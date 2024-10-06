@@ -1,0 +1,51 @@
+.pad
+{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: max-content;
+
+}
+
+.button
+{
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    border: 1.5px solid var(--foreground);
+    color: var(--foreground);
+    margin: 0px 5px;
+    font-size: large;
+}
+
+.button_placeholder
+{
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    border: 1.5px solid #808080;
+    margin: 0px 5px;
+}
+
+.prev_button::after
+{
+    /* TODO: Use icons and not symbols */
+    content: '<';
+}
+
+.next_button::after
+{
+    content: '>';
+}
+
+.first_button::after
+{
+    content: '<<'
+}
+
+.last_button::after
+{
+    content: '>>'
+}

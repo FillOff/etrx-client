@@ -4,12 +4,19 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #202020;
+  --main-red: #B54147;
+  --main-yellow: #CD962D;
+  --main-beige: #F7F2DC;
+  --main: #269393;
+  --main-dark: #165555;
+  --main-darker: hsl(180, 59%, 31%);
+  --main-light: hsl(180, 59%, 46%);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #181818;
     --foreground: #ededed;
   }
 }
