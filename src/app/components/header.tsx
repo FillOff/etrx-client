@@ -1,10 +1,9 @@
 'use client'
 
-import Styles from "./dropdown.module.css"
+import DdStyles from "./dropdown.module.css"
 import MiscStyles from "./misc.module.css"
 import { useRouter } from "next/navigation"
 import Image from "next/image";
-import logo from '../../public/logo.png'
 import Dropdown from "./dropdown";
 
 export default function Header()
@@ -15,13 +14,13 @@ export default function Header()
         <>
             <div className="flex items-center fixed w-full h-16 bg-main">
                 {/* <img src="../../../assets/img/logo.png" className="w-14 h-14"/> */}
-                <Image src={logo} alt="Logo" className="m-2" width={40} height={40} priority/>
-                <button onClick={() => router.push('/')} className={Styles.header_elem}>
+                <h1 className="select-none pl-2 pr-2 pt-1.5 ml-2 mr-2 italic font-mono font-bold text-3xl bg-main-light rounded-xl">ETRX</h1>
+                <button onClick={() => router.push('/')} className={DdStyles.header_elem}>
                     Главная
                 </button>
                 <Dropdown header="Контесты">
-                    <button onClick={() => router.push('/contests')} className={Styles.dropdown_elem}>Просмотреть все</button>
-                    <button className={Styles.dropdown_elem}><div className={MiscStyles.add_ico}></div> Добавить</button>
+                    <button onClick={() => router.push('/contests/view')} className={DdStyles.dropdown_elem}>Просмотреть все</button>
+                    <button className={DdStyles.dropdown_elem}><div className={MiscStyles.add_ico}></div> Добавить</button>
                 </Dropdown>
             </div>
             {/* acts as bottom margin */}
