@@ -1,0 +1,134 @@
+
+.header_elem
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 64px;
+    min-height: 32px;
+    padding: 6px;
+    border-radius: 6px;
+    font-size: large;
+    transition-duration: 75ms;
+    background: var(--main-dark);
+    margin: 8px 10px;
+
+    /* black font is just not visible */
+    color: var(--main-white);
+    animation: popIn 1s ease-in-out forwards 1;
+}
+
+.header_elem:hover
+{
+    background: var(--main-darker);
+    cursor: pointer;
+}
+
+@keyframes popIn {
+    0% {
+        opacity: 0;
+    }
+    90% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.dropdown
+{
+    position: relative;
+    user-select: none;
+
+    width: 0px;
+    overflow: hidden;
+}
+
+.dropdown:hover
+{
+    overflow: visible;
+    border-radius: 6px 6px 0 0;
+}
+
+.dropdown_elem
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: max-content;
+    width: calc(100% - 4px - 4px);
+    min-height: 32px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: large;
+    transition-duration: 75ms;
+    background: var(--main-dark);
+    margin: 4px;
+}
+
+.dropdown_elem:hover
+{
+    background: var(--main-darker);
+    cursor: pointer;
+}
+
+
+.dropdown_menu
+{
+    position: absolute;
+    top: 100%;
+    left: 0;
+    display: none;
+
+    padding: 6px;
+
+    cursor: default;
+
+    background: var(--main-dark);
+    border-radius: 0 0 6px 6px;
+    
+}
+
+.dropdown_menu_anim
+{
+    display: none;
+}
+
+.dropdown:hover .dropdown_menu_anim
+{
+    display: block;
+}
+
+.dropdown_menu_1
+{
+    animation: rotateMenu 400ms ease-in-out forwards;
+    transform-origin: top center;
+}
+
+@keyframes rotateMenu
+{
+    0% {
+        transform: rotateX(-90deg);
+    }
+    70% {
+        transform: rotateX(20deg);
+    }
+    100% {
+        transform: rotateX(0deg);
+    }
+}
+
+@media (max-width: 800px)
+{
+    .dropdown
+    {
+        visibility: hidden;
+    }
+    .header_elem
+    {
+        display: none;
+    }
+}

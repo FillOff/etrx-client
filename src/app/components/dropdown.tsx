@@ -1,0 +1,42 @@
+import { useEffect, useRef, useState } from 'react'
+import Styles from './dropdown.module.css'
+
+type Props = {
+    header: React.ReactNode
+    children?: React.ReactNode
+}
+
+export default function Dropdown(props: Props)
+{
+    const [matches, setMatches] = useState(false);
+    const headRef = useRef<HTMLDivElement>(null);
+    const contentRef = useRef<HTMLDivElement>(null);
+
+    // Need to match media for 800px min width to
+    // make dropdown scaling work when window resizes
+    // beyond the media query in css that hides it
+    useEffect(() => {
+        if(!window)
+            return;
+        window.matchMedia("(min-width: 800px)").addEventListener('change', e => setMatches(e.matches));
+        return () => document.removeEventListener('change', e => setMatches(false));
+    }, []);
+
+    useEffect(() => {
+        if(headRef.current && contentRef.current)
+        {
+            contentRef.current.style.display = 'block';
+            headRef.current.style.width = getComputedStyle(contentRef.current).width;
+            contentRef.current.style.display = '';
+        }
+    }, [headRef, contentRef, matches]);
+
+    return(
+        <div ref={headRef} className={`${Styles.dropdown} ${Styles.header_elem}`}>
+            {props.header}
+            <div ref={contentRef} className={`${Styles.dropdown_menu} ${Styles.dropdown_menu_anim} ${Styles.dropdown_menu_1}`}>
+                {props.children}
+            </div>
+        </div>
+    )
+}

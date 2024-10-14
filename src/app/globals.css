@@ -4,13 +4,32 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --background-shade: #ededed;
+  --foreground: #202020;
+  --foreground-shade: #333333;
+  --main-white: #ffffff;
+  --main-white-shade: #ededed;
+  --main-black: #202020;
+  --main-black-shade: #333333;
+  --main-red: #B54147;
+  --main-yellow: #CD962D;
+  --main-beige: #F7F2DC;
+  --main: hsl(215, 59%, 36%);
+  --main-dark: hsl(215, 59%, 21%);
+  --main-darker: hsl(215, 59%, 31%);
+  --main-light: hsl(215, 59%, 46%);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #181818;
+    --background-shade: #292929;
     --foreground: #ededed;
+    --foreground-shade: #dbdbdb;
+    --main-white: #ededed;
+    --main-white-shade: #dbdbdb;
+    --main-black: #181818;
+    --main-black-shade: #292929;
   }
 }
 
