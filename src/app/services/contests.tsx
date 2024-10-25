@@ -1,5 +1,6 @@
 'use client';
 
+import Pageable from "../models/Pageable";
 import Sortable from "../models/Sortable";
 
 // TODO: POST to update backend contests table
@@ -20,62 +21,37 @@ export async function getContestsPageCount (
     }
 }
 
-export class GetContestsJsonArgs extends Sortable
+export class GetContestsArgs extends Pageable
 {
     constructor(
         page: number,
         pageSize: number | null = null,
+        sortField: string | null = null,
+        sortOrder: boolean | null = false,
         isGym: boolean | null = null,
-        sortPropName: string | null = null,
-        sortOrder: boolean = false
     ) 
     {
-        super();
-        this.page = page;
-        this.pageSize = pageSize;
+        super(page, pageSize, sortField, sortOrder);
         this.isGym = isGym;
-        this.sortFieldName = sortPropName;
-        this.sortOrder = sortOrder;
     }
 
-    page: number;
-    pageSize: number | null = null;
-    isGym: boolean | null = null;
-    sortFieldName: string | null = null;
-    sortOrder: boolean = false;
+    isGym: boolean | null;
 }
 
-export async function getContestsJson(
-    args: GetContestsJsonArgs
+export async function getContests(
+    args: GetContestsArgs
 ) 
 {
     try {
         return await fetch(`http://${process.env.NEXT_PUBLIC_API_URL}/api/Contests/GetContestsByPageWithSort?` +
             `page=${args.page}` + 
-            `${args.pageSize? `&pageSize=${args.pageSize}` : '&pageSize=20'}` + 
-            `${args.isGym? `&gym=${args.isGym}` : ''}` + 
-            `${args.sortFieldName? `&sortByProp=${args.sortFieldName}` : ''}` + 
-            `&sortOrder=${args.sortOrder}`,
+            `${args.pageSize != null? `&pageSize=${args.pageSize}` : '&pageSize=20'}` + 
+            `${args.isGym != null? `&gym=${args.isGym}` : ''}` + 
+            `${args.sortField != null? `&sortField=${args.sortField}` : ''}` + 
+            `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : ''}`,
             {
-                redirect: 'error',
-                // headers: {"Content-Type": "application/json"},
-                
+                redirect: 'error',     
             }).then(res => res.json());
-    } catch(error: any|unknown) {
-        return {message: "Fetch failed"} 
-    }
-}
-
-export async function getSortableFields()
-{
-    try {
-        // return await fetcher(`https://dl.gsu.by/etr/api/contest?index=${startIndex}&count=${count}`);
-        return (await fetch(`http://${process.env.NEXT_PUBLIC_API_URL}/api/Contests/GetContestsByPageWithSort?page=1&pageSize=0&gym=false&sortByProp=null&sortOrder=false`,
-            {
-                redirect: 'error', 
-                // headers: {"Content-Type": "application/json"},
-                
-            }).then(res => res.json())).properties;
     } catch(error: any|unknown) {
         return {message: "Fetch failed"} 
     }
