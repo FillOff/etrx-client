@@ -1,5 +1,7 @@
 import Styles from './contest-table.module.css'
 
+let tableColsProps: string[] = [];
+
 type Props = {
     children?: React.ReactNode,
 }
@@ -51,10 +53,10 @@ export function ContestTable ({data}: TableProps)
                 </thead>
                 <tbody>
                     {contests.map((entry: any) => 
-                        <CTrow key={entry['id']}>
-                            <CTcell>{entry['id']}</CTcell>
-                            <CTcell>{entry['name']}</CTcell>
-                            <CTcell>{new Date(entry['start_time_seconds'] * 1000).toString()}</CTcell>
+                        <CTrow key={entry.contestId}>
+                            <CTcell>{entry.contestId}</CTcell>
+                            <CTcell>{entry.name}</CTcell>
+                            <CTcell>{entry.startTime}</CTcell>
                         </CTrow>
                     )}
                 </tbody>

@@ -1,6 +1,3 @@
-import Image from "next/image";
-import GizmoSpinner from "./components/gizmo-spinner";
-
 export default function Home() {
   return (
     <>
@@ -8,6 +5,7 @@ export default function Home() {
       <div className="flex flex-col items-center">
         <p>Last update: {process.env.LAST_UPDATE}</p>
         <p>Version: v{process.env.VERSION}</p>
+        <p>Build: {process.env.NODE_ENV}</p>
       </div>
     </>
   );

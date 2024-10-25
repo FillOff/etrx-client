@@ -22,6 +22,11 @@ export default function Header()
                     <button onClick={() => router.push('/contests/view')} className={DdStyles.dropdown_elem}>Просмотреть все</button>
                     <button className={DdStyles.dropdown_elem}><div className={MiscStyles.add_ico}></div> Добавить</button>
                 </Dropdown>
+                <Dropdown header="Ученики">
+                    <button onClick={() => router.push('/users/view')} className={DdStyles.dropdown_elem}>Просмотреть всех</button>
+                    <button className={DdStyles.dropdown_elem}><div className={MiscStyles.add_ico}></div> Добавить</button>
+                </Dropdown>
+                <button onClick={() => router.push('/problems/view')} className={DdStyles.header_elem}>Задачи</button>
             </div>
             {/* acts as bottom margin */}
             <div className="w-full h-20"></div>

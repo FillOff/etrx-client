@@ -1,55 +1,36 @@
 "use client";
-import { useEffect, useState } from "react";
-import { getContests } from "../../services/contests";
-import PageSelector from "../../components/page-selector";
-import TableStyle from './table.module.css'
-import { ContestTable, CTcell, CTrow } from "../../components/contest-table";
-import GizmoSpinner from "../../components/gizmo-spinner";
+import { getContests, GetContestsArgs, getContestsPageCount } from "../../services/contests";
+import { LinkParamType, NetTable, NetTableParams, TableProps } from "@/app/components/network-table";
 
 export default () =>
 {
-    const [data, setData] = useState<any>(null);
-    const [page, setPage] = useState(1);
-    const [loadingData, setLoadingData] = useState(false);
-    
-    if(data == null && !loadingData)
+    function getData(params: NetTableParams)
     {
-        getContests(0, 10).then(res => {
-            setData(res);
-            setLoadingData(false);
-        });
-        setLoadingData(true);
-    }
-
-    function pageCallback(newPage: number)
-    {
-        if (newPage == page)
-            return;
-
-        setPage(newPage);
-        let startIndex = 10 * (newPage - 1);
-        setLoadingData(true);
-        getContests(startIndex, startIndex + 10).then(res => {
-            setData(res);
-            setLoadingData(false);
-        });
+        console.log()
+        let args = new GetContestsArgs(
+            params.page,
+            params.pageSize,
+            params.sortField,
+            params.sortOrder,
+            null
+        )
+        return getContests(args);
     }
 
     function contestTable()
     {
-        if (!data || loadingData)
-            return (
-                <>
-                    <PageSelector page={page} maxPage={10} pageCallback={pageCallback}/>
-                    {loadingData? <div style={{margin: '10vh 0px'}}><GizmoSpinner/></div> : <></>} 
-                </>
-            )
+        let tableProps: TableProps = {
+            getData: getData, 
+            headTitles: ['ID', 'Название', 'Время начала'],
+            dataField: 'contests',
+            link: 'https://codeforces.com/contests',
+            paramType: LinkParamType.Appended,
+            linkAppendedParamField: 'contestId'
+        };
 
         return(
             <>
-                <PageSelector page={page} maxPage={10} pageCallback={pageCallback}/>
-                <ContestTable data={data}></ContestTable>
-                <PageSelector page={page} maxPage={10} pageCallback={pageCallback}/>
+                <NetTable props={tableProps}/>
             </>
         );
     }
