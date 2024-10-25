@@ -79,6 +79,14 @@ export function Sidebar ({sidebarId}: SidebarProps)
                         </span>
                         Добавить
                     </button>
+                    <div className={Styles.category}>Пользователи</div>
+                    <button onClick={() => {toggle(sidebarId); router.push('/users/view')}} className={Styles.option}>Просмотреть всех</button>
+                    <button onClick={() => {toggle(sidebarId); router.push('/users/add')}} className={Styles.option}>
+                        <span style={{width: 'min(3vw, 3vh)', height: 'min(3vw, 3vh)', fontSize: 'min(4vw, 4vh)'}} 
+                            className={`${MiscStyles.add_ico} flex items-center justify-center`}>
+                        </span>
+                        Добавить
+                    </button>
                 </div>
                 <button onClick={() => {toggle(sidebarId)}} className={`${Styles.integrated_button_cont} ${Styles.category} justify-start absolute bottom-5`}>
                     <div className={Styles.integrated_button}></div>
