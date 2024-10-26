@@ -157,8 +157,6 @@ export function NetTable({props}: {props: TableProps})
                 setSortableFields(res[sortableFieldsJsonKey]);
             else
                 setSortableFields(Object.keys(data[0]));
-
-            console.log(res)
         });
     }
 
