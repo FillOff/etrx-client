@@ -39,13 +39,13 @@
 {
     border-left: 7px solid transparent;
     border-right: 7px solid transparent;
-    border-bottom: 7px solid white;
+    border-bottom: 7px solid var(--foreground);
 }
 
 .cell_arrow_down::after {
     border-left: 7px solid transparent;
     border-right: 7px solid transparent;
-    border-top: 7px solid white;
+    border-top: 7px solid var(--foreground);
 }
 
 .cell

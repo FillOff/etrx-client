@@ -1,6 +1,7 @@
 'use client'
 
 import DdStyles from "./dropdown.module.css"
+import Styles from "./header.module.css"
 import MiscStyles from "./misc.module.css"
 import { useRouter } from "next/navigation"
 import Dropdown from "./dropdown";
@@ -12,8 +13,7 @@ export default function Header()
     return(
         <>
             <div className="flex items-center fixed w-full h-16 bg-main">
-                {/* <img src="../../../assets/img/logo.png" className="w-14 h-14"/> */}
-                <h1 className="select-none pl-2 pr-2 pt-1.5 ml-2 mr-2 italic font-mono font-bold text-3xl bg-main-light rounded-xl">ETRX</h1>
+                <h1 className={Styles.logo}>ETRX</h1>
                 <button onClick={() => router.push('/')} className={DdStyles.header_elem}>
                     Главная
                 </button>

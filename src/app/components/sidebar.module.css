@@ -63,7 +63,7 @@
     box-shadow: -20px 30px 50px -5px var(--main-light); 
     clip-path: inset(1px 1px -5px 1px);
 
-    font-size: min(8vw, 8vh);
+    font-size: 40px;
     font-weight: bold;
 }
 
@@ -76,7 +76,7 @@
     padding: 5px 5%;
     margin: 20px 0px 10px 0px;
 
-    font-size: min(6vw, 6vh);
+    font-size: 28px;
     font-weight: bold;
     text-align: left;
 }
@@ -92,7 +92,7 @@
     border-left: none;
     border-right: none;
 
-    font-size: min(4vw, 4vh);;
+    font-size: 24px;
 }
 
 .button
@@ -129,7 +129,7 @@
     border: solid var(--foreground);
     border-width: 0 5px 5px 0;
     display: inline-block;
-    padding: min(1.5vw, 1.5vh);
+    padding: 10px;
     transform: rotate(135deg);
 }
 
