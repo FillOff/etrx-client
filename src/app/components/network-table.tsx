@@ -1,6 +1,5 @@
 import Styles from './network-table.module.css'
 
-import Link from "next/link";
 import PageSelector from "./page-selector";
 import { useEffect, useState } from "react";
 import GizmoSpinner from "./gizmo-spinner";
@@ -87,7 +86,7 @@ export function NTrow ({children, onClick, href}: NTMiscProps)
 {
     if(href)
         return (
-            <tr className={Styles.tr_link} onClick={(e) => {window.open(href); onClick && onClick(e);}}>
+            <tr className={Styles.tr_link} onClick={(e) => {window.open(href); onClick? onClick(e) : '';}}>
                 {children}
             </tr>
         )
@@ -169,7 +168,7 @@ export function NetTable({props}: {props: TableProps})
 
     function pageCallback(page: number)
     {
-        let newParams = params;
+        const newParams = params;
         newParams.page = page;
         setParams(newParams);
 
@@ -181,7 +180,7 @@ export function NetTable({props}: {props: TableProps})
         // fieldsList.at(index) - check if field is sortable!
         if(fieldName)
         {
-            let newParams = params;
+            const newParams = params;
             
             // Reset sortOrder when choosing different field
             if (fieldName != params.sortField)

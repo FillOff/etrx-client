@@ -2,15 +2,10 @@
 import { useRouter } from "next/navigation"
 import Styles from './sidebar.module.css' 
 import MiscStyles from './misc.module.css'
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 type SidebarProps = {
     sidebarId: string,
-}
-
-type SidebarButtonProps = {
-    sidebarId: string,
-    style?: React.CSSProperties,
 }
 
 const btnIdPostfix = '--open-btn'
@@ -41,9 +36,9 @@ export function Sidebar ({sidebarId}: SidebarProps)
             sidebar.classList.add(`${Styles.hide}`);
         }
         
-        getComputedStyle(button).display == 'none'? 
-            button.style.display = 'block' :
-            button.style.display = 'none';
+        button.style.display = getComputedStyle(button).display == 'none'? 
+            'block' :
+            'none';
 
         setOpen(!open);
     }

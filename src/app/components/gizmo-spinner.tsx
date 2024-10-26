@@ -9,7 +9,7 @@ export default function GizmoSpinner()
     
     useEffect(() => {
         return () => {clearTimeout(timeout)};
-    }, []);
+    }, [timeout]);
 
     return(
         <>

@@ -1,7 +1,6 @@
 'use client';
 
 import Pageable from "../models/Pageable";
-import Sortable from "../models/Sortable";
 
 // TODO: POST to update backend contests table
 
@@ -16,7 +15,7 @@ export async function getContestsPageCount (
                 redirect: 'error',                
             }).then(res => res.text()).then(res => num = Number(res));
         return num;
-    } catch(error: any|unknown) {
+    } catch(_) {
         return num;
     }
 }
@@ -52,7 +51,7 @@ export async function getContests(
             {
                 redirect: 'error',     
             }).then(res => res.json());
-    } catch(error: any|unknown) {
+    } catch(_) {
         return {message: "Fetch failed"} 
     }
 }

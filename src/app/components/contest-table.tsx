@@ -1,7 +1,5 @@
 import Styles from './contest-table.module.css'
 
-let tableColsProps: string[] = [];
-
 type Props = {
     children?: React.ReactNode,
 }

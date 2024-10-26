@@ -49,7 +49,7 @@ export default function PageSelector({page, maxPage, pageCallback}: Props)
 
     function PageButtons()
     {
-        let buttons: (JSX.Element)[] = [];
+        const buttons: (JSX.Element)[] = [];
         // Fill placeholders in front
         for(let it = 1; it <= maxPageHop - page + 1; it++)
         {

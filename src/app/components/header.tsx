@@ -3,7 +3,6 @@
 import DdStyles from "./dropdown.module.css"
 import MiscStyles from "./misc.module.css"
 import { useRouter } from "next/navigation"
-import Image from "next/image";
 import Dropdown from "./dropdown";
 
 export default function Header()

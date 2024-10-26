@@ -19,7 +19,7 @@ export default function Dropdown(props: Props)
         if(!window)
             return;
         window.matchMedia("(min-width: 800px)").addEventListener('change', e => setMatches(e.matches));
-        return () => document.removeEventListener('change', e => setMatches(false));
+        return () => document.removeEventListener('change', _ => setMatches(false));
     }, []);
 
     useEffect(() => {

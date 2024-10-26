@@ -1,13 +1,13 @@
 "use client";
-import { getContests, GetContestsArgs, getContestsPageCount } from "../../services/contests";
+import { getContests, GetContestsArgs } from "../../services/contests";
 import { LinkParamType, NetTable, NetTableParams, TableProps } from "@/app/components/network-table";
 
-export default () =>
+export default function page()
 {
     function getData(params: NetTableParams)
     {
         console.log()
-        let args = new GetContestsArgs(
+        const args = new GetContestsArgs(
             params.page,
             params.pageSize,
             params.sortField,
@@ -19,7 +19,7 @@ export default () =>
 
     function contestTable()
     {
-        let tableProps: TableProps = {
+        const tableProps: TableProps = {
             getData: getData, 
             headTitles: ['ID', 'Название', 'Время начала'],
             dataField: 'contests',

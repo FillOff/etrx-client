@@ -27,7 +27,7 @@ export async function getUsers(
             {
                 redirect: 'error',                
             }).then(res => res.json());
-    } catch(error: any|unknown) {
+    } catch(_) {
         return {message: "Fetch failed"} 
     }
 }

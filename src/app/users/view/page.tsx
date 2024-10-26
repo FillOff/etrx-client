@@ -2,11 +2,11 @@
 import { getUsers, GetUsersArgs } from "@/app/services/users";
 import { LinkParamType, NetTable, NetTableParams, TableProps } from "@/app/components/network-table";
 
-export default () =>
+export default function page()
 {
     function getData(params: NetTableParams)
     {
-        let args = new GetUsersArgs(
+        const args = new GetUsersArgs(
             params.page,
             params.pageSize,
             params.sortField,
@@ -17,7 +17,7 @@ export default () =>
 
     function usersTable()
     {
-        let tableProps: TableProps = {
+        const tableProps: TableProps = {
             getData: getData, 
             headTitles: ['ID', 'Хендл', 'Имя', 'Фамилия', 'Организация', 'Город', 'Класс'],
             dataField: 'users',

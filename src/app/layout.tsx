@@ -2,7 +2,6 @@ import { useId } from "react";
 import Header from "./components/header";
 import { Sidebar } from "./components/sidebar";
 import "./globals.css";
-import GizmoSpinner from "./components/gizmo-spinner";
 
 export default function RootLayout({children,}: Readonly<{children: React.ReactNode;}>) {
   const sidebarId = useId();
