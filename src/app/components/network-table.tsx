@@ -3,6 +3,8 @@ import Styles from './network-table.module.css'
 import PageSelector from "./page-selector";
 import { useEffect, useState } from "react";
 import GizmoSpinner from "./gizmo-spinner";
+import { usePathname, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 export class NetTableParams
 {
@@ -55,6 +57,9 @@ export type TableProps = {
     // Key of a field that contains data in the request
     dataField: string,
 
+    // Disables sorting completely, duh.
+    disableSorting?: boolean,
+
     // Raw link without any arguments
     link?: string,
 
@@ -63,7 +68,7 @@ export type TableProps = {
     //   will be appended to the end of the link as a segment i.e. .../value
     // Arguments: values from the linkArgs will be link arguments' values,
     //   while keys of those values will be arguments' names
-    paramType: LinkParamType,
+    paramType?: LinkParamType,
 
     // Map for all static arguments you want to add to the link
     // Key: argument name
@@ -114,10 +119,19 @@ export function NetTable({props}: {props: TableProps})
     const sortableFieldsJsonKey = 'properties';
     
     const [data, setData] = useState<any>(null);
-    const [params, setParams] = useState(new NetTableParams(1, pageSize, null, null));
     const [pageCount, setPageCount] = useState<number | null>(1);
     const [sortableFields, setSortableFields] = useState(new Array<string>());
     const [message, setMessage] = useState('');
+    
+    const searchParams = useSearchParams();
+    const current = new URLSearchParams(Array.from(searchParams.entries()));
+    const currPage = current.get('p');
+    const firstPage = currPage? Number(currPage) : 1;
+    const [params, setParams] = useState(new NetTableParams(firstPage, pageSize, null, null));
+
+    const pathname = usePathname();
+    const { replace } = useRouter();
+
 
     function request()
     {
@@ -151,12 +165,17 @@ export function NetTable({props}: {props: TableProps})
             else
                 setPageCount(null);
 
-            // Checks if there any sortable fields names given, if not
-            // try to use data entries fields...
-            if(res[sortableFieldsJsonKey])
-                setSortableFields(res[sortableFieldsJsonKey]);
+            if(props.disableSorting == true)
+                setSortableFields([]);
             else
-                setSortableFields(Object.keys(data[0]));
+            {
+                // Checks if there any sortable fields names given, if not
+                // try to use data entries fields.
+                if(res[sortableFieldsJsonKey])
+                    setSortableFields(res[sortableFieldsJsonKey]);
+                else
+                    setSortableFields(Object.keys(data[0]));
+            }
         });
     }
 
@@ -169,6 +188,9 @@ export function NetTable({props}: {props: TableProps})
         const newParams = params;
         newParams.page = page;
         setParams(newParams);
+
+        current.set('p', params.page.toString())
+        replace(`${pathname}?${current.toString()}`);
 
         request();
     }
@@ -269,27 +291,37 @@ export function NetTable({props}: {props: TableProps})
             <table className={Styles.table}>
                 <thead>
                     <tr key={0}>
-                    {allFieldNames.map((fieldName, index) =>
-                        <th key={index} 
-                            // this is a codecrime
-                            className={(() =>{
-                                if (!sortableFields || !sortableFields.at(index) || !params || !params.sortField)
-                                    return Styles.th;
-                                    
-                                if (sortableFields.at(index)!.toLowerCase() !== params.sortField!.toLowerCase())
-                                    return Styles.th;
-                                
-                                if(params.sortOrder) 
-                                    return [Styles.th, Styles.cell_arrow_up].join(' ');
-                                else
-                                    return [Styles.th, Styles.cell_arrow_down].join(' ');
-                                    
-                            })()
-                            } 
-                            onClick={() => changeParams(allFieldNames.at(index))}>
-                            {props.headTitles.at(index)? props.headTitles.at(index) : fieldName}
-                        </th>
-                    )}
+                    {allFieldNames.map((fieldName, index) => {
+                        if (!sortableFields || !sortableFields.at(index) || !params)
+                            return(
+                                <th key={index} className={Styles.th}>
+                                    {props.headTitles.at(index)? props.headTitles.at(index) : fieldName}
+                                </th>
+                            )
+                            
+                        if (!params.sortField || sortableFields.at(index)!.toLowerCase() !== params.sortField!.toLowerCase())
+                            return(
+                                <th key={index} className={Styles.th}
+                                        onClick={() => changeParams(allFieldNames.at(index))}>
+                                    {props.headTitles.at(index)? props.headTitles.at(index) : fieldName}
+                                </th>
+                            )
+
+                        if(params.sortOrder) 
+                            return(
+                                <th key={index} className={[Styles.th, Styles.cell_arrow_up].join(' ')}
+                                        onClick={() => changeParams(allFieldNames.at(index))}>
+                                    {props.headTitles.at(index)? props.headTitles.at(index) : fieldName}
+                                </th>
+                            )
+                        else
+                            return(
+                                <th key={index} className={[Styles.th, Styles.cell_arrow_down].join(' ')}
+                                        onClick={() => changeParams(allFieldNames.at(index))}>
+                                    {props.headTitles.at(index)? props.headTitles.at(index) : fieldName}
+                                </th>
+                            )
+                    })}
                     </tr>
                 </thead>
                 <tbody>

@@ -55,3 +55,16 @@ export async function getContests(
         return {message: "Fetch failed"} 
     }
 }
+
+export async function getContestSubmissions(contestId: number)
+{
+    try {
+        return await fetch(`http://${process.env.NEXT_PUBLIC_API_URL}/api/Submissions/GetSubmissionsByContestId?` +
+            `contestId=${contestId}`,
+            {
+                redirect: 'error',     
+            }).then(res => res.json());
+    } catch(_) {
+        return {message: "Fetch failed"} 
+    }
+}

@@ -2,11 +2,11 @@
 import { getContests, GetContestsArgs } from "../../services/contests";
 import { LinkParamType, NetTable, NetTableParams, TableProps } from "@/app/components/network-table";
 
-export default function page()
+export default function Page()
 {
+
     function getData(params: NetTableParams)
-    {
-        console.log()
+    {   
         const args = new GetContestsArgs(
             params.page,
             params.pageSize,
@@ -23,7 +23,7 @@ export default function page()
             getData: getData, 
             headTitles: ['ID', 'Название', 'Время начала'],
             dataField: 'contests',
-            link: 'https://codeforces.com/contests',
+            link: '/contests/',
             paramType: LinkParamType.Appended,
             linkAppendedParamField: 'contestId'
         };
