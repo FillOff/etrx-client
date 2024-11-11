@@ -1,4 +1,5 @@
 "use client";
+import { Suspense } from "react";
 import { getContests, GetContestsArgs } from "../../services/contests";
 import { LinkParamType, NetTable, NetTableParams, TableProps } from "@/app/components/network-table";
 
@@ -29,9 +30,9 @@ export default function Page()
         };
 
         return(
-            <>
+            <Suspense>
                 <NetTable props={tableProps}/>
-            </>
+            </Suspense>
         );
     }
 

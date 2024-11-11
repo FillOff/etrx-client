@@ -1,6 +1,7 @@
 "use client";
 import { getUsers, GetUsersArgs } from "@/app/services/users";
 import { LinkParamType, NetTable, NetTableParams, TableProps } from "@/app/components/network-table";
+import { Suspense } from "react";
 
 export default function page()
 {
@@ -27,7 +28,9 @@ export default function page()
         };
 
         return(
-            <NetTable props={tableProps}/>
+            <Suspense>
+                <NetTable props={tableProps}/>
+            </Suspense>
         );
     }
 
