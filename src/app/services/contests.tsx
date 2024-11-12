@@ -42,7 +42,7 @@ export async function getContests(
 ) 
 {
     try {
-        return await fetch(`http://${process.env.NEXT_PUBLIC_API_URL}/api/Contests/GetContestsByPageWithSort?` +
+        return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Contests/GetContestsByPageWithSort?` +
             `page=${args.page}` + 
             `${args.pageSize != null? `&pageSize=${args.pageSize}` : '&pageSize=20'}` + 
             `${args.isGym != null? `&gym=${args.isGym}` : ''}` + 
@@ -59,7 +59,7 @@ export async function getContests(
 export async function getContestSubmissions(contestId: number)
 {
     try {
-        return await fetch(`http://${process.env.NEXT_PUBLIC_API_URL}/api/Submissions/GetSubmissionsByContestId?` +
+        return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Submissions/GetSubmissionsByContestId?` +
             `contestId=${contestId}`,
             {
                 redirect: 'error',     

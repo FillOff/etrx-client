@@ -21,7 +21,7 @@ export async function getUsers(
 ) 
 {
     try {
-        return await fetch(`http://${process.env.NEXT_PUBLIC_API_URL}/api/Users/GetUsersWithSort?` +
+        return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Users/GetUsersWithSort?` +
             `${args.sortField != null? `&sortField=${args.sortField}` : ''}` + 
             `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : ''}`,
             {
