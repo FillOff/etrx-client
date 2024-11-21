@@ -24,7 +24,7 @@ export default function Page()
             getData: getData, 
             headTitles: ['ID', 'Название', 'Время начала'],
             dataField: 'contests',
-            link: '/contests/',
+            link: '/etrx2/contests',
             paramType: LinkParamType.Appended,
             linkAppendedParamField: 'contestId'
         };
