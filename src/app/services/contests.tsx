@@ -50,15 +50,30 @@ export async function getContests(
         {redirect: 'error'});
 }
 
-export async function getContestSubmissions(contestId: number)
+// export async function getContestSubmissions(contestId: number)
+// {
+//     try {
+//         return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Submissions/GetSubmissionsByContestIdWithSort?` +
+//             `contestId=${contestId}`,
+//             {
+//                 redirect: 'error',     
+//             }).then(res => res.json());
+//     } catch(_) {
+//         return {message: "Fetch failed"} 
+//     }
+// }
+
+export async function getContestSubmissionsNew(contestId: number)
 {
-    try {
-        return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Submissions/GetSubmissionsByContestIdWithSort?` +
-            `contestId=${contestId}`,
-            {
-                redirect: 'error',     
-            }).then(res => res.json());
-    } catch(_) {
-        return {message: "Fetch failed"} 
-    }
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Codeforces/Submissions/PostSubmissionsFromCodeforcesByContestId?` +
+        `contestId=${contestId}`,
+        {
+            redirect: 'error',   
+            method: 'POST',  
+        }); 
+    return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Submissions/GetSubmissionsByContestIdWithSort?` +
+        `contestId=${contestId}`,
+        {
+            redirect: 'error',     
+        }); 
 }

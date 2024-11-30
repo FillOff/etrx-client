@@ -55,7 +55,7 @@ export default function Page()
 
             const tEntry = new TableEntry;
             tEntry.row = <tr key={i} className={TableStyles.tr_link}
-            onClick={() => window.open(`/etrx2/contests/${raw['contestId']}`)}>
+            onClick={() => window.open(`https://codeforces.com/profile/${raw['handle']}`)}>
                 {entry.cells}
             </tr>;
             entries.push(tEntry);
