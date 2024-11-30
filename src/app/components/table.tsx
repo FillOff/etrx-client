@@ -43,13 +43,15 @@ export function Table({props}: {props: TableProps})
         });
     }
 
+    // TODO: figure out how to be responsive to new table properties
+    // while avoiding double-fetching because of refresh of getData function
     useEffect(() => {
         request();
-    }, [props])
+    }, [])
 
     function pageCallback(newPage: number)
     {
-        let newRProps = rProps;
+        const newRProps = rProps;
         newRProps.page = newPage;
         setRProps(newRProps);
 

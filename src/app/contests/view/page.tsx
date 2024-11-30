@@ -12,7 +12,7 @@ export default function Page()
     const gymCheckbox = useId();
 
     useEffect(() => {
-        let checkbox = document.getElementById(gymCheckbox) as HTMLInputElement;
+        const checkbox = document.getElementById(gymCheckbox) as HTMLInputElement;
         if(gym == 2)
             checkbox.indeterminate = true;
         else
@@ -20,7 +20,7 @@ export default function Page()
     }, [gym])
 
     async function getData(props: RequestProps)
-    {   
+    {  
         // Prepare request parameters and other properties
         props.page = props.page ? props.page : 1;
         props.sortField = props.sortField ? props.sortField : 'startTime';
@@ -45,8 +45,8 @@ export default function Page()
             return {entries: [], props: props};
         }
 
-        let data = await response.json();
-        let rawEntries = Array.from(data.contests);
+        const data = await response.json();
+        const rawEntries = Array.from(data.contests);
 
         // Set status code to track request state
         setStatusCode(response.status);
@@ -60,10 +60,10 @@ export default function Page()
             props.fieldKeys = Object.keys(rawEntries[0]);
         
         // Create viewable content from raw data
-        let entries: TableEntry[] = [];
+        const entries: TableEntry[] = [];
         rawEntries.forEach((raw: any, i) => {
-            let len = Object.keys(raw).length;
-            let entry: Entry = new Entry();
+            const len = Object.keys(raw).length;
+            const entry: Entry = new Entry();
 
             entry.cells = Array(len);
             Object.keys(raw).forEach((key, i) =>
@@ -71,7 +71,7 @@ export default function Page()
                 entry.cells.push(<td key={i} className={TableStyles.cell}>{raw[key]}</td>);
             });
 
-            let tEntry = new TableEntry;
+            const tEntry = new TableEntry;
             tEntry.row = <tr key={i} className={TableStyles.tr_link}
             onClick={() => window.open(`/etrx2/contests/${raw['contestId']}`)}>
                 {entry.cells}
@@ -118,7 +118,7 @@ export default function Page()
                     name="gymCheckbox"
                     checked={gym == 1 ? true : false}
                     onChange={(event) => {
-                        let checkbox = event.target;
+                        const checkbox = event.target;
                         if(checkbox.checked && gym == 2)
                             setGym(0);
                         else

@@ -31,8 +31,8 @@ export default function Page()
             setStatusCode(-1);
             return {entries: [], props: props};
         }
-        let data = await response.json();
-        let rawEntries = Array.from(data.users);
+        const data = await response.json();
+        const rawEntries = Array.from(data.users);
 
         // Set status code to track request state
         setStatusCode(response.status);
@@ -42,10 +42,10 @@ export default function Page()
             props.fieldKeys = Object.keys(rawEntries[0]);
         
         // Create viewable content from raw data
-        let entries: TableEntry[] = [];
+        const entries: TableEntry[] = [];
         rawEntries.forEach((raw: any, i) => {
-            let len = Object.keys(raw).length;
-            let entry: Entry = new Entry();
+            const len = Object.keys(raw).length;
+            const entry: Entry = new Entry();
 
             entry.cells = Array(len);
             Object.keys(raw).forEach((key, i) =>
@@ -53,7 +53,7 @@ export default function Page()
                 entry.cells.push(<td key={i} className={TableStyles.cell}>{raw[key]}</td>);
             });
 
-            let tEntry = new TableEntry;
+            const tEntry = new TableEntry;
             tEntry.row = <tr key={i} className={TableStyles.tr_link}
             onClick={() => window.open(`/etrx2/contests/${raw['contestId']}`)}>
                 {entry.cells}
@@ -73,9 +73,6 @@ export default function Page()
 
         return(
             <Table props={tableProps}></Table>
-            // <Suspense>
-            //     <NetTable props={tableProps}/>
-            // </Suspense>
         );
     }
 
