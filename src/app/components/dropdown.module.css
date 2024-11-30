@@ -1,21 +1,26 @@
 
-.header_elem
+.header_elem_static, .header_elem
 {
     display: flex;
     align-items: center;
     justify-content: center;
 
     min-width: 96px;
-    min-height: 32px;
-    padding: 6px;
+    min-height: 36px;
+    padding: 10px;
     border-radius: 6px;
-    font-size: large;
-    transition-duration: 75ms;
-    background: var(--main-dark);
+    font-size: 20px;
+    line-height: 28px;
     margin: 8px 10px;
 
+    background: var(--main-dark);
     /* black font is just not visible */
     color: var(--main-white);
+}
+
+.header_elem
+{
+    transition-duration: 75ms;
     animation: popIn 1s ease-in-out forwards 1;
 }
 
@@ -59,14 +64,22 @@
     justify-content: center;
 
     min-width: max-content;
-    width: calc(100% - 4px - 4px);
-    min-height: 32px;
+    width: 100%;
+    min-height: 36px;
     padding: 4px 10px;
-    border-radius: 6px;
-    font-size: large;
+    font-size: 20px;
     transition-duration: 75ms;
     background: var(--main-dark);
-    margin: 4px;
+}
+
+.dropdown_elem:not(:last-child)
+{
+    border-bottom: 1px solid var(--main-light);
+}
+
+.dropdown_elem:last-child
+{
+    border-radius: 0 0 6px 6px;
 }
 
 .dropdown_elem:hover
@@ -75,7 +88,6 @@
     cursor: pointer;
 }
 
-
 .dropdown_menu
 {
     position: absolute;
@@ -83,13 +95,10 @@
     left: 0;
     display: none;
 
-    padding: 6px;
-
     cursor: default;
 
     background: var(--main-dark);
     border-radius: 0 0 6px 6px;
-    
 }
 
 .dropdown_menu_anim

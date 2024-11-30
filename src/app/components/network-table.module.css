@@ -1,9 +1,10 @@
 .container
 {
     display: flex;
-    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     width: 100%;
-    margin: 20px 0;
+    margin: 10px 0 20px 0;
 }
 
 .table
@@ -19,6 +20,8 @@
     border-width: 1.5px;
     font-size: large;
     font-weight: bold;
+
+    cursor: pointer;
 }
 
 .cell_arrow_up, .cell_arrow_down

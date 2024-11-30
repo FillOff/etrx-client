@@ -215,10 +215,8 @@ export function NetTable({props}: {props: TableProps})
                 newParams.sortOrder = !params.sortOrder;
                 setParams(newParams);
             }
-            
             request();
-        }
-            
+        } 
     }
 
     // Produces a link for a single row. Takes record (i.e. whole table row data)

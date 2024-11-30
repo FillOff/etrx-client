@@ -3,31 +3,24 @@
 import Pageable from "../models/Pageable";
 
 // While it does not utilize any paging, should have params for it for the future...
-export class GetUsersArgs extends Pageable
+export class GetUsersArgs
 {
     constructor(
-        page: number,
-        pageSize: number | null = null,
-        sortField: string | null = null,
-        sortOrder: boolean | null = false
-    )
-    {
-        super(page, pageSize, sortField, sortOrder);
-    }
+        public page: number | null = null,
+        public pageSize: number | null = null,
+        public sortField: string | null = null,
+        public sortOrder: boolean | null = false
+    ) {}
 }
 
 export async function getUsers(
     args: GetUsersArgs
 ) 
 {
-    try {
-        return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Users/GetUsersWithSort?` +
-            `${args.sortField != null? `&sortField=${args.sortField}` : ''}` + 
-            `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : ''}`,
-            {
-                redirect: 'error',                
-            }).then(res => res.json());
-    } catch(_) {
-        return {message: "Fetch failed"} 
-    }
+    return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Users/GetUsersWithSort?` +
+        `${args.sortField != null? `&sortField=${args.sortField}` : ''}` + 
+        `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : '&sortOrder=false'}`,
+        {
+            redirect: 'error',                
+        });
 }

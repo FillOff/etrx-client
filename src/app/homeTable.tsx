@@ -1,23 +1,12 @@
-"use client";
-import { useEffect, useId, useState } from "react";
-import { GetContestsArgs, getContests } from "../../services/contests";
-import TableStyles from '../../components/network-table.module.css';
-import { Entry, TableEntry, Table, TableProps, RequestProps } from "@/app/components/table";
-import GizmoSpinner from "@/app/components/gizmo-spinner";
+'use client';
+import { useState } from "react";
+import { Entry, RequestProps, Table, TableEntry, TableProps } from "./components/table";
+import { getContests, GetContestsArgs } from "./services/contests";
+import TableStyles from './components/network-table.module.css';
 
-export default function Page()
+export default function HomeTable()
 {
     const [statusCode, setStatusCode] = useState(0);
-    const [gym, setGym] = useState<number>(2);
-    const gymCheckbox = useId();
-
-    useEffect(() => {
-        let checkbox = document.getElementById(gymCheckbox) as HTMLInputElement;
-        if(gym == 2)
-            checkbox.indeterminate = true;
-        else
-            checkbox.indeterminate = false;
-    }, [gym])
 
     async function getData(props: RequestProps)
     {   
@@ -27,10 +16,10 @@ export default function Page()
         props.sortOrder = props.sortOrder ? props.sortOrder : false;
         const args = new GetContestsArgs(
             props.page,
-            100,
+            10,
             props.sortField,
             props.sortOrder,
-            gym == 2? null : gym == 1? true : false,
+            null
         )
 
         // Get raw data
@@ -88,6 +77,7 @@ export default function Page()
             getData, 
             ['ID', 'Название', 'Время начала']
         );
+        tableProps.hidePageSelectors = true;
 
         // Display table and hide it if status code is not 200
         return(
@@ -106,31 +96,7 @@ export default function Page()
 
     return(
         <>
-        <h1 className='text-3xl w-full text-center font-bold mb-5'>Таблица контестов</h1>
-        <div className='m-auto rounded-md h-fit px-4 py-2 lg:w-[200px] w-[140px] bg-main-black-shade'>
-            <div>Фильтры</div>
-            <form>
-                <div className='flex items-center'>
-                    <input 
-                    className='w-4 h-4 mb-1'
-                    id={gymCheckbox}
-                    type="checkbox"
-                    name="gymCheckbox"
-                    checked={gym == 1 ? true : false}
-                    onChange={(event) => {
-                        let checkbox = event.target;
-                        if(checkbox.checked && gym == 2)
-                            setGym(0);
-                        else
-                            setGym(gym + 1);
-                    }}
-                    />
-                    <div className='ml-2'>Тренировки</div>
-                </div>
-            </form>
-        </div>
-        {statusCode == 0 && <div className='mb-[150px]'><GizmoSpinner></GizmoSpinner></div>}
         {contestTable()}
         </>
-    );
+    )
 }

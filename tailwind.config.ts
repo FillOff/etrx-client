@@ -11,6 +11,8 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        "main-black":  "var(--main-black)",
+        "main-black-shade":  "var(--main-black-shade)",
         "main-red":  "var(--main-red)",
         "main-yellow":  "var(--main-yellow)",
         "main-beige": "var(--main-beige)",

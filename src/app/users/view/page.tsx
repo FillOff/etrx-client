@@ -1,36 +1,81 @@
 "use client";
 import { getUsers, GetUsersArgs } from "@/app/services/users";
-import { LinkParamType, NetTable, NetTableParams, TableProps } from "@/app/components/network-table";
-import { Suspense } from "react";
+// import { LinkParamType, NetTable, NetTableParams, TableProps } from "@/app/components/network-table";
+// import { Suspense } from "react";
+import { Entry, RequestProps, Table, TableEntry, TableProps } from "@/app/components/table";
+import { useState } from "react";
+import TableStyles from '../../components/network-table.module.css';
 
-export default function page()
+export default function Page()
 {
-    function getData(params: NetTableParams)
+    const [statusCode, setStatusCode] = useState(0);
+    async function getData(props: RequestProps)
     {
+        // Prepare request parameters
+        props.sortField = props.sortField ? props.sortField : 'firstName';
+        props.sortOrder = props.sortOrder ? props.sortOrder : true;
         const args = new GetUsersArgs(
-            params.page,
-            params.pageSize,
-            params.sortField,
-            params.sortOrder
+            null,
+            null,
+            props.sortField,
+            props.sortOrder
         )
-        return getUsers(args);
+        // Get raw data
+        let response: Response;
+        try
+        {
+            response = await getUsers(args);
+        } 
+        catch(error)
+        {
+            setStatusCode(-1);
+            return {entries: [], props: props};
+        }
+        let data = await response.json();
+        let rawEntries = Array.from(data.users);
+
+        // Set status code to track request state
+        setStatusCode(response.status);
+
+        // Set field keys that we got
+        if(rawEntries[0])
+            props.fieldKeys = Object.keys(rawEntries[0]);
+        
+        // Create viewable content from raw data
+        let entries: TableEntry[] = [];
+        rawEntries.forEach((raw: any, i) => {
+            let len = Object.keys(raw).length;
+            let entry: Entry = new Entry();
+
+            entry.cells = Array(len);
+            Object.keys(raw).forEach((key, i) =>
+            {
+                entry.cells.push(<td key={i} className={TableStyles.cell}>{raw[key]}</td>);
+            });
+
+            let tEntry = new TableEntry;
+            tEntry.row = <tr key={i} className={TableStyles.tr_link}
+            onClick={() => window.open(`/etrx2/contests/${raw['contestId']}`)}>
+                {entry.cells}
+            </tr>;
+            entries.push(tEntry);
+        });
+
+        return {entries: entries, props: props};
     }
 
     function usersTable()
     {
-        const tableProps: TableProps = {
-            getData: getData, 
-            headTitles: ['ID', 'Хендл', 'Имя', 'Фамилия', 'Организация', 'Город', 'Класс'],
-            dataField: 'users',
-            link: 'https://codeforces.com/profile',
-            paramType: LinkParamType.Appended,
-            linkAppendedParamField: 'handle'
-        };
+        const tableProps = new TableProps(
+            getData, 
+            ['ID', 'Хендл', 'Имя', 'Фамилия', 'Организация', 'Город', 'Класс']
+        );
 
         return(
-            <Suspense>
-                <NetTable props={tableProps}/>
-            </Suspense>
+            <Table props={tableProps}></Table>
+            // <Suspense>
+            //     <NetTable props={tableProps}/>
+            // </Suspense>
         );
     }
 
