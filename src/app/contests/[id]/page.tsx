@@ -52,8 +52,8 @@ export default function Page()
                 {
                     entry.cells.push(
                         <td key={i} className={TableStyles.cell}>
-                            {raw['tries'].map((elem: any, index: number) => {
-                                return (<div>{data.problemIndexes[index]}: {elem}</div>);
+                            {data['problemIndexes'].map((elem: string, index: number) => {
+                                return (<div key={index}>{elem}: {raw['tries'][index] != undefined? raw['tries'][index] : 0}</div>);
                             })}
                         </td>
                     );
