@@ -3,8 +3,9 @@ import { getUsers, GetUsersArgs } from "@/app/services/users";
 // import { LinkParamType, NetTable, NetTableParams, TableProps } from "@/app/components/network-table";
 // import { Suspense } from "react";
 import { Entry, RequestProps, Table, TableEntry, TableProps } from "@/app/components/table";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import TableStyles from '../../components/network-table.module.css';
+import GizmoSpinner from "@/app/components/gizmo-spinner";
 
 export default function Page()
 {
@@ -13,7 +14,7 @@ export default function Page()
     {
         // Prepare request parameters
         props.sortField = props.sortField ? props.sortField : 'firstName';
-        props.sortOrder = props.sortOrder ? props.sortOrder : true;
+        props.sortOrder = props.sortOrder != null ? props.sortOrder : true;
         const args = new GetUsersArgs(
             null,
             null,
@@ -64,22 +65,32 @@ export default function Page()
         return {entries: entries, props: props};
     }
 
-    function usersTable()
-    {
-        const tableProps = new TableProps(
-            getData, 
-            ['ID', 'Хендл', 'Имя', 'Фамилия', 'Организация', 'Город', 'Класс']
-        );
+    const tableProps = new TableProps(
+        ['ID', 'Хендл', 'Имя', 'Фамилия', 'Организация', 'Город', 'Класс']
+    );
 
-        return(
-            <Table props={tableProps}></Table>
-        );
-    }
+    const table = useMemo(() => {
+        return (
+            <>
+            <div>
+                <Table getData={getData} props={tableProps}></Table>
+            </div>          
+            </>
+        )
+    }, [])
 
     return(
         <>
-            <h1 className=' text-3xl w-full text-center font-bold mb-5'>Таблица пользователей</h1>
-            {usersTable()}
+        <h1 className=' text-3xl w-full text-center font-bold mb-5'>Таблица пользователей</h1>
+        {statusCode == 0 && <div className='mb-[150px]'><GizmoSpinner></GizmoSpinner></div>}
+        {statusCode != 200 && statusCode != 0 && 
+            <h1 className="w-full text-center text-2xl font-bold">
+                Could not load table data. Status code: {statusCode}
+            </h1>
+        }
+        <div className={statusCode == 200 ? 'visible' : 'invisible'}>
+            {table}
+        </div>
         </>
     );
 }

@@ -12,13 +12,13 @@ export default function Dropdown(props: Props)
     const headRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
 
-    // Need to match media for 800px min width to
+    // Need to match media for 900px min width to
     // make dropdown scaling work when window resizes
     // beyond the media query in css that hides it
     useEffect(() => {
         if(!window)
             return;
-        window.matchMedia("(min-width: 800px)").addEventListener('change', e => setMatches(e.matches));
+        window.matchMedia("(min-width: 900px)").addEventListener('change', e => setMatches(e.matches));
         return () => document.removeEventListener('change', _ => setMatches(false));
     }, []);
 

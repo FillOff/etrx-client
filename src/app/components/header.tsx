@@ -7,12 +7,14 @@ import Dropdown from "./dropdown";
 
 export default function Header()
 {
-    const router = useRouter()
-    
+    const router = useRouter();
+
     return(
         <>
             <div className="flex items-center fixed w-full h-16 bg-main">
-                <h1 className={DdStyles.header_elem_static + ' select-none bg-main-light font-bold italic text-[28px]'}>ETRX</h1>
+                <h1 className={DdStyles.header_elem_static + ' select-none bg-main-light font-bold italic text-[28px]'}>
+                    ETRX
+                </h1>
                 <button onClick={() => router.push('/')} className={DdStyles.header_elem}>
                     Главная
                 </button>
@@ -25,6 +27,7 @@ export default function Header()
                     <button className={DdStyles.dropdown_elem}><div className={MiscStyles.add_ico}></div> Добавить</button>
                 </Dropdown>
                 <button onClick={() => router.push('/problems/view')} className={DdStyles.header_elem}>Задачи</button>
+                <button onClick={() => router.push('/about')} className={DdStyles.header_elem}>О сайте</button>
             </div>
             {/* acts as bottom margin */}
             <div className="w-full h-20"></div>

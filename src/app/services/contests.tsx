@@ -1,6 +1,7 @@
 'use client';
 
 import Pageable from "../models/Pageable";
+import Sortable from "../models/Sortable";
 
 // TODO: POST to update backend contests table
 
@@ -50,29 +51,42 @@ export async function getContests(
         {redirect: 'error'});
 }
 
-// export async function getContestSubmissions(contestId: number)
-// {
-//     try {
-//         return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Submissions/GetSubmissionsByContestIdWithSort?` +
-//             `contestId=${contestId}`,
-//             {
-//                 redirect: 'error',     
-//             }).then(res => res.json());
-//     } catch(_) {
-//         return {message: "Fetch failed"} 
-//     }
-// }
-
-export async function getContestSubmissionsNew(contestId: number)
+export class GetContestSubmissionsArgs extends Sortable
 {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Codeforces/Submissions/PostSubmissionsFromCodeforcesByContestId?` +
-        `contestId=${contestId}`,
+    constructor(
+        public contestId: number,
+        public sortField: string | null,
+        public sortOrder: boolean | null
+    )
+    {
+        super(sortField, sortOrder);
+    }
+}
+
+export async function getContestSubmissions(args: GetContestSubmissionsArgs)
+{
+    return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Submissions/GetSubmissionsByContestIdWithSort?` +
+        `contestId=${args.contestId}` +
+        `${args.sortField != null? `&sortField=${args.sortField}` : ''}` +
+        `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : ''}`,
+        {
+            redirect: 'error',     
+        }); 
+}
+
+export async function getContestSubmissionsWithUpdate(args: GetContestSubmissionsArgs)
+{
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Codeforces/Submissions/PostAndUpdateSubmissionsFromCodeforcesByContestId?` +
+        `contestId=${args.contestId}`,
         {
             redirect: 'error',   
             method: 'POST',  
         }); 
+
     return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Submissions/GetSubmissionsByContestIdWithSort?` +
-        `contestId=${contestId}`,
+        `contestId=${args.contestId}` +
+        `${args.sortField != null? `&sortField=${args.sortField}` : ''}` +
+        `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : ''}`,
         {
             redirect: 'error',     
         }); 

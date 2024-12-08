@@ -37,8 +37,8 @@
 @media (max-width: 600px) {
     .button, .placeholder
     {
-        width: 12vw;
-        height: 12vw;
+        width: 60px;
+        height: 60px;
         margin: 0px 2px;
     }
     .pad .cont_placeholder, 
@@ -53,12 +53,12 @@
     .silent_pad .placeholder,
     .silent_pad .cont_placeholder
     {
-        width: 10vw;
-        height: 10vw;
+        width: 50px;
+        height: 50px;
     }
     .pad
     {
-        margin-bottom: 10px;
+        margin-bottom: 0px;
     }
     .silent_pad
     {

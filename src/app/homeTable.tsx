@@ -74,7 +74,6 @@ export default function HomeTable()
     function contestTable()
     {
         const tableProps = new TableProps(
-            getData, 
             ['ID', 'Название', 'Время начала']
         );
         tableProps.hidePageSelectors = true;
@@ -88,7 +87,7 @@ export default function HomeTable()
                 </h1>
             }
             <div className={statusCode == 200 ? 'visible' : 'invisible'}>
-                <Table props={tableProps}></Table>
+                <Table getData={getData} props={tableProps}></Table>
             </div>
             </>            
         );

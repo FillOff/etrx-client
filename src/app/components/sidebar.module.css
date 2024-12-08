@@ -63,20 +63,20 @@
     box-shadow: -20px 30px 50px -5px var(--main-light); 
     clip-path: inset(1px 1px -5px 1px);
 
-    font-size: 40px;
+    font-size: 30px;
     font-weight: bold;
 }
 
 .category
 {
-    width: 90%;
+    width: 100%;
     box-shadow: -10vw 30px 50px -5px var(--foreground-shade); 
     clip-path: inset(1px 1px -2px 1px);
     font-size: large;
-    padding: 5px 5%;
+    padding: 5px 20px;
     margin: 20px 0px 10px 0px;
 
-    font-size: 28px;
+    font-size: 24px;
     font-weight: bold;
     text-align: left;
 }
@@ -92,7 +92,7 @@
     border-left: none;
     border-right: none;
 
-    font-size: 24px;
+    font-size: 22px;
 }
 
 .button
@@ -100,10 +100,10 @@
     position: fixed;
     z-index: 200;
     width: 100px;
-    height: 45px;
+    height: 64px;
     background: transparent;
-    top: 10px;
-    left: 6px;
+    top: 0px;
+    left: 8px;
 }
 
 .integrated_button_cont
@@ -135,7 +135,7 @@
 
 .scrollable
 {
-    height: calc(92vh - min(6vw, 6vh));
+    height: calc(92vh - 50px - min(10vw, 10vh));
     overflow-x: scroll;
 
     /* Hide scrollbar for IE, Edge and Firefox */
@@ -149,7 +149,7 @@
 }
   
 
-@media (min-width: 800px) {
+@media (min-width: 900px) {
     .button 
     {
         visibility: hidden;

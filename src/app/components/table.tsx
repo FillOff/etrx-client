@@ -14,8 +14,7 @@ export class TableEntry
 
 export class TableProps
 {
-    constructor(
-        public getData: (params: RequestProps) => Promise<{entries: TableEntry[], props: RequestProps}>, 
+    constructor( 
         public columnNames: string[],
     ) {}
     hidePageSelectors: boolean | undefined;
@@ -30,24 +29,33 @@ export class RequestProps
     fieldKeys: string[] = [];
 }
 
-export function Table({props}: {props: TableProps})
+export function Table(
+    {
+        getData, 
+        props
+    }: 
+    {
+        getData: (params: RequestProps) => Promise<{entries: TableEntry[], props: RequestProps}>,
+        props: TableProps
+    }
+)
 {
     const [entries, setEntries] = useState<TableEntry[]>([]);
     const [rProps, setRProps] = useState(new RequestProps);
 
     function request()
     {
-        props.getData(rProps).then(result => {
-            setEntries(result.entries)
+        getData(rProps).then(result => {
+            if(result.entries.length != 0)
+                setEntries(result.entries);
+
             setRProps(result.props);
         });
     }
 
-    // TODO: figure out how to be responsive to new table properties
-    // while avoiding double-fetching because of refresh of getData function
     useEffect(() => {
         request();
-    }, [])
+    }, [getData])
 
     function pageCallback(newPage: number)
     {
@@ -60,7 +68,6 @@ export function Table({props}: {props: TableProps})
 
     function changeParams(fieldName: string | undefined)
     {
-        // fieldsList.at(index) - check if field is sortable!
         if(fieldName)
         {
             const newRProps = rProps;

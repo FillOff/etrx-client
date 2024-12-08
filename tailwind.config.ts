@@ -11,6 +11,8 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        "background-shade": "var(--background-shade)",
+        "foreground-shade": "var(--foreground-shade)",
         "main-black":  "var(--main-black)",
         "main-black-shade":  "var(--main-black-shade)",
         "main-red":  "var(--main-red)",
@@ -20,6 +22,9 @@ const config: Config = {
         "main-dark": "var(--main-dark)",
         "main-light": "var(--main-light)",
       },
+      listStyleType: {
+        circle: 'circle'
+      }
     },
   },
   plugins: [],

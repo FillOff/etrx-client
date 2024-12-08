@@ -3,14 +3,17 @@
 @tailwind utilities;
 
 :root {
+  /* Primary page colors */
   --background: #ffffff;
   --background-shade: #ededed;
   --foreground: #202020;
   --foreground-shade: #333333;
+  /* Fixed primary page colors */
   --main-white: #ffffff;
   --main-white-shade: #ededed;
   --main-black: #202020;
   --main-black-shade: #333333;
+  /* Main page colors */
   --main-red: #B54147;
   --main-yellow: #CD962D;
   --main-beige: #F7F2DC;
@@ -26,6 +29,7 @@
     --background-shade: #292929;
     --foreground: #ededed;
     --foreground-shade: #dbdbdb;
+    
     --main-white: #ededed;
     --main-white-shade: #dbdbdb;
     --main-black: #181818;

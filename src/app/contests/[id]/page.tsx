@@ -1,13 +1,23 @@
 'use client';
 import { Entry, RequestProps, Table, TableEntry, TableProps } from "@/app/components/table";
-import { getContestSubmissionsNew } from "@/app/services/contests";
+import { getContestSubmissions, GetContestSubmissionsArgs, getContestSubmissionsWithUpdate } from "@/app/services/contests";
 import { useParams } from "next/navigation";
 import TableStyles from '../../components/network-table.module.css';
+import { useMemo, useRef, useState } from "react";
+import GizmoSpinner from "@/app/components/gizmo-spinner";
 
 export default function Page()
 {
-    // Set contest ID as arguments for request
-    const args = Number(useParams().id);
+    // Contest ID for which we request submissions.
+    const contestId = Number(useParams().id);
+    // Stores response status code, used for hiding the table, showing spinner
+    // and possible error messages
+    const [statusCode, setStatusCode] = useState(0);
+    // Used to determine, if we need to POST an update to the server
+    const firstUpdate = useRef(true);
+    const tableProps = new TableProps(
+        ['Хендл', 'Имя', 'Фамилия', 'Город', 'Организация', 'Класс', 'Всего решено', 'Тип участия']
+    );
 
     async function getData(props: RequestProps)
     {  
@@ -16,16 +26,29 @@ export default function Page()
         props.maxPage = null;
         props.sortField = props.sortField ? props.sortField : 'solvedCount';
         props.sortOrder = props.sortOrder ? props.sortOrder : false;
+        const args = new GetContestSubmissionsArgs(
+            contestId,
+            props.sortField,
+            props.sortOrder
+        );
 
         // Get raw data
         let response: Response;
         try
         {
-            response = await getContestSubmissionsNew(args);
+            if(firstUpdate.current)
+            {
+                response = await getContestSubmissionsWithUpdate(args);
+                firstUpdate.current = false;
+            }
+            else
+            {
+                response = await getContestSubmissions(args);
+            }
         } 
         catch(error)
         {
-            // setStatusCode(-1);
+            setStatusCode(-1);
             return {entries: [], props: props};
         }
 
@@ -33,11 +56,19 @@ export default function Page()
         const rawEntries = Array.from(data['submissions']);
 
         // Set status code to track request state
-        // setStatusCode(response.status);
+        setStatusCode(response.status);
 
         // Set field keys that we got
         if(rawEntries[0])
             props.fieldKeys = Object.keys(rawEntries[0]);
+
+        // Append problem indexes into table names
+        const newIndexes: string[] = []
+        data['problemIndexes'].forEach((elem: string) => {
+            newIndexes.push(elem);
+        });
+        tableProps.columnNames = 
+            ['Хендл', 'Имя', 'Фамилия', 'Город', 'Организация', 'Класс', 'Всего решено', 'Тип участия'].concat(newIndexes);
         
         // Create viewable content from raw data
         const entries: TableEntry[] = [];
@@ -50,13 +81,11 @@ export default function Page()
             {
                 if(key == 'tries')
                 {
-                    entry.cells.push(
-                        <td key={i} className={TableStyles.cell}>
-                            {data['problemIndexes'].map((elem: string, index: number) => {
-                                return (<div key={index}>{elem}: {raw['tries'][index] != undefined? raw['tries'][index] : 0}</div>);
-                            })}
-                        </td>
-                    );
+                    data['problemIndexes'].forEach((elem: string, index: number) => {
+                        entry.cells.push(
+                            <td key={i + index} className={TableStyles.cell}>{raw['tries'][index]}</td>
+                        );     
+                    });
                     return;
                 }
                 entry.cells.push(<td key={i} className={TableStyles.cell}>{raw[key]}</td>);
@@ -72,25 +101,28 @@ export default function Page()
         return {entries: entries, props: props};
     }
 
-    function contestTable()
-    {
-        const tableProps = new TableProps(
-            getData, 
-            ['Хендл', 'Имя', 'Фамилия', 'Город', 'Организация', 'Класс', 'Всего решено', 'Тип участия', 'Попытки']
-        );
-
-        // Display table and hide it if status code is not 200
-        return(
+    const table = useMemo(() => {
+        return (
             <>
-            <Table props={tableProps}></Table>
-            </>            
-        );
-    }
+            <div>
+                <Table getData={getData} props={tableProps}></Table>
+            </div>          
+            </>
+        )
+    }, [])
 
     return(
         <>
-            <h1 className=' text-3xl w-full text-center font-bold mb-5'>Таблица контеста #{args}</h1>
-            {contestTable()}
+        <h1 className=' text-3xl w-full text-center font-bold mb-5'>Таблица контеста #{contestId}</h1>
+        {statusCode == 0 && <div className='mb-[150px]'><GizmoSpinner></GizmoSpinner></div>}
+        {statusCode != 200 && statusCode != 0 && 
+            <h1 className="w-full text-center text-2xl font-bold">
+                Could not load table data. Status code: {statusCode}
+            </h1>
+        }
+        <div className={statusCode == 200 ? 'visible' : 'invisible'}>
+            {table}
+        </div>
         </>
     );
 }
