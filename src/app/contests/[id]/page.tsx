@@ -16,7 +16,7 @@ export default function Page()
     // Used to determine, if we need to POST an update to the server
     const firstUpdate = useRef(true);
     const tableProps = new TableProps(
-        ['Хендл', 'Имя', 'Фамилия', 'Город', 'Организация', 'Класс', 'Всего решено', 'Тип участия']
+        ['Имя', 'Фамилия', 'Город', 'Организация', 'Класс', 'Всего решено']
     );
 
     async function getData(props: RequestProps)
@@ -60,7 +60,8 @@ export default function Page()
 
         // Set field keys that we got
         if(rawEntries[0])
-            props.fieldKeys = Object.keys(rawEntries[0]);
+            props.fieldKeys = Object.keys(rawEntries[0])
+                .filter(key => key != 'handle' && key != 'participantType');
 
         // Append problem indexes into table names
         const newIndexes: string[] = []
@@ -68,7 +69,7 @@ export default function Page()
             newIndexes.push(elem);
         });
         tableProps.columnNames = 
-            ['Хендл', 'Имя', 'Фамилия', 'Город', 'Организация', 'Класс', 'Всего решено', 'Тип участия'].concat(newIndexes);
+            ['Имя', 'Фамилия', 'Город', 'Организация', 'Класс', 'Всего решено'].concat(newIndexes);
         
         // Create viewable content from raw data
         const entries: TableEntry[] = [];
@@ -77,8 +78,12 @@ export default function Page()
             const entry: Entry = new Entry();
 
             entry.cells = Array(len);
-            Object.keys(raw).forEach((key, i) =>
+            let rawKeys = Object.keys(raw)
+                .filter(key => (key != 'handle') && (key != 'participantType'));
+                
+            rawKeys.forEach((key, i) =>
             {
+
                 if(key == 'tries')
                 {
                     data['problemIndexes'].forEach((elem: string, index: number) => {
