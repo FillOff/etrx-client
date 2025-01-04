@@ -18,11 +18,11 @@ export default function Header()
                 <button onClick={() => router.push('/')} className={DdStyles.header_elem}>
                     Главная
                 </button>
-                <Dropdown header="Контесты">
+                <Dropdown header="Контесты" onClick={() => router.push('/contests/view')}>
                     <button onClick={() => router.push('/contests/view')} className={DdStyles.dropdown_elem}>Просмотреть все</button>
                     <button className={DdStyles.dropdown_elem}><div className={MiscStyles.add_ico}></div> Добавить</button>
                 </Dropdown>
-                <Dropdown header="Ученики">
+                <Dropdown header="Ученики" onClick={() => router.push('/users/view')}>
                     <button onClick={() => router.push('/users/view')} className={DdStyles.dropdown_elem}>Просмотреть всех</button>
                     <button className={DdStyles.dropdown_elem}><div className={MiscStyles.add_ico}></div> Добавить</button>
                 </Dropdown>

@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from 'react'
+import { MouseEventHandler, useEffect, useRef, useState } from 'react'
 import Styles from './dropdown.module.css'
 
 type Props = {
     header: React.ReactNode
     children?: React.ReactNode
+    onClick?: MouseEventHandler
 }
 
 export default function Dropdown(props: Props)
@@ -32,7 +33,7 @@ export default function Dropdown(props: Props)
     }, [headRef, contentRef, matches]);
 
     return(
-        <div ref={headRef} className={`${Styles.dropdown} ${Styles.header_elem}`}>
+        <div ref={headRef} className={`${Styles.dropdown} ${Styles.header_elem}`} onClick={props.onClick}>
             {props.header}
             <div ref={contentRef} className={`${Styles.dropdown_menu} ${Styles.dropdown_menu_anim} ${Styles.dropdown_menu_1}`}>
                 {props.children}
