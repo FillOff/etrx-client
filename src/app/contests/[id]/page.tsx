@@ -5,9 +5,11 @@ import { useParams } from "next/navigation";
 import TableStyles from '../../components/network-table.module.css';
 import { useMemo, useRef, useState } from "react";
 import GizmoSpinner from "@/app/components/gizmo-spinner";
+import { RadioGroup, Option } from "../../components/contest-radiogroup";
 
 export default function Page()
 {
+    const [participantType, setParticipantType] = useState('CONTESTANT');
     // Contest ID for which we request submissions.
     const contestId = Number(useParams().id);
     // Stores response status code, used for hiding the table, showing spinner
@@ -29,7 +31,8 @@ export default function Page()
         const args = new GetContestSubmissionsArgs(
             contestId,
             props.sortField,
-            props.sortOrder
+            props.sortOrder,
+            participantType
         );
 
         // Get raw data
@@ -114,20 +117,35 @@ export default function Page()
             </div>          
             </>
         )
-    }, [])
+    }, [participantType])
+
+    const participantFilterOptions: Option[] = [
+        { label: 'ALL', value: 'ALL' },
+        { label: 'CONTESTANT', value: 'CONTESTANT' },
+        { label: 'PRACTICE', value: 'PRACTICE' },
+        { label: 'VIRTUAL', value: 'VIRTUAL' },
+        { label: 'OUT_OF_COMPETITION', value: 'OUT_OF_COMPETITION' },
+    ]
 
     return(
         <>
-        <h1 className=' text-3xl w-full text-center font-bold mb-5'>Таблица контеста #{contestId}</h1>
-        {statusCode == 0 && <div className='mb-[150px]'><GizmoSpinner></GizmoSpinner></div>}
-        {statusCode != 200 && statusCode != 0 && 
-            <h1 className="w-full text-center text-2xl font-bold">
-                Could not load table data. Status code: {statusCode}
-            </h1>
-        }
-        <div className={statusCode == 200 ? 'visible' : 'invisible'}>
-            {table}
-        </div>
+            <h1 className=' text-3xl w-full text-center font-bold mb-5'>Таблица контеста #{contestId}</h1>
+            <RadioGroup 
+                title="Фильтр участия"
+                options={participantFilterOptions}
+                name="participantTypeFilter"
+                value={participantType}
+                onChange={setParticipantType}
+            />
+            {statusCode == 0 && <div className='mb-[150px]'><GizmoSpinner></GizmoSpinner></div>}
+            {statusCode != 200 && statusCode != 0 && 
+                <h1 className="w-full text-center text-2xl font-bold">
+                    Could not load table data. Status code: {statusCode}
+                </h1>
+            }
+            <div className={statusCode == 200 ? 'visible' : 'invisible'}>
+                {table}
+            </div>
         </>
     );
 }

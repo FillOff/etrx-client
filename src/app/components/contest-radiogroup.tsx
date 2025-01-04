@@ -1,19 +1,19 @@
 export interface Option {
     label: string;
-    value: number;
+    value: any;
 }
 
 interface RadioGroupProps {
     title: string;
     options: Option[];
     name: string;
-    value: number;
+    value: any;
     onChange: any;
 }
 
 export function RadioGroup (props: RadioGroupProps) {
     return (
-        <div className='m-auto rounded-md h-fit px-4 py-2 lg:w-[200px] w-[140px] bg-background-shade' role="radiogroup">
+        <div className='m-auto rounded-md h-fit px-4 py-2 w-fit bg-background-shade' role="radiogroup">
             <div>{props.title}</div>
             {props.options.map((option) => (
                 <label key={option.value} style={{ display: 'block', margin: '5px 0' }}>

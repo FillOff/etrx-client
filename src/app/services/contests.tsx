@@ -56,10 +56,12 @@ export class GetContestSubmissionsArgs extends Sortable
     constructor(
         public contestId: number,
         public sortField: string | null,
-        public sortOrder: boolean | null
+        public sortOrder: boolean | null,
+        public filterByParticipantType: string | null
     )
     {
         super(sortField, sortOrder);
+        this.filterByParticipantType = filterByParticipantType;
     }
 }
 
@@ -68,6 +70,7 @@ export async function getContestSubmissions(args: GetContestSubmissionsArgs)
     return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Submissions/GetSubmissionsByContestIdWithSort?` +
         `contestId=${args.contestId}` +
         `${args.sortField != null? `&sortField=${args.sortField}` : ''}` +
+        `${args.filterByParticipantType != null? `&filterByParticipantType=${args.filterByParticipantType}` : ''}` +
         `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : ''}`,
         {
             redirect: 'error',     
@@ -86,6 +89,7 @@ export async function getContestSubmissionsWithUpdate(args: GetContestSubmission
     return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Submissions/GetSubmissionsByContestIdWithSort?` +
         `contestId=${args.contestId}` +
         `${args.sortField != null? `&sortField=${args.sortField}` : ''}` +
+        `${args.filterByParticipantType != null? `&filterByParticipantType=${args.filterByParticipantType}` : ''}` +
         `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : ''}`,
         {
             redirect: 'error',     
