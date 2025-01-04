@@ -3,21 +3,13 @@ import { useEffect, useId, useMemo, useState } from "react";
 import { GetContestsArgs, getContests } from "../../services/contests";
 import TableStyles from '../../components/network-table.module.css';
 import { Entry, TableEntry, Table, TableProps, RequestProps } from "@/app/components/table";
+import { RadioGroup, Option } from "../../components/contest-radiogroup";
 import GizmoSpinner from "@/app/components/gizmo-spinner";
 
 export default function Page()
 {
     const [statusCode, setStatusCode] = useState(0);
     const [gym, setGym] = useState<number>(2);
-    const gymCheckbox = useId();
-
-    useEffect(() => {
-        const checkbox = document.getElementById(gymCheckbox) as HTMLInputElement;
-        if(gym == 2)
-            checkbox.indeterminate = true;
-        else
-            checkbox.indeterminate = false;
-    }, [gym])
 
     async function getData(props: RequestProps)
     {  
@@ -96,40 +88,31 @@ export default function Page()
         )
     }, [gym])
 
+    const radioGroupOptions: Option[] = [
+        { label: 'Все', value: 2 },
+        { label: 'Только тренировки', value: 1 },
+        { label: 'Только контесты', value: 0 },
+    ];
+
     return(
         <>
-        <h1 className='text-3xl w-full text-center font-bold mb-5'>Таблица контестов</h1>
-        <div className='m-auto rounded-md h-fit px-4 py-2 lg:w-[200px] w-[140px] bg-background-shade'>
-            <div>Фильтры</div>
-            <form>
-                <div className='flex items-center'>
-                    <input 
-                    className='w-4 h-4 mb-1'
-                    id={gymCheckbox}
-                    type="checkbox"
-                    name="gymCheckbox"
-                    checked={gym == 1 ? true : false}
-                    onChange={(event) => {
-                        const checkbox = event.target;
-                        if(checkbox.checked && gym == 2)
-                            setGym(0);
-                        else
-                            setGym(gym + 1);
-                    }}
-                    />
-                    <div className='ml-2'>Тренировки</div>
-                </div>
-            </form>
-        </div>
-        {statusCode == 0 && <div className='mb-[150px]'><GizmoSpinner></GizmoSpinner></div>}
-        {statusCode != 200 && statusCode != 0 && 
-            <h1 className="w-full text-center text-2xl font-bold">
-                Could not load table data. Status code: {statusCode}
-            </h1>
-        }
-        <div className={statusCode == 200 ? 'visible' : 'invisible'}>
-            {table}
-        </div>
+            <h1 className='text-3xl w-full text-center font-bold mb-5'>Таблица контестов</h1>
+            <RadioGroup 
+                title="Фильтры"
+                options={radioGroupOptions}
+                name="gymFilter"
+                value={gym}
+                onChange={setGym}    
+            />
+            {statusCode == 0 && <div className='mb-[150px]'><GizmoSpinner></GizmoSpinner></div>}
+            {statusCode != 200 && statusCode != 0 && 
+                <h1 className="w-full text-center text-2xl font-bold">
+                    Could not load table data. Status code: {statusCode}
+                </h1>
+            }
+            <div className={statusCode == 200 ? 'visible' : 'invisible'}>
+                {table}
+            </div>
         </>
     );
 }
