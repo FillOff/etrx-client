@@ -81,7 +81,7 @@ export default function Page()
             const entry: Entry = new Entry();
 
             entry.cells = Array(len);
-            let rawKeys = Object.keys(raw)
+            const rawKeys = Object.keys(raw)
                 .filter(key => (key != 'handle') && (key != 'participantType'));
                 
             rawKeys.forEach((key, i) =>
