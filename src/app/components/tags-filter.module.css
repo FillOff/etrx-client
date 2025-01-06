@@ -31,7 +31,7 @@
     height: fit-content;
     padding: 8px 10px;
     background-color: var(--background-shade);
-    width: 79vw;
+    width: 100%;
     border-radius: 6px;
 }
 
@@ -39,7 +39,7 @@
 {
     border-radius: 6px;
     height: fit-content;
-    width: 79vw;
+    width: 100%;
     background-color: var(--background);
 }
 
