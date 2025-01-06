@@ -12,7 +12,8 @@
     border-radius: 6px;
     height: fit-content;
     width: 80vw;
-    background-color: var(--background-shade);
+    background: transparent;
+    border: 1.5px solid var(--background-shade);
     display: flex;
     padding: 8px 10px;
     display: flex;
@@ -29,7 +30,7 @@
     min-height: 50px;
     height: fit-content;
     padding: 8px 10px;
-    background-color: var(--background-shade1);
+    background-color: var(--background-shade);
     width: 79vw;
     border-radius: 6px;
 }
@@ -39,7 +40,7 @@
     border-radius: 6px;
     height: fit-content;
     width: 79vw;
-    background-color: var(--background-shade);
+    background-color: var(--background);
 }
 
 .tag

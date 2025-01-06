@@ -2,7 +2,7 @@
 import { Entry, RequestProps, Table, TableEntry, TableProps } from "@/app/components/table";
 import { getProblems, GetProblemsArgs, getTags } from "@/app/services/problems";
 import { useState, useMemo } from "react";
-import TableStyles from '../../components/network-table.module.css';
+import TableStyles from '@/app/components/network-table.module.css';
 import GizmoSpinner from "@/app/components/gizmo-spinner";
 import { GetDivTagsList } from "@/app/components/problem-tags";
 import { TagsFilter } from "@/app/components/tags-filter";
@@ -100,7 +100,7 @@ export default function Page()
     }
 
     const tableProps = new TableProps(
-        ['ID', 'ContestId', 'Index', 'Name', 'Points', 'Rating', 'Tags']
+        ['ID', 'Контест', 'Индекс', 'Имя', 'Очки', 'Рейтинг', 'Теги']
     );
 
     const table = useMemo(() => {
