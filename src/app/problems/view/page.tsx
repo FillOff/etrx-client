@@ -1,14 +1,16 @@
 "use client";
 import { Entry, RequestProps, Table, TableEntry, TableProps } from "@/app/components/table";
-import { getProblems, GetProblemsArgs } from "@/app/services/problems";
+import { getProblems, GetProblemsArgs, getTags } from "@/app/services/problems";
 import { useState, useMemo } from "react";
 import TableStyles from '../../components/network-table.module.css';
 import GizmoSpinner from "@/app/components/gizmo-spinner";
-
+import { GetDivTagsList } from "@/app/components/problem-tags";
+import { TagsFilter } from "@/app/components/tags-filter";
 
 export default function Page()
 {
     const [statusCode, setStatusCode] = useState(0);
+    const [tags, setTags] = useState<string[]>([]);
 
     async function getData(props: RequestProps)
     {
@@ -20,6 +22,7 @@ export default function Page()
             100,
             props.sortField,
             props.sortOrder,
+            tags
         )
 
         let response : Response;
@@ -56,7 +59,15 @@ export default function Page()
             entry.cells = Array(len);
             Object.keys(raw).forEach((key, i) =>
             {
-                entry.cells.push(<td key={i} className={TableStyles.cell}>{raw[key]}</td>);
+                if (key == 'tags')
+                {
+                    const tags = GetDivTagsList(raw[key]);
+                    entry.cells.push(<td key={i} className={TableStyles.cell}>{tags}</td>);
+                }
+                else
+                {
+                    entry.cells.push(<td key={i} className={TableStyles.cell}>{raw[key]}</td>);
+                }
             });
 
             const tEntry = new TableEntry;
@@ -67,7 +78,25 @@ export default function Page()
             entries.push(tEntry);
         });
 
-        return {entries: entries, props: props};
+        return { entries: entries, props: props };
+    }
+
+    async function getTagsList()
+    {
+        let response : Response;
+        try
+        {
+            response = await getTags();
+        }
+        catch (error)
+        {
+            setStatusCode(-1);
+            return { tags: [] };
+        }
+
+        const data: string[] = await response.json();
+        
+        return { tags: data }
     }
 
     const tableProps = new TableProps(
@@ -75,17 +104,26 @@ export default function Page()
     );
 
     const table = useMemo(() => {
-            return (
-                <>
-                <div>
-                    <Table getData={getData} props={tableProps}></Table>
-                </div>          
-                </>
-            )
-        }, [])
+        return (
+            <>
+            <div>
+                <Table getData={getData} props={tableProps}></Table>
+            </div>          
+            </>
+        )
+    }, [tags])
+
+    const tagsFilter = useMemo(() => {
+        return (
+            <>
+                <TagsFilter getTags={getTagsList} selTags={tags} onChange={setTags}/>
+            </>
+        )
+    }, [tags])
     
     return(
         <>
+            {tagsFilter}
             <h1 className='text-3xl w-full text-center font-bold mb-5'>Таблица задач</h1>
             {statusCode == 0 && <div className='mb-[150px]'><GizmoSpinner></GizmoSpinner></div>}
             {statusCode != 200 && statusCode != 0 && 

@@ -6,6 +6,7 @@
   /* Primary page colors */
   --background: #ffffff;
   --background-shade: #ededed;
+  --background-shade1: #cccccc;
   --foreground: #202020;
   --foreground-shade: #333333;
   /* Fixed primary page colors */
@@ -27,6 +28,7 @@
   :root {
     --background: #181818;
     --background-shade: #292929;
+    --background-shade1: #454545;
     --foreground: #ededed;
     --foreground-shade: #dbdbdb;
     

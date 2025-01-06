@@ -7,7 +7,8 @@ export class GetProblemsArgs
         public page: number | null = null,
         public pageSize: number | null = null,
         public sortField: string | null = null,
-        public sortOrder: boolean | null = true
+        public sortOrder: boolean | null = true,
+        public tags: string[] | null = []
     ) {}
 }
 
@@ -18,9 +19,18 @@ export async function getProblems(
     return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Problems/GetProblemsByPageWithSortAndFilterTags?` +
         `${args.page != null? `&page=${args.page}` : ''}` +
         `${args.pageSize != null? `&pageSize=${args.pageSize}` : ''}` +
+        `${args.tags != null? `&tags=${args.tags.join(';')}` : ''}` +
         `${args.sortField != null? `&sortField=${args.sortField}` : ''}` + 
         `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : '&sortOrder=true'}`,
         {
             redirect: 'error',                
         });
+}
+
+export async function getTags()
+{
+    return fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Problems/GetTagsList`,
+    {
+        redirect: 'error',
+    });
 }

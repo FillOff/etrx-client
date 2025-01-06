@@ -6,6 +6,35 @@ export default function Page()
         <>
         <h1 className="m-auto text-center text-2xl md:text-3xl font-bold">Обновления</h1>
         <div className="ml-8 text-lg">
+            <label>v0.8.0 - 05.01.2025</label>
+            <ul className="border-b-[1px] border-dashed w-[80%] list-disc">
+                <li>Добавлено
+                    <div className="ml-6">
+                        <ul className="list-circle">
+                            <li>Таблица задач</li>
+                            <li>Фильтрация задач по тегам</li>
+                            <li>Фильтрация по типу участия в попытках пользователей</li>
+                        </ul>
+                    </div>
+                </li>
+                <li>Переделано/Изменено
+                    <div className="ml-6">
+                        <ul className="list-circle">
+                            <li>Отображаемые данные в попытках пользователей</li>
+                            <li>Фильтр соревнований/тренировок</li>
+                        </ul>
+                    </div>
+                </li>
+                <li>Исправлено
+                    <div className="ml-6">
+                        <ul className="list-circle">
+                            <li>Данные при выводе всех попыток пользователя были некорректными</li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div className="ml-8 text-lg">
             <label>v0.7.0 - 08.12.2024</label>
             <ul className="border-b-[1px] border-dashed w-[80%] list-disc">
                 <li>Добавлено
