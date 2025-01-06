@@ -5,8 +5,8 @@ export function GetDivTagsList(tagsList: string[])
 {
     return (
         <div>
-            {tagsList.map((tag) => (
-                <div key={tag} className={Styles.tag}>{tag}</div>
+            {tagsList.map((tag, i) => (
+                <div key={i} className={Styles.tag}>{tag}</div>
             ))}
         </div>
     );

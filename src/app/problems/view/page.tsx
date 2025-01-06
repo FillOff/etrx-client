@@ -16,7 +16,7 @@ export default function Page()
     {
         props.page = props.page ? props.page : 1;
         props.sortField = props.sortField ? props.sortField : 'id';
-        props.sortOrder = !props.sortOrder ? props.sortOrder : true;
+        props.sortOrder = props.sortOrder != null ? props.sortOrder : true;
         const args = new GetProblemsArgs(
             props.page,
             100,

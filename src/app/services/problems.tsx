@@ -21,7 +21,7 @@ export async function getProblems(
         `${args.pageSize != null? `&pageSize=${args.pageSize}` : ''}` +
         `${args.tags != null? `&tags=${args.tags.join(';')}` : ''}` +
         `${args.sortField != null? `&sortField=${args.sortField}` : ''}` + 
-        `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : '&sortOrder=true'}`,
+        `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : '&sortOrder=false'}`,
         {
             redirect: 'error',                
         });

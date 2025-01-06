@@ -27,7 +27,7 @@ export default function Page()
         props.page = null;
         props.maxPage = null;
         props.sortField = props.sortField ? props.sortField : 'solvedCount';
-        props.sortOrder = props.sortOrder ? props.sortOrder : false;
+        props.sortOrder = props.sortOrder != null ? props.sortOrder : false;
         const args = new GetContestSubmissionsArgs(
             contestId,
             props.sortField,

@@ -16,7 +16,7 @@ export default function Page()
         // Prepare request parameters and other properties
         props.page = props.page ? props.page : 1;
         props.sortField = props.sortField ? props.sortField : 'startTime';
-        props.sortOrder = props.sortOrder ? props.sortOrder : false;
+        props.sortOrder = props.sortOrder != null ? props.sortOrder : false;
         const args = new GetContestsArgs(
             props.page,
             100,
