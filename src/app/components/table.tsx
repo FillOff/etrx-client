@@ -46,8 +46,7 @@ export function Table(
     function request()
     {
         getData(rProps).then(result => {
-            if(result.entries.length != 0)
-                setEntries(result.entries);
+            setEntries(result.entries);
 
             setRProps(result.props);
         });
