@@ -57,6 +57,10 @@ export default function HomeTable()
             entry.cells = Array(len);
             Object.keys(raw).forEach((key, i) =>
             {
+                if (key == 'startTime')
+                {
+                    raw[key] = unixToFormattedDate(raw[key]);
+                }
                 entry.cells.push(<td key={i} className={TableStyles.cell}>{raw[key]}</td>);
             });
 
@@ -69,6 +73,21 @@ export default function HomeTable()
         });
 
         return {entries: entries, props: props};
+    }
+
+    function unixToFormattedDate(unixTime: number): string {
+        const months = [
+            "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
+            "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
+        ];
+    
+        const date = new Date(unixTime * 1000);
+    
+        const month = months[date.getMonth()];
+        const day = date.getDate();
+        const year = date.getFullYear();
+    
+        return `${month} ${day} ${year}`;
     }
 
     function contestTable()
