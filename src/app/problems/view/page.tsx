@@ -12,6 +12,7 @@ export default function Page()
     const [statusCode, setStatusCode] = useState(0);
     const [tags, setTags] = useState<string[]>([]);
     const [indexes, setIndexes] = useState<string[]>([]);
+    const [problemName, setProblemName] = useState<string>('');
 
     async function getData(props: RequestProps)
     {
@@ -24,7 +25,8 @@ export default function Page()
             props.sortField,
             props.sortOrder,
             tags,
-            indexes
+            indexes,
+            problemName
         )
 
         let response : Response;
@@ -131,17 +133,18 @@ export default function Page()
             </div>          
             </>
         )
-    }, [tags, indexes])
+    }, [tags, indexes, problemName])
 
     const tagsFilter = useMemo(() => {
         return (
             <>
                 <TagsFilter 
                     getTags={getTagsList} selTags={tags} onChangeTags={setTags}
-                    getIndexes={getIndexesList} selIndexes={indexes} onChangeIndexes={setIndexes}/>
+                    getIndexes={getIndexesList} selIndexes={indexes} onChangeIndexes={setIndexes}
+                    problemName={problemName} onChangeProblemName={setProblemName}/>
             </>
         )
-    }, [tags, indexes])
+    }, [tags, indexes, problemName])
     
     return(
         <>

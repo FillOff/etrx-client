@@ -9,7 +9,8 @@ export class GetProblemsArgs
         public sortField: string | null = null,
         public sortOrder: boolean | null = true,
         public tags: string[] | null = [],
-        public indexes: string[] | null = []
+        public indexes: string[] | null = [],
+        public problemName: string
     ) {}
 }
 
@@ -22,6 +23,7 @@ export async function getProblems(
         `${args.pageSize != null? `&pageSize=${args.pageSize}` : ''}` +
         `${args.tags != null? `&tags=${args.tags.join(';')}` : ''}` +
         `${args.indexes != null? `&indexes=${args.indexes.join(';')}` : ''}` +
+        `${args.problemName != null? `&problemName=${args.problemName}` : ''}` +
         `${args.sortField != null? `&sortField=${args.sortField}` : ''}` + 
         `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : '&sortOrder=false'}`,
         {

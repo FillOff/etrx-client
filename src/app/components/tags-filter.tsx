@@ -10,7 +10,9 @@ export function TagsFilter
         onChangeTags,
         getIndexes,
         selIndexes,
-        onChangeIndexes
+        onChangeIndexes,
+        problemName,
+        onChangeProblemName
     }:
     {
         getTags: () => Promise<{tags: string[]}>,
@@ -18,7 +20,9 @@ export function TagsFilter
         onChangeTags: any,
         getIndexes: () => Promise<{indexes: string[]}>,
         selIndexes: string[],
-        onChangeIndexes: any
+        onChangeIndexes: any,
+        problemName: string,
+        onChangeProblemName: any
     }
 )
 {
@@ -43,7 +47,7 @@ export function TagsFilter
             firstUpdate.current = false;
         }
     }
-    
+
     useEffect(() => {
         request();
     }, [getTags, getIndexes])
@@ -85,9 +89,11 @@ export function TagsFilter
     }, [indexes]);
 
     const divSelectedTags = useMemo(() => {
-        return (
-            <>
-                <div>
+        if (selTags.length != 0)
+        {
+            return (
+                <fieldset className={Styles.fieldset}>
+                    <legend className={Styles.legend}>Теги</legend>
                     {selTags.map((tag) => (
                         <div 
                             key={`${tag}1`}
@@ -97,17 +103,20 @@ export function TagsFilter
                                 setTags([...tags, tag]);
                             }}>
                             {tag}
+                            <div className={Styles.close_btn}></div>
                         </div>
                     ))}
-                </div>
-            </>
-        )
+                </fieldset>
+            )
+        }
     }, [selTags]);
 
     const divSelectedIndexes = useMemo(() => {
-        return (
-            <>
-                <div>
+        if (selIndexes.length != 0)
+        {
+            return (
+                <fieldset className={Styles.fieldset}>
+                    <legend className={Styles.legend}>Индексы</legend>
                     {selIndexes.map((index) => (
                         <div 
                             key={`${index}1`}
@@ -117,12 +126,27 @@ export function TagsFilter
                                 setIndexes([...indexes, index]);
                             }}>
                             {index}
+                            <div className={Styles.close_btn}></div>
                         </div>
                     ))}
-                </div>
-            </>
-        )
+                </fieldset>
+            )
+        }
     }, [selIndexes]);
+
+    const searchForm =
+        <div>
+            <label htmlFor="problemName">Название задачи: </label>
+            <input 
+                type="text" 
+                name="problemName" 
+                id="problemName" 
+                value={problemName} 
+                onChange={(event) => {
+                    onChangeProblemName(event.target.value);
+                }} 
+                className="border-[1.5px] border-solid border-black rounded-[6px] pl-[5px] pr-[5px] pt-[2px] pb-[2px]"/>
+        </div>
 
     return (
         <div className={Styles.container}>
@@ -139,6 +163,10 @@ export function TagsFilter
                 <Widget 
                     title="Индексы"
                     data={divIndexes}
+                />
+                <Widget 
+                    title="Поиск"
+                    data={searchForm}
                 />
             </div>
         </div>

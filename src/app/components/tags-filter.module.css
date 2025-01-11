@@ -56,10 +56,54 @@
     margin: 4px;
     float: left;
     border-radius: 10px;   
+    display: flex;
+    align-items: center;
 }
 
 .tag:hover
 {
     cursor: pointer;
     user-select: none;
+}
+
+.fieldset {
+    border: 1.5px solid;
+    padding: 0 5px 10px 5px;
+    border-radius: 6px;
+}
+
+.legend {
+    margin-left: 10px;
+    padding: 0 5px;
+}
+
+.close_btn {
+    position: relative;
+    float: right;
+    margin-left: 4px;
+
+    width: 16px;
+    height: 16px;
+
+    background-color: #ccc;
+    border-radius: 8px;
+}
+
+.close_btn::before,
+.close_btn::after {
+    position: absolute;
+    top: calc(50% - 1px / 2); /*px value - height*/
+    left: calc((100% - 12px) / 2); /*px value - width*/
+    content: '';
+    width: 12px;
+    height: 1px;
+    background-color: black;
+}
+
+.close_btn::before {
+    transform: rotate(45deg);
+}
+
+.close_btn::after {
+    transform: rotate(-45deg);
 }
