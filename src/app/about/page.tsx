@@ -14,6 +14,41 @@ export default function Page()
                     </tr>
                 </thead>
                 <tbody>
+                <tr>
+                        <td className={Styles.cell}>
+                            <div className="text-center">11.1.2025</div>
+                        </td>
+                        <td className={Styles.cell}>
+                            <div className="ml-8">
+                                <ul className="w-[80%] list-disc">
+                                    <li>Добавлено
+                                        <div className="ml-6">
+                                            <ul className="list-circle">
+                                                <li>Фильтрация по индексам (если выбрать несколько индексов, будут выведены все задачи с подобными индексами)</li>
+                                                <li>Поиск по названию задачи</li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li>Переделано/Изменено
+                                        <div className="ml-6">
+                                            <ul className="list-circle">
+                                            <li>Версионизация приложения. Теперь версия и билд отображены справа сверху, также теперь версии это даты обновления</li>
+                                            <li>Изменена данная таблица обновлений</li>       
+                                            <li>Теперь дата отображается в формате "Month dd yyyy"</li>                                              
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li>Исправлено
+                                        <div className="ml-6">
+                                            <ul className="list-circle">
+                                                <li>Названия задач были на английском. Сейчас же большинство задач имеют название на русском языке</li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
                     <tr>
                         <td className={Styles.cell}>
                             <div className="text-center">5.1.2025</div>
