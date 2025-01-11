@@ -1,6 +1,6 @@
 "use client";
 import { Entry, RequestProps, Table, TableEntry, TableProps } from "@/app/components/table";
-import { getProblems, GetProblemsArgs, getTags } from "@/app/services/problems";
+import { getIndexes, getProblems, GetProblemsArgs, getTags } from "@/app/services/problems";
 import { useState, useMemo } from "react";
 import TableStyles from '@/app/components/network-table.module.css';
 import GizmoSpinner from "@/app/components/gizmo-spinner";
@@ -11,6 +11,7 @@ export default function Page()
 {
     const [statusCode, setStatusCode] = useState(0);
     const [tags, setTags] = useState<string[]>([]);
+    const [indexes, setIndexes] = useState<string[]>([]);
 
     async function getData(props: RequestProps)
     {
@@ -22,7 +23,8 @@ export default function Page()
             100,
             props.sortField,
             props.sortOrder,
-            tags
+            tags,
+            indexes
         )
 
         let response : Response;
@@ -99,6 +101,24 @@ export default function Page()
         return { tags: data }
     }
 
+    async function getIndexesList()
+    {
+        let response : Response;
+        try
+        {
+            response = await getIndexes();
+        }
+        catch (error)
+        {
+            setStatusCode(-1);
+            return { indexes: [] };
+        }
+
+        const data: string[] = await response.json();
+        
+        return { indexes: data }
+    }
+
     const tableProps = new TableProps(
         ['ID', 'Контест', 'Индекс', 'Имя', 'Очки', 'Рейтинг', 'Теги']
     );
@@ -111,15 +131,17 @@ export default function Page()
             </div>          
             </>
         )
-    }, [tags])
+    }, [tags, indexes])
 
     const tagsFilter = useMemo(() => {
         return (
             <>
-                <TagsFilter getTags={getTagsList} selTags={tags} onChange={setTags}/>
+                <TagsFilter 
+                    getTags={getTagsList} selTags={tags} onChangeTags={setTags}
+                    getIndexes={getIndexesList} selIndexes={indexes} onChangeIndexes={setIndexes}/>
             </>
         )
-    }, [tags])
+    }, [tags, indexes])
     
     return(
         <>

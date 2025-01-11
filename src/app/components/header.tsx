@@ -31,7 +31,7 @@ export default function Header()
                     <button onClick={() => router.push('/about')} className={DdStyles.header_elem}>О сайте</button>
 
                 </div>
-                <div className="flex flex-col items-left w-fit text-xs ml-auto mr-2">
+                <div className="flex flex-col items-left w-fit text-xs ml-auto mr-2 text-white">
                     <div>Version: {process.env.NEXT_PUBLIC_VERSION}</div>
                     <div>Build: {process.env.NODE_ENV}</div>
                 </div>

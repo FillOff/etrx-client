@@ -9,6 +9,8 @@
   --background-shade1: #cccccc;
   --foreground: #202020;
   --foreground-shade: #333333;
+  --widget: #cccccc;
+  --widget-hidden: #eeeeee;
   /* Fixed primary page colors */
   --main-white: #ffffff;
   --main-white-shade: #ededed;
@@ -31,6 +33,8 @@
     --background-shade1: #454545;
     --foreground: #ededed;
     --foreground-shade: #dbdbdb;
+    --widget: #303030;
+    --widget-hidden: #212121;
     
     --main-white: #ededed;
     --main-white-shade: #dbdbdb;
