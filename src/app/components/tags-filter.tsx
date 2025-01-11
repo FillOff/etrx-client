@@ -145,7 +145,7 @@ export function TagsFilter
                 onChange={(event) => {
                     onChangeProblemName(event.target.value);
                 }} 
-                className="border-[1.5px] border-solid border-black rounded-[6px] pl-[5px] pr-[5px] pt-[2px] pb-[2px]"/>
+                className="border-[1.5px] border-solid border-black rounded-[6px] pl-[5px] pr-[5px] pt-[2px] pb-[2px] bg-[--background]"/>
         </div>
 
     return (
