@@ -16,6 +16,32 @@ export default function Page()
                 <tbody>
                 <tr>
                         <td className={Styles.cell}>
+                            <div className="text-center">2.3.2025</div>
+                        </td>
+                        <td className={Styles.cell}>
+                            <div className="ml-8">
+                                <ul className="w-[80%] list-disc">
+                                    <li>Переделано/Изменено
+                                        <div className="ml-6">
+                                            <ul className="list-circle">
+                                                <li>Все фильтры теперь располагается горизонтально</li>
+                                                <li>Теперь на странице контеста отображается его название и номер</li>       
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li>Исправлено
+                                        <div className="ml-6">
+                                            <ul className="list-circle">
+                                                <li>Вроде как исправлена проблема с пользователями, которые не отображались из-за измененного хендла</li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className={Styles.cell}>
                             <div className="text-center">11.1.2025</div>
                         </td>
                         <td className={Styles.cell}>

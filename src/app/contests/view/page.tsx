@@ -64,7 +64,11 @@ export default function Page()
                 {
                     raw[key] = unixToFormattedDate(raw[key]);
                 }
-                entry.cells.push(<td key={i} className={TableStyles.cell}>{raw[key]}</td>);
+
+                if (key != "relativeTimeSeconds" && key != "durationSeconds")
+                {
+                    entry.cells.push(<td key={i} className={TableStyles.cell}>{raw[key]}</td>);
+                }
             });
 
             const tEntry = new TableEntry;

@@ -1,17 +1,20 @@
 'use client';
 import { Entry, RequestProps, Table, TableEntry, TableProps } from "@/app/components/table";
-import { getContestSubmissions, GetContestSubmissionsArgs, getContestSubmissionsWithUpdate } from "@/app/services/contests";
+import { getContest, getContestSubmissions, GetContestSubmissionsArgs, getContestSubmissionsWithUpdate, updateContestSubmissions } from "@/app/services/contests";
 import { useParams } from "next/navigation";
 import TableStyles from '../../components/network-table.module.css';
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import GizmoSpinner from "@/app/components/gizmo-spinner";
 import { RadioGroup, Option } from "../../components/contest-radiogroup";
+import Contest from "@/app/models/ContestData";
 
 export default function Page()
 {
     const [participantType, setParticipantType] = useState('CONTESTANT');
     // Contest ID for which we request submissions.
     const contestId = Number(useParams().id);
+    const [contest, setContest] = useState(new Contest(0, "", 0, 0, 0));
+    const timeNow = Math.floor(Date.now() / 1000);
     // Stores response status code, used for hiding the table, showing spinner
     // and possible error messages
     const [statusCode, setStatusCode] = useState(0);
@@ -23,6 +26,34 @@ export default function Page()
 
     async function getData(props: RequestProps)
     {  
+        let response: Response;
+        try 
+        {
+            response = await getContest(contestId);
+        }
+        catch(error)
+        {
+            setStatusCode(-1);
+            return {entries: [], props: props};
+        }
+
+        let data = await response.json();
+        setContest(data);
+
+        // if (participantType !== "CONTESTANT" || 
+        //    (timeNow <= contest.startTime + contest.durationSeconds && contest.relativeTimeSeconds >= 0))
+        // {
+        //     try 
+        //     {
+        //         await updateContestSubmissions(contestId);
+        //     }
+        //     catch (error) 
+        //     {
+        //         setStatusCode(-1);
+        //         return { entries: [], props: props };
+        //     }
+        // }
+
         // Prepare request parameters and other properties
         props.page = null;
         props.maxPage = null;
@@ -36,11 +67,11 @@ export default function Page()
         );
 
         // Get raw data
-        let response: Response;
         try
         {
             if(firstUpdate.current)
             {
+                await updateContestSubmissions(contestId);
                 response = await getContestSubmissionsWithUpdate(args);
                 firstUpdate.current = false;
             }
@@ -55,7 +86,7 @@ export default function Page()
             return {entries: [], props: props};
         }
 
-        const data = await response.json();
+        data = await response.json();
         const rawEntries = Array.from(data['submissions']);
 
         // Set status code to track request state
@@ -109,12 +140,16 @@ export default function Page()
         return {entries: entries, props: props};
     }
 
+    useEffect(() => {
+        setStatusCode(0);
+    }, [participantType]);
+
     const table = useMemo(() => {
         return (
             <>
             <div>
                 <Table getData={getData} props={tableProps}></Table>
-            </div>          
+            </div>
             </>
         )
     }, [participantType])
@@ -129,7 +164,7 @@ export default function Page()
 
     return(
         <>
-            <h1 className=' text-3xl w-full text-center font-bold mb-5'>Таблица контеста #{contestId}</h1>
+            <h1 className='text-3xl w-full text-center font-bold mb-5'>{contest.name} - #{contest.contestId}</h1>
             <RadioGroup 
                 title="Фильтр участия"
                 options={participantFilterOptions}

@@ -14,20 +14,22 @@ interface RadioGroupProps {
 export function RadioGroup (props: RadioGroupProps) {
     return (
         <div className='m-auto rounded-md h-fit px-4 py-2 w-fit bg-background-shade' role="radiogroup">
-            <div>{props.title}</div>
-            {props.options.map((option) => (
-                <label key={option.value} style={{ display: 'block', margin: '5px 0' }}>
-                    <input
-                        type="radio"
-                        name={props.name}
-                        value={option.value}
-                        checked={props.value == option.value}
-                        onChange={(event) => props.onChange(event.target.value)}
-                        style={{ margin: '0 5px 0 0'}}
-                    />
-                    {option.label}
-                </label>
-            ))}
+            <div className="text-center">{props.title}</div>
+            <div className="flex">
+                {props.options.map((option) => (
+                    <label key={option.value} className='block mx-[10px]' >
+                        <input
+                            type="radio"
+                            name={props.name}
+                            value={option.value}
+                            checked={props.value == option.value}
+                            onChange={(event) => props.onChange(event.target.value)}
+                            style={{ margin: '0 5px 0 0'}}
+                        />
+                        {option.label}
+                    </label>
+                ))}
+            </div>
         </div>
     );
 };

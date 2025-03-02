@@ -5,22 +5,6 @@ import Sortable from "../models/Sortable";
 
 // TODO: POST to update backend contests table
 
-export async function getContestsPageCount (
-    recordsPerPage: number
-)
-{
-    let num: number | null = null;
-    try {
-        await fetch(`http://${process.env.NEXT_PUBLIC_API_URL}/api/Contests/GetCountOfPagesContests?pageCount=${recordsPerPage}`,
-            {
-                redirect: 'error',                
-            }).then(res => res.text()).then(res => num = Number(res));
-        return num;
-    } catch(_) {
-        return num;
-    }
-}
-
 export class GetContestsArgs extends Pageable
 {
     constructor(
@@ -42,7 +26,7 @@ export async function getContests(
     args: GetContestsArgs
 ) 
 {
-    return fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Contests/GetContestsByPageWithSort?` +
+    return fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Contests?` +
         `page=${args.page}` + 
         `${args.pageSize != null? `&pageSize=${args.pageSize}` : '&pageSize=20'}` + 
         `${args.isGym != null? `&gym=${args.isGym}` : ''}` + 
@@ -67,8 +51,7 @@ export class GetContestSubmissionsArgs extends Sortable
 
 export async function getContestSubmissions(args: GetContestSubmissionsArgs)
 {
-    return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Submissions/GetSubmissionsByContestIdWithSort?` +
-        `contestId=${args.contestId}` +
+    return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Submissions/${args.contestId}?` +
         `${args.sortField != null? `&sortField=${args.sortField}` : ''}` +
         `${args.filterByParticipantType != null? `&filterByParticipantType=${args.filterByParticipantType}` : ''}` +
         `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : ''}`,
@@ -79,19 +62,29 @@ export async function getContestSubmissions(args: GetContestSubmissionsArgs)
 
 export async function getContestSubmissionsWithUpdate(args: GetContestSubmissionsArgs)
 {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Codeforces/Submissions/PostAndUpdateSubmissionsFromCodeforcesByContestId?` +
-        `contestId=${args.contestId}`,
-        {
-            redirect: 'error',   
-            method: 'POST',  
-        }); 
-
-    return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Submissions/GetSubmissionsByContestIdWithSort?` +
-        `contestId=${args.contestId}` +
+    return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Submissions/${args.contestId}?` +
         `${args.sortField != null? `&sortField=${args.sortField}` : ''}` +
         `${args.filterByParticipantType != null? `&filterByParticipantType=${args.filterByParticipantType}` : ''}` +
         `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : ''}`,
         {
             redirect: 'error',     
+        }); 
+}
+
+export async function updateContestSubmissions(contestId: number)
+{
+    return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Codeforces/Submissions/${contestId}?`,
+        {
+            redirect: 'error',   
+            method: 'POST',  
+        }); 
+}
+
+export async function getContest(contestId: number)
+{
+    return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Contests/${contestId}?`,
+        {
+            redirect: 'error',   
+            method: 'GET',  
         }); 
 }

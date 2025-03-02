@@ -18,7 +18,7 @@ export async function getProblems(
     args: GetProblemsArgs
 ) 
 {
-    return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Problems/GetProblemsByPageWithSortAndFilterTags?` +
+    return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Problems?` +
         `${args.page != null? `&page=${args.page}` : ''}` +
         `${args.pageSize != null? `&pageSize=${args.pageSize}` : ''}` +
         `${args.tags != null? `&tags=${args.tags.join(';')}` : ''}` +
@@ -33,7 +33,7 @@ export async function getProblems(
 
 export async function getTags()
 {
-    return fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Problems/GetTagsList`,
+    return fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Problems/tags`,
     {
         redirect: 'error',
     });
@@ -41,7 +41,7 @@ export async function getTags()
 
 export async function getIndexes()
 {
-    return fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Problems/GetIndexesList`,
+    return fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Problems/indexes`,
     {
         redirect: 'error',
     });

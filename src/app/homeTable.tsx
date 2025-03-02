@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Entry, RequestProps, Table, TableEntry, TableProps } from "./components/table";
 import { getContests, GetContestsArgs } from "./services/contests";
 import TableStyles from './components/network-table.module.css';
+import Contest from "./models/Contest";
 
 export default function HomeTable()
 {
@@ -57,11 +58,15 @@ export default function HomeTable()
             entry.cells = Array(len);
             Object.keys(raw).forEach((key, i) =>
             {
-                if (key == 'startTime')
+                if (key == 'startTime' && raw[key] != null)
                 {
                     raw[key] = unixToFormattedDate(raw[key]);
                 }
-                entry.cells.push(<td key={i} className={TableStyles.cell}>{raw[key]}</td>);
+
+                if (key != "relativeTimeSeconds" && key != "durationSeconds")
+                {
+                    entry.cells.push(<td key={i} className={TableStyles.cell}>{raw[key]}</td>);
+                }
             });
 
             const tEntry = new TableEntry;
