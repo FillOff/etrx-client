@@ -14,7 +14,25 @@ export default function Page()
                     </tr>
                 </thead>
                 <tbody>
-                <tr>
+                    <tr>
+                        <td className={Styles.cell}>
+                            <div className="text-center">9.3.2025</div>
+                        </td>
+                        <td className={Styles.cell}>
+                            <div className="ml-8">
+                                <ul className="w-[80%] list-disc">
+                                    <li>Добавлено
+                                        <div className="ml-6">
+                                            <ul className="list-circle">
+                                                <li>Добавлена фильтрация задач по рейтингу и очкам</li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
                         <td className={Styles.cell}>
                             <div className="text-center">2.3.2025</div>
                         </td>

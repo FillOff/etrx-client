@@ -12,7 +12,15 @@ export function TagsFilter
         selIndexes,
         onChangeIndexes,
         problemName,
-        onChangeProblemName
+        onChangeProblemName,
+        minRating,
+        setMinRating,
+        maxRating,
+        setMaxRating,
+        minPoints,
+        setMinPoints,
+        maxPoints,
+        setMaxPoints,
     }:
     {
         getTags: () => Promise<{tags: string[]}>,
@@ -22,7 +30,15 @@ export function TagsFilter
         selIndexes: string[],
         onChangeIndexes: any,
         problemName: string,
-        onChangeProblemName: any
+        onChangeProblemName: any,
+        minRating: number | undefined,
+        setMinRating: any,
+        maxRating: number | undefined,
+        setMaxRating: any,
+        minPoints: number | undefined,
+        setMinPoints: any,
+        maxPoints: number | undefined,
+        setMaxPoints: any,
     }
 )
 {
@@ -148,6 +164,70 @@ export function TagsFilter
                 className="border-[1.5px] border-solid border-black rounded-[6px] pl-[5px] pr-[5px] pt-[2px] pb-[2px] bg-[--background]"/>
         </div>
 
+    const ratingForm =
+        <div>
+            <label htmlFor="minRating">Мин: </label>
+            <input 
+                type="number" 
+                name="minRating" 
+                id="minRating" 
+                value={minRating}
+                onChange={(event) => {
+                    setMinRating(event.target.value);
+                }} 
+                className="border-[1.5px] w-[200px] border-solid border-black rounded-[6px] pl-[5px] pr-[5px] pt-[2px] pb-[2px] mr-[5px] bg-[--background]"/>
+            <label htmlFor="maxRating">Макс: </label>
+            <input 
+                type="number" 
+                name="maxRating" 
+                id="maxRating" 
+                value={maxRating}
+                onChange={(event) => {
+                    if (event.target.value == "")
+                    {
+                        setMaxRating(0);
+                    }
+                    else {
+                        setMaxRating(event.target.value);
+                        
+                    }
+                }} 
+                min={0}
+                className="border-[1.5px] w-[200px] border-solid border-black rounded-[6px] pl-[5px] pr-[5px] pt-[2px] pb-[2px] bg-[--background]"/>
+        </div>
+
+    const pointsForm =
+        <div>
+            <label htmlFor="minPoints">Мин: </label>
+            <input 
+                type="number" 
+                name="minPoints" 
+                id="minPoints" 
+                value={minPoints}
+                onChange={(event) => {
+                    setMinPoints(event.target.value);
+                }} 
+                className="border-[1.5px] w-[200px] border-solid border-black rounded-[6px] pl-[5px] pr-[5px] pt-[2px] pb-[2px] mr-[5px] bg-[--background]"/>
+            <label htmlFor="maxPoints">Макс: </label>
+            <input 
+                type="number" 
+                name="maxPoints" 
+                id="maxPoints" 
+                value={maxPoints}
+                onChange={(event) => {
+                    if (event.target.value == "")
+                    {
+                        setMaxPoints(0);
+                    }
+                    else {
+                        setMaxPoints(event.target.value);
+                        
+                    }
+                }} 
+                min={0}
+                className="border-[1.5px] w-[200px] border-solid border-black rounded-[6px] pl-[5px] pr-[5px] pt-[2px] pb-[2px] bg-[--background]"/>
+        </div>
+
     return (
         <div className={Styles.container}>
             <div className={Styles.main}>
@@ -168,6 +248,20 @@ export function TagsFilter
                     title="Поиск"
                     data={searchForm}
                 />
+                <div className="flex flex-row w-full">
+                    <div className="flex-1 mr-2">
+                        <Widget 
+                            title="Сортировка по рейтингу"
+                            data={ratingForm}
+                        />
+                    </div>
+                    <div className="flex-1">
+                        <Widget 
+                            title="Сортировка по очкам"
+                            data={pointsForm}
+                        />
+                    </div>
+                </div>
             </div>
         </div>
     )

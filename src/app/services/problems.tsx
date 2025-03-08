@@ -10,7 +10,11 @@ export class GetProblemsArgs
         public sortOrder: boolean | null = true,
         public tags: string[] | null = [],
         public indexes: string[] | null = [],
-        public problemName: string
+        public problemName: string,
+        public minRating: number,
+        public maxRating: number | undefined,
+        public minPoints: number,
+        public maxPoints: number | undefined,
     ) {}
 }
 
@@ -24,10 +28,14 @@ export async function getProblems(
         `${args.tags != null? `&tags=${args.tags.join(';')}` : ''}` +
         `${args.indexes != null? `&indexes=${args.indexes.join(';')}` : ''}` +
         `${args.problemName != null? `&problemName=${args.problemName}` : ''}` +
+        `${args.minRating != null? `&minRating=${args.minRating}` : ''}` +
+        `${args.maxRating != null? `&maxRating=${args.maxRating}` : ''}` +
+        `${args.minPoints != null? `&minPoints=${args.minPoints}` : ''}` +
+        `${args.maxPoints != null? `&maxPoints=${args.maxPoints}` : ''}` +
         `${args.sortField != null? `&sortField=${args.sortField}` : ''}` + 
         `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : '&sortOrder=false'}`,
         {
-            redirect: 'error',                
+            redirect: 'error',
         });
 }
 

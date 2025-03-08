@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Entry, RequestProps, Table, TableEntry, TableProps } from "./components/table";
 import { getContests, GetContestsArgs } from "./services/contests";
 import TableStyles from './components/network-table.module.css';
-import Contest from "./models/Contest";
 
 export default function HomeTable()
 {
@@ -47,7 +46,7 @@ export default function HomeTable()
 
         // Set field keys that we got
         if(rawEntries[0])
-            props.fieldKeys = Object.keys(rawEntries[0]);
+            props.fieldKeys = Object.keys(rawEntries[0]).filter(k => k != "durationSeconds");
         
         // Create viewable content from raw data
         const entries: TableEntry[] = [];
@@ -58,7 +57,7 @@ export default function HomeTable()
             entry.cells = Array(len);
             Object.keys(raw).forEach((key, i) =>
             {
-                if (key == 'startTime' && raw[key] != null)
+                if (key == "startTime" && raw[key] != 0)
                 {
                     raw[key] = unixToFormattedDate(raw[key]);
                 }

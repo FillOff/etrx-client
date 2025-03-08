@@ -13,6 +13,10 @@ export default function Page()
     const [tags, setTags] = useState<string[]>([]);
     const [indexes, setIndexes] = useState<string[]>([]);
     const [problemName, setProblemName] = useState<string>('');
+    const [minRating, setMinRating] = useState<number>(0);
+    const [maxRating, setMaxRating] = useState<number>(10000);
+    const [minPoints, setMinPoints] = useState<number>(0);
+    const [maxPoints, setMaxPoints] = useState<number>(10000);
 
     async function getData(props: RequestProps)
     {
@@ -26,7 +30,11 @@ export default function Page()
             props.sortOrder,
             tags,
             indexes,
-            problemName
+            problemName,
+            minRating,
+            maxRating,
+            minPoints,
+            maxPoints
         )
 
         let response : Response;
@@ -133,7 +141,7 @@ export default function Page()
             </div>          
             </>
         )
-    }, [tags, indexes, problemName])
+    }, [tags, indexes, problemName, minRating, maxRating, minPoints, maxPoints])
 
     const tagsFilter = useMemo(() => {
         return (
@@ -141,10 +149,14 @@ export default function Page()
                 <TagsFilter 
                     getTags={getTagsList} selTags={tags} onChangeTags={setTags}
                     getIndexes={getIndexesList} selIndexes={indexes} onChangeIndexes={setIndexes}
-                    problemName={problemName} onChangeProblemName={setProblemName}/>
+                    problemName={problemName} onChangeProblemName={setProblemName}
+                    minRating={minRating} setMinRating={setMinRating}
+                    maxRating={maxRating} setMaxRating={setMaxRating}
+                    minPoints={minPoints} setMinPoints={setMinPoints}
+                    maxPoints={maxPoints} setMaxPoints={setMaxPoints}/>
             </>
         )
-    }, [tags, indexes, problemName])
+    }, [tags, indexes, problemName, minRating, maxRating, minPoints, maxPoints])
     
     return(
         <>
