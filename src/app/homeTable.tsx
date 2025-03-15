@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Entry, RequestProps, Table, TableEntry, TableProps } from "./components/table";
 import { getContests, GetContestsArgs } from "./services/contests";
 import TableStyles from './components/network-table.module.css';
+import GizmoSpinner from "./components/gizmo-spinner";
 
 export default function HomeTable()
 {
@@ -104,6 +105,7 @@ export default function HomeTable()
         // Display table and hide it if status code is not 200
         return(
             <>
+            {statusCode == 0 && <div className='mb-[150px]'><GizmoSpinner></GizmoSpinner></div>}
             {statusCode != 200 && statusCode != 0 && 
                 <h1 className="w-full text-center text-2xl font-bold">
                     Could not load table data. Status code: {statusCode}

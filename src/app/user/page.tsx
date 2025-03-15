@@ -4,7 +4,7 @@ import { getUsers, GetUsersArgs } from "@/app/services/users";
 // import { Suspense } from "react";
 import { Entry, RequestProps, Table, TableEntry, TableProps } from "@/app/components/table";
 import { useMemo, useState } from "react";
-import TableStyles from '../../components/network-table.module.css';
+import TableStyles from '@/app/components/network-table.module.css';
 import GizmoSpinner from "@/app/components/gizmo-spinner";
 
 export default function Page()

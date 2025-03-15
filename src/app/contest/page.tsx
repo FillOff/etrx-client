@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useId, useMemo, useState } from "react";
-import { GetContestsArgs, getContests } from "../../services/contests";
-import TableStyles from '../../components/network-table.module.css';
+import { GetContestsArgs, getContests } from "../services/contests";
+import TableStyles from '../components/network-table.module.css';
 import { Entry, TableEntry, Table, TableProps, RequestProps } from "@/app/components/table";
-import { RadioGroup, Option } from "../../components/contest-radiogroup";
+import { RadioGroup, Option } from "../components/contest-radiogroup";
 import GizmoSpinner from "@/app/components/gizmo-spinner";
 
 export default function Page()
@@ -73,7 +73,7 @@ export default function Page()
 
             const tEntry = new TableEntry;
             tEntry.row = <tr key={i} className={TableStyles.tr_link}
-            onClick={() => window.open(`/etrx2/contests/${raw['contestId']}`)}>
+            onClick={() => window.open(`/etrx2/contest/${raw['contestId']}`)}>
                 {entry.cells}
             </tr>;
             entries.push(tEntry);

@@ -19,15 +19,15 @@ export default function Header()
                     <button onClick={() => router.push('/')} className={DdStyles.header_elem}>
                         Главная
                     </button>
-                    <Dropdown header="Контесты" onClick={() => router.push('/contests/view')}>
-                        <button onClick={() => router.push('/contests/view')} className={DdStyles.dropdown_elem}>Просмотреть все</button>
+                    <Dropdown header="Контесты" onClick={() => router.push('/contest')}>
+                        <button onClick={() => router.push('/contest')} className={DdStyles.dropdown_elem}>Просмотреть все</button>
                         <button className={DdStyles.dropdown_elem}><div className={MiscStyles.add_ico}></div> Добавить</button>
                     </Dropdown>
-                    <Dropdown header="Ученики" onClick={() => router.push('/users/view')}>
-                        <button onClick={() => router.push('/users/view')} className={DdStyles.dropdown_elem}>Просмотреть всех</button>
+                    <Dropdown header="Ученики" onClick={() => router.push('/user')}>
+                        <button onClick={() => router.push('/user')} className={DdStyles.dropdown_elem}>Просмотреть всех</button>
                         <button className={DdStyles.dropdown_elem}><div className={MiscStyles.add_ico}></div> Добавить</button>
                     </Dropdown>
-                    <button onClick={() => router.push('/problems/view')} className={DdStyles.header_elem}>Задачи</button>
+                    <button onClick={() => router.push('/problem')} className={DdStyles.header_elem}>Задачи</button>
                     <button onClick={() => router.push('/about')} className={DdStyles.header_elem}>О сайте</button>
 
                 </div>
