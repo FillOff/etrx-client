@@ -16,6 +16,24 @@ export default function Page()
                 <tbody>
                     <tr>
                         <td className={Styles.cell}>
+                            <div className="text-center">16.3.2025</div>
+                        </td>
+                        <td className={Styles.cell}>
+                            <div className="ml-8">
+                                <ul className="w-[80%] list-disc">
+                                    <li>Переделано/Изменено
+                                        <div className="ml-6">
+                                            <ul className="list-circle">
+                                                <li>Унификация ссылок (теперь они такие же, как на etr)</li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className={Styles.cell}>
                             <div className="text-center">9.3.2025</div>
                         </td>
                         <td className={Styles.cell}>
