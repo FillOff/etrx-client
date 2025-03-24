@@ -1,0 +1,21 @@
+{
+  "contestTitle": "{{contestName}} - #{{contestId}}",
+  "filters": {
+    "participation": "Фильтр участия",
+    "options": {
+      "all": "Все",
+      "contestant": "Участник",
+      "practice": "Практика",
+      "virtual": "Виртуальный",
+      "outOfCompetition": "Вне конкурса"
+    }
+  },
+  "tableHeaders": {
+    "firstName": "Имя",
+    "lastName": "Фамилия",
+    "city": "Город",
+    "organization": "Организация",
+    "class": "Класс",
+    "solvedCount": "Всего решено"
+  }
+}

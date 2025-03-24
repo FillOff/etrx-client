@@ -1,0 +1,140 @@
+{
+    "updatesTitle": "Updates",
+    "version": "Version",
+    "changes": "Changes",
+    "updates": [
+      {
+        "date": "24.3.2025",
+        "items": [
+          {
+            "type": "Added",
+            "details": [
+              "Added full application localization in Russian and English",
+              "Added selected language saving in cookies"
+            ]
+          }
+        ]
+      },
+      {
+        "date": "16.3.2025",
+        "items": [
+          {
+            "type": "Reworked/Changed",
+            "details": [
+              "Links unification (now they are the same as on etr)"
+            ]
+          }
+        ]
+      },
+      {
+        "date": "9.3.2025",
+        "items": [
+          {
+            "type": "Added",
+            "details": [
+              "Added task filtering by rating and points"
+            ]
+          }
+        ]
+      },
+      {
+        "date": "2.3.2025",
+        "items": [
+          {
+            "type": "Reworked/Changed",
+            "details": [
+              "All filters are now placed horizontally",
+              "Now the contest page displays its name and number"
+            ]
+          },
+          {
+            "type": "Fixed",
+            "details": [
+              "Fixed the issue with users not being displayed due to changed handles"
+            ]
+          }
+        ]
+      },
+      {
+        "date": "11.1.2025",
+        "items": [
+          {
+            "type": "Added",
+            "details": [
+              "Index filtering (if multiple indexes are selected, tasks with similar indexes will be displayed)",
+              "Task name search"
+            ]
+          },
+          {
+            "type": "Reworked/Changed",
+            "details": [
+              "Application versioning. Now the version and build are displayed at the top right, and versions are now update dates",
+              "Changed this updates table",
+              "Now the date is displayed in the format 'Month dd yyyy'"
+            ]
+          },
+          {
+            "type": "Fixed",
+            "details": [
+              "Task names were in English. Now most tasks have names in Russian"
+            ]
+          }
+        ]
+      },
+      {
+        "date": "5.1.2025",
+        "items": [
+          {
+            "type": "Added",
+            "details": [
+              "Task table",
+              "Task filtering by tags",
+              "Filtering by user participation type in attempts"
+            ]
+          },
+          {
+            "type": "Reworked/Changed",
+            "details": [
+              "Displayed data in user attempts",
+              "Contest/training filter"
+            ]
+          },
+          {
+            "type": "Fixed",
+            "details": [
+              "Data when displaying all user attempts was incorrect"
+            ]
+          }
+        ]
+      },
+      {
+        "date": "8.12.2024",
+        "items": [
+          {
+            "type": "Added",
+            "details": [
+              "About page, i.e., this page"
+            ]
+          },
+          {
+            "type": "Reworked/Changed",
+            "details": [
+              "Display of attempts in the contest table",
+              "Sidebar"
+            ]
+          },
+          {
+            "type": "Fixed",
+            "details": [
+              "The contests table now updates correctly when selecting a filter",
+              "Contest data requests",
+              "User table sorting",
+              "Incorrect style for contest table filter backgrounds",
+              "Display of icons in the side menu",
+              "Size and position of the side menu button"
+            ]
+          }
+        ]
+      }
+    ]
+  }

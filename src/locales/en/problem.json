@@ -1,0 +1,30 @@
+{
+    "problemsTableTitle": "Problems Table",
+    "tableHeaders": {
+      "id": "ID",
+      "contest": "Contest",
+      "index": "Index",
+      "name": "Name",
+      "points": "Points",
+      "rating": "Rating",
+      "tags": "Tags"
+    },
+    "filtersTitle": "Filters",
+    "filters": {
+      "tags": "Tags",
+      "indexes": "Indexes",
+      "search": "Search",
+      "rating": "Rating",
+      "points": "Points",
+      "min": "Min",
+      "max": "Max",
+      "problemName": "Problem Name"
+    },
+    "widgetTitles": {
+      "tags": "Tags",
+      "indexes": "Indexes",
+      "search": "Search",
+      "ratingSort": "Sort by Rating",
+      "pointsSort": "Sort by Points"
+    }
+  }

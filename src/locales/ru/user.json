@@ -1,0 +1,12 @@
+{
+    "usersTableTitle": "Таблица пользователей",
+    "tableHeaders": {
+      "id": "ID",
+      "handle": "Хендл",
+      "firstName": "Имя",
+      "lastName": "Фамилия",
+      "organization": "Организация",
+      "city": "Город",
+      "class": "Класс"
+    }
+  }

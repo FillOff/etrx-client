@@ -1,0 +1,21 @@
+{
+  "contestTitle": "{{contestName}} - #{{contestId}}",
+  "filters": {
+    "participation": "Participation Filter",
+    "options": {
+      "all": "All",
+      "contestant": "Contestant",
+      "practice": "Practice",
+      "virtual": "Virtual",
+      "outOfCompetition": "Out of Competition"
+    }
+  },
+  "tableHeaders": {
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "city": "City",
+    "organization": "Organization",
+    "class": "Class",
+    "solvedCount": "Total Solved"
+  }
+}

@@ -1,0 +1,14 @@
+{
+    "contestsTableTitle": "Таблица контестов",
+    "filtersTitle": "Фильтры",
+    "filters": {
+      "all": "Все",
+      "gymOnly": "Только тренировки",
+      "contestsOnly": "Только контесты"
+    },
+    "tableHeaders": {
+      "id": "ID",
+      "name": "Название",
+      "startTime": "Время начала"
+    }
+  }

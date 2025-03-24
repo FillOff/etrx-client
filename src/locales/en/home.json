@@ -1,0 +1,8 @@
+{
+  "lastContests": "Last 10 Contests",
+  "tableHeaders": {
+    "id": "ID",
+    "name": "Name",
+    "startTime": "Start Time"
+  }
+}

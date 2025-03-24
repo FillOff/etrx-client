@@ -1,0 +1,30 @@
+{
+    "problemsTableTitle": "Таблица задач",
+    "tableHeaders": {
+      "id": "ID",
+      "contest": "Контест",
+      "index": "Индекс",
+      "name": "Имя",
+      "points": "Очки",
+      "rating": "Рейтинг",
+      "tags": "Теги"
+    },
+    "filtersTitle": "Фильтры",
+    "filters": {
+      "tags": "Теги",
+      "indexes": "Индексы",
+      "search": "Поиск",
+      "rating": "Рейтинг",
+      "points": "Очки",
+      "min": "Мин",
+      "max": "Макс",
+      "problemName": "Название задачи"
+    },
+    "widgetTitles": {
+      "tags": "Теги",
+      "indexes": "Индексы",
+      "search": "Поиск",
+      "ratingSort": "Сортировка по рейтингу",
+      "pointsSort": "Сортировка по очкам"
+    }
+  }

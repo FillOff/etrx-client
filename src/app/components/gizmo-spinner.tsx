@@ -1,23 +1,33 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Styles from './gizmo-spinner.module.css'
+import { useTranslation } from 'react-i18next';
+import '../../i18n/client';
 
 export default function GizmoSpinner()
 {   
-    const [loadingMsg, setLoadingMsg] = useState(<>Loading...</>);
-    const timeout = setTimeout(() => {setLoadingMsg(<>Loading takes too long!<br/>Check your connection.</>);}, 15000);
+    const { t } = useTranslation();
+    const [loadingMsg, setLoadingMsg] = useState(<>{t('common:loading')}</>);
+    const timeout = setTimeout(() => {setLoadingMsg(<>{t('common:loadingTooLong')}<br/>{t('common:checkConnection')}</>);}, 15000);
+    const [isClient, setIsClient] = useState(false);
     
     useEffect(() => {
+        setIsClient(true);
         return () => {clearTimeout(timeout)};
     }, [timeout]);
 
+    // Возвращаем пустой div для серверного рендеринга
+    if (!isClient) {
+        return <div className="gizmo-spinner-container"></div>;
+    }
+
     return(
-        <>
+        <div className="gizmo-spinner-container">
             <div className={Styles.pad}>
                 <div className={`${Styles.loader_generic} ${Styles.loader_more}`}></div>
                 <div className={`${Styles.loader_generic} ${Styles.loader}`}></div>
                 <p className={Styles.pad_text}>{loadingMsg}</p>
             </div>
-        </>
+        </div>
     )
 }

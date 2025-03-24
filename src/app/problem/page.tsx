@@ -1,22 +1,30 @@
 "use client";
 import { Entry, RequestProps, Table, TableEntry, TableProps } from "@/app/components/table";
 import { getIndexes, getProblems, GetProblemsArgs, getTags } from "@/app/services/problems";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import TableStyles from '@/app/components/network-table.module.css';
 import GizmoSpinner from "@/app/components/gizmo-spinner";
 import { GetDivTagsList } from "@/app/components/problem-tags";
 import { TagsFilter } from "@/app/components/tags-filter";
+import { useTranslation } from "react-i18next";
+import '../../i18n/client';
 
 export default function Page()
 {
+    const { t, i18n } = useTranslation();
     const [statusCode, setStatusCode] = useState(0);
-    const [tags, setTags] = useState<string[]>([]);
+    const [isClient, setIsClient] = useState(false);
+    const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [indexes, setIndexes] = useState<string[]>([]);
     const [problemName, setProblemName] = useState<string>('');
     const [minRating, setMinRating] = useState<number>(0);
     const [maxRating, setMaxRating] = useState<number>(10000);
     const [minPoints, setMinPoints] = useState<number>(0);
     const [maxPoints, setMaxPoints] = useState<number>(10000);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     async function getData(props: RequestProps)
     {
@@ -28,7 +36,7 @@ export default function Page()
             100,
             props.sortField,
             props.sortOrder,
-            tags,
+            selectedTags,
             indexes,
             problemName,
             minRating,
@@ -129,11 +137,20 @@ export default function Page()
         return { indexes: data }
     }
 
-    const tableProps = new TableProps(
-        ['ID', 'Контест', 'Индекс', 'Имя', 'Очки', 'Рейтинг', 'Теги']
-    );
+    const tableProps = new TableProps([
+        t('problem:tableHeaders.id'),
+        t('problem:tableHeaders.contest'),
+        t('problem:tableHeaders.index'),
+        t('problem:tableHeaders.name'),
+        t('problem:tableHeaders.points'),
+        t('problem:tableHeaders.rating'),
+        t('problem:tableHeaders.tags')
+      ]);
+    
 
     const table = useMemo(() => {
+        if (!isClient) return null;
+
         return (
             <>
             <div>
@@ -141,13 +158,13 @@ export default function Page()
             </div>          
             </>
         )
-    }, [tags, indexes, problemName, minRating, maxRating, minPoints, maxPoints])
+    }, [i18n.language, isClient, selectedTags, indexes, problemName, minRating, maxRating, minPoints, maxPoints])
 
     const tagsFilter = useMemo(() => {
         return (
             <>
                 <TagsFilter 
-                    getTags={getTagsList} selTags={tags} onChangeTags={setTags}
+                    getTags={getTagsList} selTags={selectedTags} onChangeTags={setSelectedTags}
                     getIndexes={getIndexesList} selIndexes={indexes} onChangeIndexes={setIndexes}
                     problemName={problemName} onChangeProblemName={setProblemName}
                     minRating={minRating} setMinRating={setMinRating}
@@ -156,16 +173,20 @@ export default function Page()
                     maxPoints={maxPoints} setMaxPoints={setMaxPoints}/>
             </>
         )
-    }, [tags, indexes, problemName, minRating, maxRating, minPoints, maxPoints])
+    }, [selectedTags, indexes, problemName, minRating, maxRating, minPoints, maxPoints])
     
+    if (!isClient) {
+        return <GizmoSpinner />;
+    }
+
     return(
         <>
             {tagsFilter}
-            <h1 className='text-3xl w-full text-center font-bold mb-5'>Таблица задач</h1>
+            <h1 className='text-3xl w-full text-center font-bold mb-5'>{t('problem:problemsTableTitle')}</h1>
             {statusCode == 0 && <div className='mb-[150px]'><GizmoSpinner></GizmoSpinner></div>}
             {statusCode != 200 && statusCode != 0 && 
                 <h1 className="w-full text-center text-2xl font-bold">
-                    Could not load table data. Status code: {statusCode}
+                    {t('common:error', { statusCode })}
                 </h1>
             }
             <div className={statusCode == 200 ? 'visible' : 'invisible'}>
