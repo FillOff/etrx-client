@@ -36,7 +36,7 @@ export default function Page() {
   async function getData(props: RequestProps) {
     let response: Response;
     try {
-      response = await getContest(contestId);
+      response = await getContest(contestId, i18n.language);
     } catch (error) {
       setStatusCode(-1);
       return { entries: [], props: props };
@@ -53,7 +53,8 @@ export default function Page() {
       contestId,
       props.sortField,
       props.sortOrder,
-      participantType
+      participantType,
+      i18n.language
     );
 
     try {

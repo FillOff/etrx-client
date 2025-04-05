@@ -42,7 +42,8 @@ export default function Page()
             minRating,
             maxRating,
             minPoints,
-            maxPoints
+            maxPoints,
+            i18n.language
         )
 
         let response : Response;

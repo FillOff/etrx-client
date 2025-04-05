@@ -30,6 +30,7 @@ export default function Page() {
       props.sortField,
       props.sortOrder,
       gym == 2 ? null : gym == 1 ? true : false,
+      i18n.language
     );
 
     // Get raw data

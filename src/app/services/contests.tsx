@@ -13,13 +13,16 @@ export class GetContestsArgs extends Pageable
         sortField: string | null = null,
         sortOrder: boolean | null = false,
         isGym: boolean | null = null,
+        lang: string | null = null
     ) 
     {
         super(page, pageSize, sortField, sortOrder);
         this.isGym = isGym;
+        this.lang = lang;
     }
 
     isGym: boolean | null;
+    lang: string | null;
 }
 
 export async function getContests(
@@ -31,7 +34,8 @@ export async function getContests(
         `${args.pageSize != null? `&pageSize=${args.pageSize}` : '&pageSize=20'}` + 
         `${args.isGym != null? `&gym=${args.isGym}` : ''}` + 
         `${args.sortField != null? `&sortField=${args.sortField}` : ''}` + 
-        `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : '&sortOrder=false'}`,
+        `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : '&sortOrder=false'}` + 
+        `${args.lang != null? `&lang=${args.lang}` : '&lang=ru'}`,
         {redirect: 'error'});
 }
 
@@ -41,11 +45,13 @@ export class GetContestSubmissionsArgs extends Sortable
         public contestId: number,
         public sortField: string | null,
         public sortOrder: boolean | null,
-        public filterByParticipantType: string | null
+        public filterByParticipantType: string | null,
+        public lang: string | null
     )
     {
         super(sortField, sortOrder);
         this.filterByParticipantType = filterByParticipantType;
+        this.lang = lang;
     }
 }
 
@@ -54,7 +60,8 @@ export async function getContestSubmissions(args: GetContestSubmissionsArgs)
     return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Submissions/${args.contestId}?` +
         `${args.sortField != null? `&sortField=${args.sortField}` : ''}` +
         `${args.filterByParticipantType != null? `&filterByParticipantType=${args.filterByParticipantType}` : ''}` +
-        `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : ''}`,
+        `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : ''}` +
+        `${args.lang != null? `&lang=${args.lang}` : 'lang=ru'}`,
         {
             redirect: 'error',     
         }); 
@@ -65,7 +72,8 @@ export async function getContestSubmissionsWithUpdate(args: GetContestSubmission
     return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Submissions/${args.contestId}?` +
         `${args.sortField != null? `&sortField=${args.sortField}` : ''}` +
         `${args.filterByParticipantType != null? `&filterByParticipantType=${args.filterByParticipantType}` : ''}` +
-        `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : ''}`,
+        `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : ''}` +
+        `${args.lang != null? `&lang=${args.lang}` : 'lang=ru'}`,
         {
             redirect: 'error',     
         }); 
@@ -80,9 +88,10 @@ export async function updateContestSubmissions(contestId: number)
         }); 
 }
 
-export async function getContest(contestId: number)
+export async function getContest(contestId: number, lang: string | null)
 {
-    return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Contests/${contestId}?`,
+    return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Contests/${contestId}?` +
+        `${lang != null? `&lang=${lang}` : 'lang=ru'}`,
         {
             redirect: 'error',   
             method: 'GET',  

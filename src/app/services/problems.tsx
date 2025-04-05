@@ -15,6 +15,7 @@ export class GetProblemsArgs
         public maxRating: number | undefined,
         public minPoints: number,
         public maxPoints: number | undefined,
+        public lang: string | null
     ) {}
 }
 
@@ -33,7 +34,8 @@ export async function getProblems(
         `${args.minPoints != null? `&minPoints=${args.minPoints}` : ''}` +
         `${args.maxPoints != null? `&maxPoints=${args.maxPoints}` : ''}` +
         `${args.sortField != null? `&sortField=${args.sortField}` : ''}` + 
-        `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : '&sortOrder=false'}`,
+        `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : '&sortOrder=false'}` +
+        `${args.lang != null? `&lang=${args.lang}` : 'lang=ru'}`,
         {
             redirect: 'error',
         });

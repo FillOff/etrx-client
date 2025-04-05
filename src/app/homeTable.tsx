@@ -7,7 +7,7 @@ import GizmoSpinner from "./components/gizmo-spinner";
 import { useTranslation } from 'next-i18next';
 
 export default function HomeTable() {
-  const { t } = useTranslation('home');
+  const { t, i18n } = useTranslation('home');
   const [statusCode, setStatusCode] = useState(0);
 
   async function getData(props: RequestProps) {
@@ -20,7 +20,8 @@ export default function HomeTable() {
       10,
       props.sortField,
       props.sortOrder,
-      null
+      null,
+      i18n.language
     );
 
     // Get raw data
