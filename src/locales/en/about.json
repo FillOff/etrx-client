@@ -4,6 +4,17 @@
     "changes": "Changes",
     "updates": [
       {
+        "date": "5.4.2025",
+        "items": [
+          {
+            "type": "Added",
+            "details": [
+              "Added data localization"
+            ]
+          }
+        ]
+      },
+      {
         "date": "24.3.2025",
         "items": [
           {
