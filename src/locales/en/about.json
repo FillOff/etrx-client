@@ -11,6 +11,12 @@
             "details": [
               "Added protocol with time and contest filtering"
             ]
+          },
+          {
+            "type": "Reworked/Changed",
+            "details": [
+              "The data is now updated once every 30 minutes"
+            ]
           }
         ]
       },

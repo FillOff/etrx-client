@@ -38,8 +38,7 @@ export async function getSubmissionsProtocol(
     args: GetSubmissionsProtocolArgs
 ) 
 {
-    // return fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Submissions?` +
-    return fetch(`http://localhost:8080/api/Submissions?` +
+    return fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Submissions?` +
         `page=${args.page}` + 
         `${args.pageSize != null? `&pageSize=${args.pageSize}` : '&pageSize=20'}` + 
         `${args.fYear != null? `&fYear=${args.fYear}` : ''}` + 
