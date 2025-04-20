@@ -10,6 +10,7 @@ import ruUser from '../locales/ru/user.json';
 import ruHome from '../locales/ru/home.json';
 import ruContestId from '../locales/ru/contestId.json';
 import ruCommon from '../locales/ru/common.json';
+import ruProtocol from "../locales/ru/protocol.json";
 import enHeader from '../locales/en/header.json';
 import enAbout from '../locales/en/about.json';
 import enContest from '../locales/en/contest.json';
@@ -18,6 +19,7 @@ import enProblem from '../locales/en/problem.json';
 import enHome from '../locales/en/home.json';
 import enContestId from '../locales/en/contestId.json';
 import enCommon from '../locales/en/common.json';
+import enProtocol from "../locales/en/protocol.json";
 import Cookies from 'js-cookie';
 
 const LANGUAGE_COOKIE = 'selected_language';
@@ -40,6 +42,7 @@ i18next
                 home: ruHome,
                 contestId: ruContestId,
                 common: ruCommon,
+                protocol: ruProtocol,
             },
             en: {
                 header: enHeader,
@@ -50,6 +53,7 @@ i18next
                 home: enHome,
                 contestId: enContestId,
                 common: enCommon,
+                protocol: enProtocol,
             },
         },
         lng: getInitialLanguage(),

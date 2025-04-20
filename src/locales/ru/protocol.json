@@ -1,0 +1,23 @@
+{
+    "protocolTableTitle": "Протокол",
+    "tableHeaders": {
+      "id": "ID",
+      "creationTimeSeconds": "Время отправки",
+      "firstName": "Имя",
+      "lastName": "Фамилия",
+      "contestId": "ID контеста",
+      "index": "Индекс задачи",
+      "participantType": "Тип участия",
+      "programmingLanguage": "Язык программирования",
+      "verdict": "Вердикт",
+      "timeConsumedMillis": "Время",
+      "memoryConsumedBytes": "Память"
+    },
+    "filtersTitle": "Фильтры",
+    "selectDate": "Выберите дату",
+    "filters": {
+      "fromDate": "От: ",
+      "toDate": "До: ",
+      "setContestId": "Id контеста: "
+    }
+}

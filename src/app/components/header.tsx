@@ -49,6 +49,7 @@ export default function Header()
                         <button className={DdStyles.dropdown_elem}><div className={MiscStyles.add_ico}></div> {t('header:add_new')}</button>
                     </Dropdown>
                     <button onClick={() => router.push('/problem')} className={DdStyles.header_elem}>{t('header:problems')}</button>
+                    <button onClick={() => router.push('/protocol')} className={DdStyles.header_elem}>{t('header:protocol')}</button>
                     <button onClick={() => router.push('/about')} className={DdStyles.header_elem}>{t('header:about')}</button>
                 </div>
                 <div className="flex items-center gap-4 ml-auto mr-2">

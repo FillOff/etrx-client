@@ -14,6 +14,7 @@ export default class Pageable extends Sortable
         this.page = page;
         this.pageSize = pageSize;
     }
+    
     page: number;
     pageSize: number | null = null;
 }

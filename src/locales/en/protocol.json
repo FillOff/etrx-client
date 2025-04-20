@@ -1,0 +1,23 @@
+{
+    "protocolTableTitle": "Protocol",
+    "tableHeaders": {
+      "id": "ID",
+      "creationTimeSeconds": "Sending time",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "contestId": "Contest ID",
+      "index": "Problem Index",
+      "participantType": "Participant type",
+      "programmingLanguage": "Programming language",
+      "verdict": "Verdict",
+      "timeConsumedMillis": "Time",
+      "memoryConsumedBytes": "Memory"
+    },
+    "filtersTitle": "Filters",
+    "selectDate": "Select date",
+    "filters": {
+      "fromDate": "From: ",
+      "toDate": "To: ",
+      "setContestId": "Contest Id: "
+    }
+}

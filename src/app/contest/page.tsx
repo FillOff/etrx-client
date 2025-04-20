@@ -101,9 +101,11 @@ export default function Page() {
     return `${month} ${day} ${year}`;
   }
 
-  const tableProps = new TableProps(
-    [t('contest:tableHeaders.id'), t('contest:tableHeaders.name'), t('contest:tableHeaders.startTime')]
-  );
+  const tableProps = new TableProps([
+    t('contest:tableHeaders.id'), 
+    t('contest:tableHeaders.name'), 
+    t('contest:tableHeaders.startTime')]
+);
 
   const table = useMemo(() => {
     if (!isClient) return null;

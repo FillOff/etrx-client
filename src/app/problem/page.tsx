@@ -1,6 +1,7 @@
-"use client";
+'use client';
+
 import { Entry, RequestProps, Table, TableEntry, TableProps } from "@/app/components/table";
-import { getIndexes, getProblems, GetProblemsArgs, getTags } from "@/app/services/problems";
+import { getIndexes, getProblems, getTags } from "@/app/services/problems";
 import { useState, useMemo, useEffect } from "react";
 import TableStyles from '@/app/components/network-table.module.css';
 import GizmoSpinner from "@/app/components/gizmo-spinner";
@@ -8,6 +9,7 @@ import { GetDivTagsList } from "@/app/components/problem-tags";
 import { TagsFilter } from "@/app/components/tags-filter";
 import { useTranslation } from "react-i18next";
 import '../../i18n/client';
+import { GetProblemsArgs } from "../models/GetProblemsArgs";
 
 export default function Page()
 {
@@ -182,8 +184,8 @@ export default function Page()
 
     return(
         <>
-            {tagsFilter}
             <h1 className='text-3xl w-full text-center font-bold mb-5'>{t('problem:problemsTableTitle')}</h1>
+            {tagsFilter}
             {statusCode == 0 && <div className='mb-[150px]'><GizmoSpinner></GizmoSpinner></div>}
             {statusCode != 200 && statusCode != 0 && 
                 <h1 className="w-full text-center text-2xl font-bold">

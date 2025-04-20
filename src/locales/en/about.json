@@ -4,6 +4,17 @@
     "changes": "Changes",
     "updates": [
       {
+        "date": "20.4.2025",
+        "items": [
+          {
+            "type": "Added",
+            "details": [
+              "Added protocol with time and contest filtering"
+            ]
+          }
+        ]
+      },
+      {
         "date": "5.4.2025",
         "items": [
           {

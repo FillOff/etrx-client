@@ -17,11 +17,11 @@
     color: var(--main-white);
 }
 
-.header_elem
+/* .header_elem
 {
     transition-duration: 75ms;
     animation: popIn 1s ease-in-out forwards 1;
-}
+} */
 
 .header_elem:hover
 {

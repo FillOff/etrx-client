@@ -1,23 +1,6 @@
 'use client';
 
-// While it does not utilize any paging, should have params for it for the future...
-export class GetProblemsArgs
-{
-    constructor(
-        public page: number | null = null,
-        public pageSize: number | null = null,
-        public sortField: string | null = null,
-        public sortOrder: boolean | null = true,
-        public tags: string[] | null = [],
-        public indexes: string[] | null = [],
-        public problemName: string,
-        public minRating: number,
-        public maxRating: number | undefined,
-        public minPoints: number,
-        public maxPoints: number | undefined,
-        public lang: string | null
-    ) {}
-}
+import { GetProblemsArgs } from "../models/GetProblemsArgs";
 
 export async function getProblems(
     args: GetProblemsArgs
