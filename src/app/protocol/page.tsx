@@ -1,7 +1,7 @@
 'use client';
 
 import { Entry, RequestProps, Table, TableEntry, TableProps } from "@/app/components/table";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, Suspense } from "react";
 import TableStyles from '@/app/components/network-table.module.css';
 import GizmoSpinner from "@/app/components/gizmo-spinner";
 import { useTranslation } from "react-i18next";
@@ -11,7 +11,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function Page()
+function PageLogic()
 {
     const { t, i18n } = useTranslation();
     const [statusCode, setStatusCode] = useState(0);
@@ -20,22 +20,22 @@ export default function Page()
     const router = useRouter();
 
     const [fYear, setFYear] = useState<number>(
-        searchParams.get('fyear') != null ? Number(searchParams.get('fyear')) : new Date().getFullYear()!
+        searchParams.get('fyear') != null ? Number(searchParams.get('fyear')) : new Date().getFullYear()
     );
     const [fMonth, setFMonth] = useState<number>(
-        searchParams.get('fmonth') ? Number(searchParams.get('fmonth')) : new Date()?.getMonth()! + 1
+        searchParams.get('fmonth') ? Number(searchParams.get('fmonth')) : new Date().getMonth() + 1
     );
     const [fDay, setFDay] = useState<number>(
-        searchParams.get('fday') ? Number(searchParams.get('fday')) : new Date()?.getDate()!
+        searchParams.get('fday') ? Number(searchParams.get('fday')) : new Date().getDate()
     );
     const [tYear, setTYear] = useState<number>(
-        searchParams.get('tyear') ? Number(searchParams.get('tyear')) : new Date()?.getFullYear()!
+        searchParams.get('tyear') ? Number(searchParams.get('tyear')) : new Date().getFullYear()
     );
     const [tMonth, setTMonth] = useState<number>(
-        searchParams.get('tmonth') ? Number(searchParams.get('tmonth')) : new Date()?.getMonth()! + 1
+        searchParams.get('tmonth') ? Number(searchParams.get('tmonth')) : new Date().getMonth() + 1
     );
     const [tDay, setTDay] = useState<number>(
-        searchParams.get('tday') ? Number(searchParams.get('tday')) : new Date()?.getDate()!
+        searchParams.get('tday') ? Number(searchParams.get('tday')) : new Date().getDate()
     );
     const [contestId, setContestId] = useState<number | null>(
         searchParams.get('contestid') ? Number(searchParams.get('contestid')) : null
@@ -64,7 +64,7 @@ export default function Page()
         router.push(`?${params.toString()}`);
 
         props.page = props.page ? props.page : 1;
-        const args = new GetSubmissionsProtocolArgs(
+        let args = new GetSubmissionsProtocolArgs(
             fYear, fMonth, fDay,
             tYear, tMonth, tDay,
             contestId,
@@ -83,11 +83,32 @@ export default function Page()
             return { entries: [], props: props };
         }
 
-        const data = await response.json();
+        let data = await response.json();
+
+        if (props.page > data['pageCount']) {
+            props.page = 1;
+            args = new GetSubmissionsProtocolArgs(
+                fYear, fMonth, fDay, tYear, tMonth, tDay,
+                contestId, props.page, 100
+            )
+
+            try
+            {
+                response = await getSubmissionsProtocol(args);
+            }
+            catch (error)
+            {
+                setStatusCode(-1);
+                return { entries: [], props: props };
+            }
+
+            data = await response.json();
+        }
+
         const rawEntries = Array.from(data.submissions);
 
         // Set status code to track request state
-        setStatusCode(response.status);
+        setStatusCode(response.status); 
 
         // Set new page that we got from response
         if(data['pageCount'] && typeof(data['pageCount']) == 'number')
@@ -176,7 +197,6 @@ export default function Page()
     }, [i18n.language, isClient, fYear, fMonth, fDay, tYear, tMonth, tDay, contestId])
 
     const filter = useMemo(() => {
-        
         return (
             <>
                 <div className='m-auto rounded-md h-fit px-4 py-2 w-fit bg-background-shade'>
@@ -277,4 +297,12 @@ export default function Page()
             </div>
         </>
     )
+}
+
+export default function Page() {
+    return (
+        <Suspense>
+            <PageLogic />
+        </Suspense>
+    );
 }
