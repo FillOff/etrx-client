@@ -41,8 +41,9 @@ export default function Page()
         searchParams.get('contestid') ? Number(searchParams.get('contestid')) : null
     );
 
-    const [fromDate, setFromDate] = useState<Date | null>(new Date(fYear, fMonth, fDay));
-    const [toDate, setToDate] = useState<Date | null>(new Date(tYear, tMonth, tDay));
+    const [fromDate, setFromDate] = useState<Date | null>(new Date(fYear, fMonth-1, fDay));
+    console.log(fromDate);
+    const [toDate, setToDate] = useState<Date | null>(new Date(tYear, tMonth-1, tDay));
 
     useEffect(() => {
         setIsClient(true);
@@ -193,7 +194,7 @@ export default function Page()
 
                                     const params = new URLSearchParams(window.location.search);
                                     params.set('fyear', String(date!.getFullYear()));
-                                    params.set('fmonth', String(date!.getMonth() + 1));
+                                    params.set('fmonth', String(date!.getMonth() + 2));
                                     params.set('fday', String(date!.getDate()));
                                     router.push(`?${params.toString()}`);
                                 }
@@ -217,7 +218,7 @@ export default function Page()
 
                                     const params = new URLSearchParams(window.location.search);
                                     params.set('tyear', String(date!.getFullYear()));
-                                    params.set('tmonth', String(date!.getMonth() + 1));
+                                    params.set('tmonth', String(date!.getMonth() + 2));
                                     params.set('tday', String(date!.getDate()));
                                     router.push(`?${params.toString()}`);
                                 }
