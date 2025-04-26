@@ -78,7 +78,7 @@ export default function Page() {
         setStatusCode(response.status);
 
         const problemIndexes = problems.map((problem: any) => problem.index);
-        let columnNames = [
+        const columnNames = [
             t('contestId:tableHeaders.userName'),
             t('contestId:tableHeaders.city'),
             t('contestId:tableHeaders.organization'),

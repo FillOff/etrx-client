@@ -31,7 +31,7 @@ export function getQueryParam<T>(query: string, defaultValue: T, searchParams : 
 }
 
 export function pushRouteWithQueryParams(path : string, curPath : string, router : AppRouterInstance) {
-    var params = new URLSearchParams(window.location.search).toString();
+    const params = new URLSearchParams(window.location.search).toString();
 
     if (curPath === path) {
         router.push(`${path}?${params}`);

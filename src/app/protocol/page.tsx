@@ -48,7 +48,7 @@ function PageLogic() {
         }, router);
 
         props.page = props.page ? props.page : 1;
-        let args = new GetSubmissionsProtocolArgs(
+        const args = new GetSubmissionsProtocolArgs(
             fYear, fMonth, fDay,
             tYear, tMonth, tDay,
             contestId
@@ -65,7 +65,7 @@ function PageLogic() {
             return { entries: [], props: props };
         }
 
-        let data = await response.json();
+        const data = await response.json();
         const rawEntries = Array.from(data);
 
         // Set status code to track request state
