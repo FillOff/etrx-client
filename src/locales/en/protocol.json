@@ -11,7 +11,9 @@
       "programmingLanguage": "Programming language",
       "verdict": "Verdict",
       "timeConsumedMillis": "Time",
-      "memoryConsumedBytes": "Memory"
+      "memoryConsumedBytes": "Memory",
+      "userName": "User Name",
+      "totalSolved": "Total Solved"
     },
     "filtersTitle": "Filters",
     "selectDate": "Select date",

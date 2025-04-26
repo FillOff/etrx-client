@@ -4,6 +4,17 @@
     "changes": "Changes",
     "updates": [
       {
+        "date": "26.4.2025",
+        "items": [
+          {
+            "type": "Reworked/Changed",
+            "details": [
+              "Rework protocol and contest submissions"
+            ]
+          }
+        ]
+      },
+      {
         "date": "20.4.2025",
         "items": [
           {

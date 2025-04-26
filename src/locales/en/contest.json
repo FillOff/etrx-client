@@ -1,14 +1,14 @@
 {
-    "contestsTableTitle": "Contests Table",
-    "filtersTitle": "Filters",
-    "filters": {
-      "all": "All",
-      "gymOnly": "Gym Only",
-      "contestsOnly": "Contests Only"
-    },
-    "tableHeaders": {
-      "id": "ID",
-      "name": "Name",
-      "startTime": "Start Time"
-    }
+  "contestsTableTitle": "Contests Table",
+  "filtersTitle": "Filters",
+  "filters": {
+    "all": "All",
+    "gymOnly": "Gym Only",
+    "contestsOnly": "Contests Only"
+  },
+  "tableHeaders": {
+    "id": "ID",
+    "name": "Name",
+    "startTime": "Start Time"
   }
+}

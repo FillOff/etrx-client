@@ -11,11 +11,12 @@
     }
   },
   "tableHeaders": {
-    "firstName": "First Name",
-    "lastName": "Last Name",
+    "userName": "User Name",
     "city": "City",
     "organization": "Organization",
     "class": "Class",
-    "solvedCount": "Total Solved"
+    "points": "Points",
+    "solvedCount": "Total solved",
+    "participantType": "Participant type"
   }
 }

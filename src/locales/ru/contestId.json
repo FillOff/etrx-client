@@ -11,11 +11,12 @@
     }
   },
   "tableHeaders": {
-    "firstName": "Имя",
-    "lastName": "Фамилия",
+    "userName": "Имя участника",
     "city": "Город",
     "organization": "Организация",
     "class": "Класс",
-    "solvedCount": "Всего решено"
+    "points": "Очки",
+    "solvedCount": "Всего решено",
+    "participantType": "Тип участия"
   }
 }

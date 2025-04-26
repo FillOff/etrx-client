@@ -11,7 +11,9 @@
       "programmingLanguage": "Язык программирования",
       "verdict": "Вердикт",
       "timeConsumedMillis": "Время",
-      "memoryConsumedBytes": "Память"
+      "memoryConsumedBytes": "Память",
+      "userName": "Имя пользователя",
+      "totalSolved": "Всего решено"
     },
     "filtersTitle": "Фильтры",
     "selectDate": "Выберите дату",

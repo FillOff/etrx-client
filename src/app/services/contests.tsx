@@ -67,18 +67,6 @@ export async function getContestSubmissions(args: GetContestSubmissionsArgs)
         }); 
 }
 
-export async function getContestSubmissionsWithUpdate(args: GetContestSubmissionsArgs)
-{
-    return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Submissions/${args.contestId}?` +
-        `${args.sortField != null? `&sortField=${args.sortField}` : ''}` +
-        `${args.filterByParticipantType != null? `&filterByParticipantType=${args.filterByParticipantType}` : ''}` +
-        `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : ''}` +
-        `${args.lang != null? `&lang=${args.lang}` : 'lang=ru'}`,
-        {
-            redirect: 'error',     
-        }); 
-}
-
 export async function updateContestSubmissions(contestId: number)
 {
     return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Codeforces/Submissions/${contestId}?`,

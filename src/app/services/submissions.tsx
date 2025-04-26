@@ -8,8 +8,6 @@ export class GetSubmissionsProtocolArgs {
         tMonth: number | null,
         tDay: number | null,
         contestId: number | null = null,
-        page: number | null = 1,
-        pageSize: number | null = 100
     )
     {
         this.fYear = fYear;
@@ -19,8 +17,6 @@ export class GetSubmissionsProtocolArgs {
         this.tMonth = tMonth;
         this.tDay = tDay;
         this.contestId = contestId;
-        this.page = page;
-        this.pageSize = pageSize;
     }
 
     fYear: number | null;
@@ -30,8 +26,6 @@ export class GetSubmissionsProtocolArgs {
     tMonth: number | null;
     tDay: number | null;
     contestId: number | null;
-    page: number | null;
-    pageSize: number | null;
 }
 
 export async function getSubmissionsProtocol(
@@ -39,8 +33,6 @@ export async function getSubmissionsProtocol(
 ) 
 {
     return fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Submissions?` +
-        `page=${args.page}` + 
-        `${args.pageSize != null? `&pageSize=${args.pageSize}` : '&pageSize=20'}` + 
         `${args.fYear != null? `&fYear=${args.fYear}` : ''}` + 
         `${args.fMonth != null? `&fMonth=${args.fMonth}` : ''}` + 
         `${args.fDay != null? `&fDay=${args.fDay}` : ''}` + 
