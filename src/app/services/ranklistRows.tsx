@@ -22,7 +22,7 @@ export class GetRanklistRowsArgs {
 
 export async function getRanklistRows(args: GetRanklistRowsArgs)
 {
-    return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Submissions/${args.contestId}?` +
+    return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/RanklistRows/${args.contestId}?` +
         `${args.sortField != null? `&sortField=${args.sortField}` : ''}` +
         `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : ''}` +
         `${args.filterByParticipantType != null? `&filterByParticipantType=${args.filterByParticipantType}` : ''}` +
@@ -34,7 +34,7 @@ export async function getRanklistRows(args: GetRanklistRowsArgs)
 
 export async function updateRanklistRows(contestId: number)
 {
-    return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Codeforces/Submissions/${contestId}?`,
+    return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Codeforces/RanklistRows/${contestId}?`,
         {
             redirect: 'error',   
             method: 'POST',  
