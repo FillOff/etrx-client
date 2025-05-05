@@ -15,8 +15,7 @@ export default function Page() {
     const { t, i18n } = useTranslation();
     const [participantType, setParticipantType] = useState('CONTESTANT');
     const contestId = Number(useParams().id);
-    const [contest, setContest] = useState(new Contest(0, "", 0, 0, 0));
-    const timeNow = Math.floor(Date.now() / 1000);
+    const [contest, setContest] = useState(new Contest(0, "", 0, 0, 0, false));
     const [statusCode, setStatusCode] = useState(0);
     const firstUpdate = useRef(true);
     const [isClient, setIsClient] = useState(false);
@@ -45,7 +44,7 @@ export default function Page() {
 
         let data = await response.json();
         setContest(data);
-
+        
         props.page = null;
         props.maxPage = null;
         props.sortField = props.sortField ? props.sortField : 'solvedCount';
@@ -59,11 +58,14 @@ export default function Page() {
         );
 
         try {
-            if (firstUpdate.current) {
-                await updateRanklistRows(contestId);
+            if (args.filterByParticipantType == 'CONTESTANT' && data['isContestLoaded']) {
                 response = await getRanklistRows(args);
-                firstUpdate.current = false;
             } else {
+                if (firstUpdate.current) {
+                    await updateRanklistRows(contestId);
+                    firstUpdate.current = false;
+                }
+
                 response = await getRanklistRows(args);
             }
         } catch (error) {

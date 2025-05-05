@@ -6,6 +6,7 @@ export default class ContestData
         durationSeconds: number,
         startTime: number,
         relativeTimeSeconds: number,
+        isContestLoaded: boolean
     )
     {
         this.contestId = contestId;
@@ -13,10 +14,12 @@ export default class ContestData
         this.durationSeconds = durationSeconds;
         this.startTime = startTime;
         this.relativeTimeSeconds = relativeTimeSeconds;
+        this.isContestLoaded = isContestLoaded;
     }
     contestId: number;
     name: string;
     durationSeconds: number;
     startTime: number;
     relativeTimeSeconds: number;
+    isContestLoaded: boolean;
 }
