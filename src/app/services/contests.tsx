@@ -78,8 +78,7 @@ export async function updateContestSubmissions(contestId: number)
 
 export async function getContest(contestId: number, lang: string | null)
 {
-    // return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Contests/${contestId}?` +
-    return await fetch(`http://localhost:8080/api/Contests/${contestId}?` +
+    return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Contests/${contestId}?` +
         `${lang != null? `&lang=${lang}` : 'lang=ru'}`,
         {
             redirect: 'error',   

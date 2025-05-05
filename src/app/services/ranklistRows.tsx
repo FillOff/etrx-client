@@ -34,8 +34,7 @@ export async function getRanklistRows(args: GetRanklistRowsArgs)
 
 export async function updateRanklistRows(contestId: number)
 {
-    // return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Codeforces/RanklistRows/${contestId}?`,
-    return await fetch(`http://localhost:8080/api/Codeforces/RanklistRows/${contestId}?`,
+    return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Codeforces/RanklistRows/${contestId}?`,
         {
             redirect: 'error',   
             method: 'POST',  

@@ -4,6 +4,17 @@
     "changes": "Changes",
     "updates": [
       {
+        "date": "5.5.2025",
+        "items": [
+          {
+            "type": "Reworked/Changed",
+            "details": [
+              "Now the results of the contestants are uploaded instantly, if they were uploaded before and the contest has already finished"
+            ]
+          }
+        ]
+      },
+      {
         "date": "26.4.2025",
         "items": [
           {
