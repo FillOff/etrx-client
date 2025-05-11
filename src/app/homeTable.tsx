@@ -45,7 +45,7 @@ export default function HomeTable() {
 
     // Set field keys that we got
     if (rawEntries[0])
-      props.fieldKeys = Object.keys(rawEntries[0]).filter(k => k != "durationSeconds");
+      props.fieldKeys = Object.keys(rawEntries[0]).filter(k => k != "durationSeconds" && k != "isContestLoaded");
 
     // Create viewable content from raw data
     const entries: TableEntry[] = [];
@@ -59,7 +59,7 @@ export default function HomeTable() {
           raw[key] = unixToFormattedDate(raw[key]);
         }
 
-        if (key != "relativeTimeSeconds" && key != "durationSeconds") {
+        if (key != "relativeTimeSeconds" && key != "durationSeconds" && key != "isContestLoaded") {
           entry.cells.push(<td key={i} className={TableStyles.cell}>{raw[key]}</td>);
         }
       });

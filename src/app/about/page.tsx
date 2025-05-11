@@ -6,18 +6,8 @@ import { useState, useEffect } from 'react';
 import GizmoSpinner from '../components/gizmo-spinner';
 import Styles from "../components/network-table.module.css";
 
-interface UpdateDetail {
-    type: string;
-    details: string[];
-}
-
-interface Update {
-    date: string;
-    items: UpdateDetail[];
-}
-
 export default function Page() {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
