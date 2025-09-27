@@ -5,6 +5,7 @@ export interface Column<T> {
     header: React.ReactNode;
     accessor: keyof T;
     isSortable?: boolean;
+    headerHint?: string;
     render?: (item: T) => React.ReactNode;
 }
 

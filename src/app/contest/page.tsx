@@ -123,7 +123,13 @@ function ContestClientPage() {
             key: 'isContestLoaded',
             header: t('contest:tableHeaders.isContestLoaded'),
             accessor: 'isContestLoaded',
-            render: (item) => item.isContestLoaded ? '' : '✖',
+            headerHint: t('contest:hints.isContestLoaded'),
+            render: (item) => (
+                <div className="flex items-center justify-center">
+                    {item.isContestLoaded ? '' : '✖'}
+                </div>
+            ),
+
         },
         { 
             key: 'startTime',

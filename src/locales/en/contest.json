@@ -10,6 +10,9 @@
     "id": "ID",
     "name": "Name",
     "startTime": "Start Time",
-      "isContestLoaded": "Contestant data"
+    "isContestLoaded": "✔"
+  },
+  "hints": {
+    "isContestLoaded": "Shows whether the results of the official participants of the contest have been uploaded"
   }
 }

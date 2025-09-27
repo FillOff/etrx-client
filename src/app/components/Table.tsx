@@ -40,6 +40,7 @@ export function Table<T extends { id: string | number }>({
                             key={column.key}
                             className={classes}
                             onClick={() => sortable && onSortChange?.(column.accessor)}
+                            title={column.headerHint}
                         >
                             {column.header}
                         </th>
