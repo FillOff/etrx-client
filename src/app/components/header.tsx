@@ -7,7 +7,7 @@ import { usePathname, useRouter } from "next/navigation"
 import Dropdown from "./dropdown";
 import { useTranslation } from 'react-i18next';
 import { changeLanguage } from '../../i18n/client';
-import { pushRouteWithQueryParams } from "@/lib/utils";
+import { pushRouteWithQueryParams } from "@/libs/queryParams";
 
 export default function Header()
 {
@@ -49,24 +49,22 @@ export default function Header()
                     </button>
 
                     {/* Contests Dropdown */}
-                    <Dropdown header={t('header:contests')} onClick={() => pushRouteWithQueryParams('/contest', pathname, router)}>
-                        <button onClick={() => pushRouteWithQueryParams('/contest', pathname, router)} className={DdStyles.dropdown_elem}>
-                            {t('header:view_all_contests')}
-                        </button>
-                        <button className={DdStyles.dropdown_elem}>
-                            <div className={MiscStyles.add_ico}></div> {t('header:add_new')}
-                        </button>
-                    </Dropdown>
+                    <button onClick={() => pushRouteWithQueryParams('/contest', pathname, router)} className={DdStyles.header_elem}>
+                        {t('header:contests')}
+                    </button>
 
                     {/* Users Dropdown */}
-                    <Dropdown header={t('header:users')} onClick={() => pushRouteWithQueryParams('/user', pathname, router)}>
+                    <button onClick={() => pushRouteWithQueryParams('/user', pathname, router)} className={DdStyles.header_elem}>
+                        {t('header:users')}
+                    </button>
+                    {/* <Dropdown header={t('header:users')} onClick={() => pushRouteWithQueryParams('/user', pathname, router)}>
                         <button onClick={() => pushRouteWithQueryParams('/user', pathname, router)} className={DdStyles.dropdown_elem}>
                             {t('header:view_all_users')}
                         </button>
                         <button className={DdStyles.dropdown_elem}>
                             <div className={MiscStyles.add_ico}></div> {t('header:add_new')}
                         </button>
-                    </Dropdown>
+                    </Dropdown> */}
 
                     {/* Problems Button */}
                     <button onClick={() => pushRouteWithQueryParams('/problem', pathname, router)} className={DdStyles.header_elem}>

@@ -1,5 +1,7 @@
 {
     "loading": "Loading...",
+    "loadingTooLong": "Too long loading",
+    "checkConnection": "Check your connection",
     "error": "Could not load table data. Status code: {{statusCode}}",
     "months": {
       "january": "January",

@@ -9,6 +9,7 @@
   "tableHeaders": {
     "id": "ID",
     "name": "Name",
-    "startTime": "Start Time"
+    "startTime": "Start Time",
+      "isContestLoaded": "Contestant data"
   }
 }

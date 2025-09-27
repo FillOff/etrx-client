@@ -13,7 +13,7 @@
       "timeConsumedMillis": "Время",
       "memoryConsumedBytes": "Память",
       "userName": "Имя пользователя",
-      "totalSolved": "Всего решено"
+      "solvedCount": "Всего решено"
     },
     "filtersTitle": "Фильтры",
     "selectDate": "Выберите дату",

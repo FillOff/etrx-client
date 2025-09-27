@@ -1,16 +1,8 @@
-export default class Contest
-{
-    constructor(
-        contestId: number,
-        name: string,
-        startTime: number,
-    )
-    {
-        this.contestId = contestId;
-        this.name = name;
-        this.startTime = startTime;
-    }
+export interface Contest {
     contestId: number;
     name: string;
     startTime: number;
+    isContestLoaded: boolean;
 }
+
+export type ContestForTable = Contest & { id: number };

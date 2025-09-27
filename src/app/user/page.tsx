@@ -1,111 +1,116 @@
-"use client";
-import { getUsers, GetUsersArgs } from "@/app/services/users";
-import { Entry, RequestProps, Table, TableEntry, TableProps } from "@/app/components/table";
-import { useMemo, useState, useEffect } from "react";
-import TableStyles from '@/app/components/network-table.module.css';
-import GizmoSpinner from "@/app/components/gizmo-spinner";
+'use client';
+
 import { useTranslation } from 'react-i18next';
-import '../../i18n/client';
+import { useState, useEffect, useMemo, useCallback, Suspense } from 'react';
+import { useIsClient } from '@/hooks/useIsClient';
+import { useQueryState } from '@/hooks/useQueryState';
+import { getUsers, GetUsersArgs } from "@/app/services/users";
+import GizmoSpinner from "@/app/components/gizmo-spinner";
+import { Table } from "@/app/components/Table";
+import { User, UserForTable } from "@/app/models/User";
+import { Column, SortOrder } from '../models/TableTypes';
 
-export default function Page() {
-  const { t, i18n } = useTranslation();
-  const [statusCode, setStatusCode] = useState(0);
-  const [isClient, setIsClient] = useState(false);
+const DEFAULT_SORT_FIELD: keyof User = 'firstName';
+const DEFAULT_SORT_ORDER: SortOrder = 'asc';
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+function UserClientPage() {
+    const { t } = useTranslation('user');
+    const isClient = useIsClient();
 
-  async function getData(props: RequestProps) {
-    // Prepare request parameters
-    props.sortField = props.sortField ? props.sortField : 'firstName';
-    props.sortOrder = props.sortOrder != null ? props.sortOrder : true;
-    const args = new GetUsersArgs(
-      null,
-      null,
-      props.sortField,
-      props.sortOrder
-    );
-
-    // Get raw data
-    let response: Response;
-    try {
-      response = await getUsers(args);
-    } catch (error) {
-      setStatusCode(-1);
-      return { entries: [], props: props };
-    }
-
-    const data = await response.json();
-    const rawEntries = Array.from(data.users);
-
-    // Set status code to track request state
-    setStatusCode(response.status);
-
-    // Set field keys that we got
-    if (rawEntries[0])
-      props.fieldKeys = Object.keys(rawEntries[0]);
-
-    // Create viewable content from raw data
-    const entries: TableEntry[] = [];
-    rawEntries.forEach((raw: any, i) => {
-      const len = Object.keys(raw).length;
-      const entry: Entry = new Entry();
-
-      entry.cells = Array(len);
-      Object.keys(raw).forEach((key, i) => {
-        entry.cells.push(<td key={i} className={TableStyles.cell}>{raw[key]}</td>);
-      });
-
-      const tEntry = new TableEntry;
-      tEntry.row = <tr key={i} className={TableStyles.tr_link}
-        onClick={() => window.open(`https://codeforces.com/profile/${raw['handle']}`)}>
-        {entry.cells}
-      </tr>;
-      entries.push(tEntry);
+    const { searchParams, setQueryParams } = useQueryState({
+        sortField: DEFAULT_SORT_FIELD,
+        sortOrder: DEFAULT_SORT_ORDER,
     });
 
-    return { entries: entries, props: props };
-  }
+    const sortField = useMemo(() => (searchParams.get('sortField') as keyof User) || DEFAULT_SORT_FIELD, [searchParams]);
+    const sortOrder = useMemo(() => (searchParams.get('sortOrder') as SortOrder) || DEFAULT_SORT_ORDER, [searchParams]);
 
-  const tableProps = new TableProps([
-    t('user:tableHeaders.id'),
-    t('user:tableHeaders.handle'),
-    t('user:tableHeaders.firstName'),
-    t('user:tableHeaders.lastName'),
-    t('user:tableHeaders.organization'),
-    t('user:tableHeaders.city'),
-    t('user:tableHeaders.class')
-  ]);
+    const [users, setUsers] = useState<User[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [error, setError] = useState<Error | null>(null);
 
-  const table = useMemo(() => {
-    if (!isClient) return null;
-    
+    const fetchData = useCallback(async () => {
+        setIsLoading(true);
+        setError(null);
+
+        const args = new GetUsersArgs(
+            null,
+            null,
+            sortField,
+            sortOrder === 'asc'
+        );
+
+        try {
+            const response = await getUsers(args);
+            if (!response.ok) {
+                throw new Error(t('common:error', { statusCode: response.status }));
+            }
+            const data = await response.json();
+            setUsers(data.users || []);
+        } catch (err) {
+            setError(err as Error);
+            setUsers([]);
+        } finally {
+            setIsLoading(false);
+        }
+    }, [sortField, sortOrder, t]);
+
+    useEffect(() => {
+        if (isClient) {
+            fetchData();
+        }
+    }, [isClient, fetchData]);
+
+    const handleSortChange = (newSortField: keyof UserForTable) => {
+        const effectiveSortField = newSortField as keyof User;
+        const newSortOrder = (sortField === effectiveSortField && sortOrder === 'asc') ? 'desc' : 'asc';
+        
+        setQueryParams({
+            sortField: effectiveSortField,
+            sortOrder: newSortOrder,
+        });
+    };
+
+    const columns: Column<UserForTable>[] = useMemo(() => [
+        { key: 'id', header: t('user:tableHeaders.id'), accessor: 'id' },
+        { key: 'handle', header: t('user:tableHeaders.handle'), accessor: 'handle' },
+        { key: 'firstName', header: t('user:tableHeaders.firstName'), accessor: 'firstName' },
+        { key: 'lastName', header: t('user:tableHeaders.lastName'), accessor: 'lastName' },
+        { key: 'organization', header: t('user:tableHeaders.organization'), accessor: 'organization' },
+        { key: 'city', header: t('user:tableHeaders.city'), accessor: 'city' },
+        { key: 'grade', header: t('user:tableHeaders.class'), accessor: 'grade' },
+    ], [t]);
+
+    const tableData: UserForTable[] = users.map(user => ({ ...user, id: user.id }));
+
+    if (!isClient) {
+        return <GizmoSpinner />;
+    }
+
     return (
-      <>
-        <div>
-          <Table getData={getData} props={tableProps}></Table>
-        </div>
-      </>
+        <>
+            <h1 className='text-3xl w-full text-center font-bold mb-5'>{t('user:usersTableTitle')}</h1>
+            
+            <Table
+                columns={columns}
+                data={tableData}
+                isLoading={isLoading}
+                error={error}
+                
+                sortField={sortField}
+                sortOrder={sortOrder}
+                onSortChange={handleSortChange}
+
+                onRowClick={(user) => window.open(`https://codeforces.com/profile/${user.handle}`)}
+            />
+        </>
     );
-  }, [i18n.language, isClient]);
+}
 
-  if (!isClient) {
-    return <GizmoSpinner />;
-  }
-
+export default function Page() {
   return (
-    <>
-      <h1 className='text-3xl w-full text-center font-bold mb-5'>{t('user:usersTableTitle')}</h1>
-      {statusCode == 0 && <div className='mb-[150px]'><GizmoSpinner></GizmoSpinner></div>}
-      {statusCode != 200 && statusCode != 0 &&
-        <h1 className="w-full text-center text-2xl font-bold">
-          {t('common:error', { statusCode })}
-        </h1>
-      }
-      <div className={statusCode == 200 ? 'visible' : 'invisible'}>
-        {table}
-      </div>
-    </>
+    <Suspense fallback={<GizmoSpinner />}>
+      <UserClientPage />
+    </Suspense>
   );
 }

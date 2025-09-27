@@ -1,11 +1,11 @@
 import Styles from "./problem-tags.module.css";
 
 
-export function GetDivTagsList(tagsList: string[])
+export function GetDivTagsList(tags: string[])
 {
     return (
         <div>
-            {tagsList.map((tag, i) => (
+            {tags.map((tag, i) => (
                 <div key={i} className={Styles.tag}>{tag}</div>
             ))}
         </div>

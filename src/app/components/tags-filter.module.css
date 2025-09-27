@@ -107,3 +107,11 @@
 .close_btn::after {
     transform: rotate(-45deg);
 }
+
+.input {
+  border: 1.5px solid black;
+  padding: 2px 5px;
+  margin: 4px;
+  border-radius: 6px;
+  background-color: var(--background);
+}
