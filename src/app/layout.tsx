@@ -1,8 +1,8 @@
 import { useId } from "react";
-import Header from "./components/header";
 import { Sidebar } from "./components/sidebar";
 import LanguageProvider from "./components/language-provider";
 import "./globals.css";
+import Header from "./components/Header";
 
 export default function RootLayout({children,}: Readonly<{children: React.ReactNode;}>) {
     const sidebarId = useId();
@@ -11,9 +11,9 @@ export default function RootLayout({children,}: Readonly<{children: React.ReactN
         <html>
             <title>ETRX</title>
             <body>
+                <Header/>
                 <LanguageProvider />
                 <Sidebar sidebarId={sidebarId}/>
-                <Header/>
                 {children}
             </body>
         </html>

@@ -1,153 +1,186 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useState } from "react";
-import { GetContestsArgs, getContests } from "../services/contests";
-import TableStyles from '../components/network-table.module.css';
-import { Entry, TableEntry, Table, TableProps, RequestProps } from "@/app/components/table";
-import { RadioGroup, Option } from "../components/contest-radiogroup";
-import GizmoSpinner from "@/app/components/gizmo-spinner";
+import { useEffect, useState, useMemo, useCallback, useRef, Suspense } from "react";
 import { useTranslation } from 'react-i18next';
-import '../../i18n/client';
+import { useIsClient } from "@/hooks/useIsClient";
+import { useQueryState } from "@/hooks/useQueryState";
+import { GetContestsArgs, getContests } from "@/app/services/contests";
+import { unixToFormattedDate } from "@/libs/date";
+import { Table } from "@/app/components/Table";
+import { RadioGroup, Option } from "@/app/components/contest-radiogroup";
+import GizmoSpinner from "@/app/components/gizmo-spinner";
+import { Column, SortOrder } from "@/app/models/TableTypes";
+import { Contest, ContestForTable } from "@/app/models/Contest";
 
-export default function Page() {
-  const { t, i18n } = useTranslation();
-  const [statusCode, setStatusCode] = useState(0);
-  const [gym, setGym] = useState<number>(2);
-  const [isClient, setIsClient] = useState(false);
+const DEFAULT_PAGE = 1;
+const DEFAULT_SORT_FIELD: keyof Contest = 'startTime';
+const DEFAULT_SORT_ORDER: SortOrder = 'asc';
+const DEFAULT_GYM_FILTER = 2; 
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+function ContestClientPage() {
+    const { t, i18n } = useTranslation();
+    const isClient = useIsClient();
 
-  async function getData(props: RequestProps) {
-    // Prepare request parameters and other properties
-    props.page = props.page ? props.page : 1;
-    props.sortField = props.sortField ? props.sortField : 'startTime';
-    props.sortOrder = props.sortOrder != null ? props.sortOrder : false;
-    const args = new GetContestsArgs(
-      props.page,
-      100,
-      props.sortField,
-      props.sortOrder,
-      gym == 2 ? null : gym == 1 ? true : false,
-      i18n.language
-    );
-
-    // Get raw data
-    let response: Response;
-    try {
-      response = await getContests(args);
-    } catch (error) {
-      setStatusCode(-1);
-      return { entries: [], props: props };
-    }
-
-    const data = await response.json();
-    const rawEntries = Array.from(data.contests);
-
-    // Set status code to track request state
-    setStatusCode(response.status);
-
-    // Set new page that we got from response
-    if (data['pageCount'] && typeof (data['pageCount']) == 'number')
-      props.maxPage = data['pageCount'];
-
-    // Set field keys that we got
-    if (rawEntries[0])
-      props.fieldKeys = Object.keys(rawEntries[0]).filter(k => k != "durationSeconds" && k != "isContestLoaded");
-
-    // Create viewable content from raw data
-    const entries: TableEntry[] = [];
-    rawEntries.forEach((raw: any, i) => {
-      const len = Object.keys(raw).length;
-      const entry: Entry = new Entry();
-
-      entry.cells = Array(len);
-      Object.keys(raw).forEach((key, i) => {
-        if (key == 'startTime' && raw[key] != 0) {
-          raw[key] = unixToFormattedDate(raw[key]);
-        }
-
-        if (key != "relativeTimeSeconds" && key != "durationSeconds" && key != "isContestLoaded") {
-          entry.cells.push(<td key={i} className={TableStyles.cell}>{raw[key]}</td>);
-        }
-      });
-
-      const tEntry = new TableEntry;
-      tEntry.row = <tr key={i} className={TableStyles.tr_link}
-        onClick={() => window.open(`/etrx2/contest/${raw['contestId']}`)}>
-        {entry.cells}
-      </tr>;
-      entries.push(tEntry);
+    const { searchParams, setQueryParams } = useQueryState({
+        page: DEFAULT_PAGE,
+        sortField: DEFAULT_SORT_FIELD,
+        sortOrder: DEFAULT_SORT_ORDER,
+        gymFilter: DEFAULT_GYM_FILTER,
     });
 
-    return { entries: entries, props: props };
-  }
+    const page = useMemo(() => Number(searchParams.get('page')) || DEFAULT_PAGE, [searchParams]);
+    const sortField = useMemo(() => (searchParams.get('sortField') as keyof Contest) || DEFAULT_SORT_FIELD, [searchParams]);
+    const sortOrder = useMemo(() => (searchParams.get('sortOrder') as SortOrder) || DEFAULT_SORT_ORDER, [searchParams]);
+    const gymFilter = useMemo(() => {
+        const param = searchParams.get('gymFilter');
+        return param !== null ? Number(param) : DEFAULT_GYM_FILTER;
+    }, [searchParams]);
 
-  function unixToFormattedDate(unixTime: number): string {
-    const months = [
-      t('common:months.january'), t('common:months.february'), t('common:months.march'),
-      t('common:months.april'), t('common:months.may'), t('common:months.june'),
-      t('common:months.july'), t('common:months.august'), t('common:months.september'),
-      t('common:months.october'), t('common:months.november'), t('common:months.december')
+    // Локальное состояние для данных
+    const [contests, setContests] = useState<Contest[]>([]);
+    const [maxPage, setMaxPage] = useState<number>(1);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [error, setError] = useState<Error | null>(null);
+    
+    const isMounted = useRef(true);
+
+    const fetchData = useCallback(async () => {
+        const args = new GetContestsArgs(
+            page,
+            100,
+            sortField,
+            sortOrder === 'desc',
+            gymFilter == 2 ? null : gymFilter == 1,
+            i18n.language
+        );
+
+        try {
+            const response = await getContests(args);
+            if (!isMounted.current) return;
+
+            if (!response.ok) {
+                throw new Error(t('common:error', { statusCode: response.status }));
+            }
+            const data = await response.json();
+            setContests(data.contests || []);
+            setMaxPage(data.pageCount || 1);
+        } catch (err) {
+            if (!isMounted.current) return;
+            setError(err as Error);
+            setContests([]);
+        } finally {
+            if (!isMounted.current) return;
+            setIsLoading(false);
+        }
+    }, [page, sortField, sortOrder, gymFilter, i18n.language, t]);
+
+    useEffect(() => {
+        isMounted.current = true;
+        if (isClient) {
+            setIsLoading(true);
+            setError(null);
+            fetchData();
+        }
+        return () => {
+            isMounted.current = false;
+        };
+    }, [isClient, fetchData]);
+
+    const handleSortChange = (newSortField: keyof ContestForTable) => {
+        const effectiveSortField = newSortField === 'id' ? 'contestId' : newSortField;
+        const newSortOrder = (sortField === effectiveSortField && sortOrder === 'asc') ? 'desc' : 'asc';
+
+        setQueryParams({
+            sortField: effectiveSortField,
+            sortOrder: newSortOrder,
+            page: 1, 
+        });
+    };
+
+    const handleFilterChange = (newFilterValue: number) => {
+        setQueryParams({
+            gymFilter: newFilterValue,
+            page: 1,
+        });
+    };
+
+    const handlePageChange = (newPage: number) => {
+        setQueryParams({ page: newPage });
+    };
+
+    const columns: Column<ContestForTable>[] = useMemo(() => [
+        { 
+            key: 'contestId', 
+            header: t('contest:tableHeaders.id'), 
+            accessor: 'contestId' 
+        },
+        { 
+            key: 'Name', 
+            header: t('contest:tableHeaders.name'), 
+            accessor: 'name' 
+        },
+        { 
+            key: 'isContestLoaded',
+            header: t('contest:tableHeaders.isContestLoaded'),
+            accessor: 'isContestLoaded',
+            render: (item) => item.isContestLoaded ? '' : '✖',
+        },
+        { 
+            key: 'startTime',
+            header: t('contest:tableHeaders.startTime'),
+            accessor: 'startTime',
+            render: (item) => unixToFormattedDate(item.startTime, t),
+        },
+    ], [t]);
+
+    const tableData: ContestForTable[] = contests.map(c => ({ ...c, id: c.contestId }));
+
+    const radioGroupOptions: Option[] = [
+        { label: t('contest:filters.all'), value: 2 },
+        { label: t('contest:filters.gymOnly'), value: 1 },
+        { label: t('contest:filters.contestsOnly'), value: 0 },
     ];
 
-    const date = new Date(unixTime * 1000);
-
-    const month = months[date.getMonth()];
-    const day = date.getDate();
-    const year = date.getFullYear();
-
-    return `${month} ${day} ${year}`;
-  }
-
-  const tableProps = new TableProps([
-    t('contest:tableHeaders.id'), 
-    t('contest:tableHeaders.name'), 
-    t('contest:tableHeaders.startTime')]
-);
-
-  const table = useMemo(() => {
-    if (!isClient) return null;
+    if (!isClient) {
+        return <GizmoSpinner />;
+    }
 
     return (
-      <>
-        <div>
-          <Table getData={getData} props={tableProps}></Table>
-        </div>
-      </>
+        <>
+            <h1 className='text-3xl w-full text-center font-bold mb-5'>{t('contest:contestsTableTitle')}</h1>
+            
+            <RadioGroup
+                title={t('contest:filtersTitle')}
+                options={radioGroupOptions}
+                name="gymFilter"
+                value={gymFilter}
+                onChange={handleFilterChange}
+            />
+
+            <Table
+                columns={columns}
+                data={tableData}
+                isLoading={isLoading}
+                error={error}
+                
+                page={page}
+                maxPage={maxPage}
+                onPageChange={handlePageChange}
+                
+                sortField={sortField}
+                sortOrder={sortOrder}
+                onSortChange={handleSortChange}
+
+                onRowClick={(contest) => window.open(`/etrx2/contest/${contest.contestId}`)}
+            />
+        </>
     );
-  }, [gym, i18n.language, isClient]);
+}
 
-  const radioGroupOptions: Option[] = [
-    { label: t('contest:filters.all'), value: 2 },
-    { label: t('contest:filters.gymOnly'), value: 1 },
-    { label: t('contest:filters.contestsOnly'), value: 0 },
-  ];
-
-  if (!isClient) {
-    return <GizmoSpinner />;
-  }
-
+export default function Page() {
   return (
-    <>
-      <h1 className='text-3xl w-full text-center font-bold mb-5'>{t('contest:contestsTableTitle')}</h1>
-      <RadioGroup
-        title={t('contest:filtersTitle')}
-        options={radioGroupOptions}
-        name="gymFilter"
-        value={gym}
-        onChange={setGym}
-      />
-      {statusCode == 0 && <div className='mb-[150px]'><GizmoSpinner></GizmoSpinner></div>}
-      {statusCode != 200 && statusCode != 0 &&
-        <h1 className="w-full text-center text-2xl font-bold">
-          {t('common:error', { statusCode })}
-        </h1>
-      }
-      <div className={statusCode == 200 ? 'visible' : 'invisible'}>
-        {table}
-      </div>
-    </>
+    <Suspense fallback={<GizmoSpinner />}>
+      <ContestClientPage />
+    </Suspense>
   );
 }

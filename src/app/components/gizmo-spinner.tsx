@@ -16,7 +16,6 @@ export default function GizmoSpinner()
         return () => {clearTimeout(timeout)};
     }, [timeout]);
 
-    // Возвращаем пустой div для серверного рендеринга
     if (!isClient) {
         return <div className="gizmo-spinner-container"></div>;
     }

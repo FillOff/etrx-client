@@ -1,137 +1,102 @@
-import { useEffect, useState } from 'react';
-import Styles from './network-table.module.css'
+import React from 'react';
+import Styles from './network-table.module.css';
 import PageSelector from './page-selector';
+import GizmoSpinner from './gizmo-spinner';
+import { SortOrder, TableProps } from '@/app/models/TableTypes';
 
-export class Entry
-{
-    cells: JSX.Element[] = [];
-}
+const getSortClasses = (
+    isSorted: boolean,
+    sortOrder: SortOrder | null | undefined
+): string => {
+    if (!isSorted) return '';
+    return sortOrder === 'desc' ? Styles.cell_arrow_down : Styles.cell_arrow_up;
+};
 
-export class TableEntry
-{
-    public row: JSX.Element = <tr></tr>
-}
+export function Table<T extends { id: string | number }>({
+    data,
+    columns,
+    isLoading = false,
+    error = null,
+    page,
+    maxPage,
+    onPageChange,
+    sortField,
+    sortOrder,
+    onSortChange,
+    onRowClick,
+}: TableProps<T>) {
 
-export class TableProps
-{
-    constructor( 
-        public columnNames: string[],
-    ) {}
-    hidePageSelectors: boolean | undefined;
-}
+    const tableHeaders = (
+        <thead>
+            <tr>
+                {columns.map((column) => {
+                    const sortable = column.isSortable ?? true;
+                    const isSorted = sortable && column.accessor === sortField;
+                    
+                    const classes = `${Styles.th} ${sortable ? Styles.sortable : ''} ${getSortClasses(isSorted, sortOrder)}`;
+                    
+                    return (
+                        <th
+                            key={column.key}
+                            className={classes}
+                            onClick={() => sortable && onSortChange?.(column.accessor)}
+                        >
+                            {column.header}
+                        </th>
+                    );
+                })}
+            </tr>
+        </thead>
+    );
 
-export class RequestProps
-{
-    page: number | null = null;
-    maxPage: number | null = null;
-    sortField: string | null = null;
-    sortOrder: boolean | null = null;
-    fieldKeys: string[] = [];
-}
 
-export function Table(
-    {
-        getData, 
-        props
-    }: 
-    {
-        getData: (params: RequestProps) => Promise<{entries: TableEntry[], props: RequestProps}>,
-        props: TableProps
-    }
-)
-{
-    const [entries, setEntries] = useState<TableEntry[]>([]);
-    const [rProps, setRProps] = useState(new RequestProps);
-
-    function request()
-    {
-        getData(rProps).then(result => {
-            setEntries(result.entries);
-
-            setRProps(result.props);
-        });
-    }
-
-    useEffect(() => {
-        request();
-    }, [getData])
-
-    function pageCallback(newPage: number)
-    {
-        const newRProps = rProps;
-        newRProps.page = newPage;
-        setRProps(newRProps);
-
-        request();
-    }
-
-    function changeParams(fieldName: string | undefined)
-    {
-        if(fieldName)
-        {
-            const newRProps = rProps;
-            
-            // Reset sortOrder when choosing different field
-            if (fieldName != newRProps.sortField)
-            {
-                newRProps.sortField = fieldName;
-                newRProps.sortOrder = false;
-                setRProps(newRProps);
-            }
-            else
-            {
-                newRProps.sortField = fieldName;
-                newRProps.sortOrder = !rProps.sortOrder;
-                setRProps(newRProps);
-            }
-
-            request();
-        } 
-    }
+    const tableBody = (
+        <tbody>
+            {data.map((item) => (
+                <tr
+                    key={item.id}
+                    className={onRowClick ? Styles.tr_link : ''}
+                    onClick={() => onRowClick?.(item)}
+                >
+                    {columns.map((column) => (
+                        <td key={String(column.key)} className={Styles.cell}>
+                            {column.render ? column.render(item) : (item[column.accessor] as React.ReactNode)}
+                        </td>
+                    ))}
+                </tr>
+            ))}
+        </tbody>
+    );
     
-    return (
-        <>
-        <div className={Styles.container}>
-            {!props.hidePageSelectors && entries.length > 0 && rProps.page && rProps.maxPage && 
-                <PageSelector page={rProps.page} maxPage={rProps.maxPage} pageCallback={pageCallback}/>
-            }
-            <table className={Styles.table}>
-                <thead>
-                    <tr key={0}>
-                    {props.columnNames.map((name, index) => {    
-                        if (rProps.sortField != rProps.fieldKeys.at(index))
-                            return(
-                                <th key={index} className={Styles.th}
-                                        onClick={() => changeParams(rProps.fieldKeys.at(index))}>
-                                    {name}
-                                </th>
-                            )
+    const renderContent = () => {
+        if (error) {
+            return <div className="text-center py-10 text-red-500">Ошибка: {error.message}</div>;
+        }
 
-                        if(rProps.sortOrder) 
-                            return(
-                                <th key={index} className={[Styles.th, Styles.cell_arrow_up].join(' ')}
-                                        onClick={() => changeParams(rProps.fieldKeys.at(index))}>
-                                    {name}
-                                </th>
-                            )
-                        else
-                            return(
-                                <th key={index} className={[Styles.th, Styles.cell_arrow_down].join(' ')}
-                                        onClick={() => changeParams(rProps.fieldKeys.at(index))}>
-                                    {name}
-                                </th>
-                            )
-                        })}
-                    </tr>
-                </thead>
-                <tbody>
-                    {entries.map(entry => entry.row)}
-                </tbody>
+        if (data.length === 0) {
+            return <div className="text-center py-10">Нет данных для отображения</div>;
+        }
+
+        return (
+            <table className={Styles.table}>
+                {tableHeaders}
+                {tableBody}
             </table>
-            {!props.hidePageSelectors != false && entries.length > 0 && rProps.page && rProps.maxPage && 
-                <PageSelector page={rProps.page} maxPage={rProps.maxPage} pageCallback={pageCallback}/>
-            }
-        </div>
-        </>
-    )
+        );
+    };
+    
+    const showPagination = !isLoading && data.length > 0 && page && maxPage && onPageChange;
+
+    if (isLoading) {
+        return <div className="py-10"><GizmoSpinner /></div>;
+    } else {
+        return (
+            <div className={Styles.container}>
+                {showPagination && <PageSelector page={page} maxPage={maxPage} pageCallback={onPageChange} />}
+                {renderContent()}
+                {showPagination && <PageSelector page={page} maxPage={maxPage} pageCallback={onPageChange} />}
+            </div>
+        );
+    }
+
 }

@@ -1,168 +1,154 @@
 'use client';
-import { Entry, RequestProps, Table, TableEntry, TableProps } from "@/app/components/table";
-import { getContest } from "@/app/services/contests";
+import { useEffect, useState, useMemo, useCallback, useRef, Suspense } from "react";
 import { useParams } from "next/navigation";
-import TableStyles from '../../components/network-table.module.css';
-import { useEffect, useMemo, useRef, useState } from "react";
-import GizmoSpinner from "@/app/components/gizmo-spinner";
-import { RadioGroup, Option } from "../../components/contest-radiogroup";
-import Contest from "@/app/models/ContestData";
 import { useTranslation } from 'react-i18next';
-import '../../../i18n/client';
+import { useIsClient } from "@/hooks/useIsClient";
+import { useQueryState } from "@/hooks/useQueryState";
+import { getContest } from "@/app/services/contests";
 import { getRanklistRows, GetRanklistRowsArgs, updateRanklistRows } from "@/app/services/ranklistRows";
+import ContestData from "@/app/models/ContestData";
+import { Column, SortOrder } from "@/app/models/TableTypes";
+import { Problem, RanklistRow, RanklistRowForTable } from "@/app/models/Ranklist";
+import { Table } from "@/app/components/Table";
+import { RadioGroup, Option } from "@/app/components/contest-radiogroup";
+import GizmoSpinner from "@/app/components/gizmo-spinner";
 
-export default function Page() {
+const DEFAULT_PARTICIPANT_TYPE = 'CONTESTANT';
+const DEFAULT_SORT_FIELD: keyof RanklistRow = 'solvedCount';
+const DEFAULT_SORT_ORDER: SortOrder = 'desc';
+
+function ContestIdClientPage() {
     const { t, i18n } = useTranslation();
-    const [participantType, setParticipantType] = useState('CONTESTANT');
     const contestId = Number(useParams().id);
-    const [contest, setContest] = useState(new Contest(0, "", 0, 0, 0, false));
-    const [statusCode, setStatusCode] = useState(0);
-    const firstUpdate = useRef(true);
-    const [isClient, setIsClient] = useState(false);
+    const isClient = useIsClient();
+    
+    const { searchParams, setQueryParams } = useQueryState({
+        participantType: DEFAULT_PARTICIPANT_TYPE,
+        sortField: DEFAULT_SORT_FIELD,
+        sortOrder: DEFAULT_SORT_ORDER,
+    });
+
+    const participantType = useMemo(() => searchParams.get('participantType') || DEFAULT_PARTICIPANT_TYPE, [searchParams]);
+    const sortField = useMemo(() => (searchParams.get('sortField') as keyof RanklistRow) || DEFAULT_SORT_FIELD, [searchParams]);
+    const sortOrder = useMemo(() => (searchParams.get('sortOrder') as SortOrder) || DEFAULT_SORT_ORDER, [searchParams]);
+    
+    const [contest, setContest] = useState<ContestData | null>(null);
+    const [ranklistRows, setRanklistRows] = useState<RanklistRow[]>([]);
+    const [problems, setProblems] = useState<Problem[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [error, setError] = useState<Error | null>(null);
+    const updatePerformed = useRef(false);
 
     useEffect(() => {
-        setIsClient(true);
-    }, []);
+        if (!isClient) return;
 
-    const tableProps = new TableProps([
-        t('contestId:tableHeaders.userName'),
-        t('contestId:tableHeaders.city'),
-        t('contestId:tableHeaders.organization'),
-        t('contestId:tableHeaders.class'),
-        t('contestId:tableHeaders.points'),
-        t('contestId:tableHeaders.solvedCount')
-    ]);
+        const fetchContestData = async () => {
+            try {
+                const contestResponse = await getContest(contestId, i18n.language);
+                if (!contestResponse.ok) throw new Error(t('common:error', { statusCode: contestResponse.status }));
+                const contestData: ContestData = await contestResponse.json();
+                setContest(contestData);
+            } catch (err) {
+                setError(err as Error);
+            }
+        };
 
-    async function getData(props: RequestProps) {
-        let response: Response;
-        try {
-            response = await getContest(contestId, i18n.language);
-        } catch (error) {
-            setStatusCode(-1);
-            return { entries: [], props: props };
-        }
+        fetchContestData();
+    }, [isClient, contestId, i18n.language, t]);
 
-        let data = await response.json();
-        setContest(data);
-        
-        props.page = null;
-        props.maxPage = null;
-        props.sortField = props.sortField ? props.sortField : 'solvedCount';
-        props.sortOrder = props.sortOrder != null ? props.sortOrder : false;
-        const args = new GetRanklistRowsArgs(
-            contestId,
-            props.sortField,
-            props.sortOrder,
-            participantType,
-            i18n.language
-        );
+    useEffect(() => {
+        if (!isClient || !contest) return;
 
-        try {
-            if (args.filterByParticipantType == 'CONTESTANT' && data['isContestLoaded']) {
-                response = await getRanklistRows(args);
-            } else {
-                if (firstUpdate.current) {
+        const fetchRanklist = async () => {
+            setIsLoading(true);
+            setError(null);
+            try {
+                const shouldUpdate = !contest.isContestLoaded || participantType !== 'CONTESTANT';
+                if (shouldUpdate && !updatePerformed.current) {
                     await updateRanklistRows(contestId);
-                    firstUpdate.current = false;
+                    updatePerformed.current = true;
                 }
 
-                response = await getRanklistRows(args);
+                const args = new GetRanklistRowsArgs(
+                    contestId,
+                    sortField,
+                    sortOrder === 'desc',
+                    participantType,
+                    i18n.language
+                );
+                const ranklistResponse = await getRanklistRows(args);
+                if (!ranklistResponse.ok) throw new Error(t('common:error', { statusCode: ranklistResponse.status }));
+                const ranklistData = await ranklistResponse.json();
+
+                setRanklistRows(ranklistData.ranklistRows || []);
+                setProblems(ranklistData.problems || []);
+            } catch (err) {
+                setError(err as Error);
+                setRanklistRows([]);
+                setProblems([]);
+            } finally {
+                setIsLoading(false);
             }
-        } catch (error) {
-            setStatusCode(-1);
-            return { entries: [], props: props };
-        }
+        };
 
-        data = await response.json();
-        const rawEntries = Array.from(data['ranklistRows']);
-        const problems = data['problems'];
+        fetchRanklist();
+    }, [isClient, contest, participantType, sortField, sortOrder, i18n.language, t]);
 
-        setStatusCode(response.status);
 
-        const problemIndexes = problems.map((problem: any) => problem.index);
-        const columnNames = [
-            t('contestId:tableHeaders.userName'),
-            t('contestId:tableHeaders.city'),
-            t('contestId:tableHeaders.organization'),
-            t('contestId:tableHeaders.class'),
-            t('contestId:tableHeaders.points'),
-            t('contestId:tableHeaders.solvedCount')
-        ];
-
-        if (participantType === "ALL") {
-            columnNames.splice(6, 0, t('contestId:tableHeaders.participantType'));
-        }
-
-        tableProps.columnNames = columnNames.concat(problems.map((problem: any) => `${problem.index}`));
-
-        const entries: TableEntry[] = [];
-        rawEntries.forEach((raw: any, i: number) => {
-            const entry: Entry = new Entry();
-
-            const staticCells = [
-                <td key={`${raw.handle}-name`} className={TableStyles.cell}>{raw.username}</td>,
-                <td key={`${raw.handle}-city`} className={TableStyles.cell}>{raw.city}</td>,
-                <td key={`${raw.handle}-org`} className={TableStyles.cell}>{raw.organization}</td>,
-                <td key={`${raw.handle}-grade`} className={TableStyles.cell}>{raw.grade}</td>,
-                <td key={`${raw.handle}-points`} className={TableStyles.cell}>{raw.points}</td>,
-                <td key={`${raw.handle}-solved`} className={TableStyles.cell}>{raw.solvedCount}</td>
-            ];
-
-            if (participantType === "ALL") {
-                staticCells.splice(6, 0, <td key={`${raw.handle}-type`} className={TableStyles.cell}>{raw.participantType}</td>);
-            }
-
-            const dynamicCells = problemIndexes.map((index: string) => {
-                const result = raw.problemResults.find((pr: any) => pr.index === index);
-                if (result && result.points !== 0) {
-                    if (result.points === 1)
-                    {
-                        return (
-                            <td key={`${raw.handle}-${index}`} className={TableStyles.cell}>
-                                +
-                            </td>
-                        );
-                    }
-                    return (
-                        <td key={`${raw.handle}-${index}`} className={TableStyles.cell}>
-                            {result.points}
-                        </td>
-                    );
-                } else if (result && result.points === 0) {
-                    if (result.rejectedAttemptCount !== 0) {
-                        return <td key={`${raw.handle}-${index}`} className={TableStyles.cell}>-{result.rejectedAttemptCount}</td>;
-                    }
-                    return <td key={`${raw.handle}-${index}`} className={TableStyles.cell}></td>;
-                } else {
-                    return <td key={`${raw.handle}-${index}`} className={TableStyles.cell}></td>;
-                }
-            });
-
-            entry.cells = [...staticCells, ...dynamicCells];
-            const tEntry = new TableEntry();
-            tEntry.row = <tr key={i} className={TableStyles.tr}>{entry.cells}</tr>;
-            entries.push(tEntry);
+    const handleSortChange = (newSortField: keyof RanklistRowForTable) => {
+        const effectiveSortField = newSortField === 'id' ? 'handle' : newSortField;
+        
+        const newSortOrder = sortField === effectiveSortField && sortOrder === 'asc' ? 'desc' : 'asc';
+        
+        setQueryParams({
+            sortField: effectiveSortField,
+            sortOrder: newSortOrder
         });
+    };
 
-        return { entries: entries, props: props };
-    }
+    const handleFilterChange = (newFilterValue: string) => {
+        setQueryParams({ participantType: newFilterValue });
+    };
 
-    useEffect(() => {
-        setStatusCode(0);
-    }, [participantType]);
-
-    const table = useMemo(() => {
-        if (!isClient) return null;
-
-        return (
-            <>
-                <div>
-                    <Table getData={getData} props={tableProps}></Table>
-                </div>
-            </>
-        );
-    }, [participantType, i18n.language, isClient]);
-
+    const columns: Column<RanklistRowForTable>[] = useMemo(() => {
+        const staticColumns: Column<RanklistRowForTable>[] = [
+            { key: 'username', header: t('contestId:tableHeaders.userName'), accessor: 'username' },
+            { key: 'city', header: t('contestId:tableHeaders.city'), accessor: 'city' },
+            { key: 'organization', header: t('contestId:tableHeaders.organization'), accessor: 'organization' },
+            { key: 'grade', header: t('contestId:tableHeaders.class'), accessor: 'grade' },
+            { key: 'points', header: t('contestId:tableHeaders.points'), accessor: 'points' },
+            { key: 'solvedCount', header: t('contestId:tableHeaders.solvedCount'), accessor: 'solvedCount' },
+        ];
+    
+        if (participantType === "ALL") {
+            staticColumns.push({ key: 'participantType', header: t('contestId:tableHeaders.participantType'), accessor: 'participantType' });
+        }
+    
+        const dynamicColumns: Column<RanklistRowForTable>[] = problems.map(problem => {
+            const problemUrl = `https://codeforces.com/contest/${problem.contestId}/problem/${problem.index}`;
+            return {
+                key: problem.index, 
+                header: (<a href={problemUrl} target="_blank" rel="noopener noreferrer">{problem.index}</a>),
+                accessor: 'problemResults',
+                isSortable: false, 
+                render: (row) => {
+                    const result = row.problemResults.find(pr => pr.index === problem.index);
+                    if (!result) return '';
+                    if (result.points > 0) return result.points === 1 ? '+' : result.points;
+                    if (result.rejectedAttemptCount > 0) return `-${result.rejectedAttemptCount}`;
+                    return '';
+                },
+            };
+        });
+    
+        return [...staticColumns, ...dynamicColumns];
+    }, [t, problems, participantType]);
+    
+    const tableData: RanklistRowForTable[] = ranklistRows.map((row, index) => ({ 
+        ...row, 
+        id: `${row.handle}-${index}`
+    }));
+    
     const participantFilterOptions: Option[] = [
         { label: t('contestId:filters.options.all'), value: 'ALL' },
         { label: t('contestId:filters.options.contestant'), value: 'CONTESTANT' },
@@ -170,32 +156,42 @@ export default function Page() {
         { label: t('contestId:filters.options.virtual'), value: 'VIRTUAL' },
         { label: t('contestId:filters.options.outOfCompetition'), value: 'OUT_OF_COMPETITION' },
     ];
-
+    
     if (!isClient) {
         return <GizmoSpinner />;
     }
-
+    
     return (
         <>
             <h1 className='text-3xl w-full text-center font-bold mb-5'>
-                {t('contestId:contestTitle', { contestName: contest.name, contestId: contest.contestId })}
+                {contest ? t('contestId:contestTitle', { contestName: contest.name, contestId: contest.contestId }) : t('common:loading')}
             </h1>
+            
             <RadioGroup
                 title={t('contestId:filters.participation')}
                 options={participantFilterOptions}
                 name="participantTypeFilter"
                 value={participantType}
-                onChange={setParticipantType}
+                onChange={handleFilterChange}
             />
-            {statusCode == 0 && <div className='mb-[150px]'><GizmoSpinner></GizmoSpinner></div>}
-            {statusCode != 200 && statusCode != 0 &&
-                <h1 className="w-full text-center text-2xl font-bold">
-                    {t('common:error', { statusCode })}
-                </h1>
-            }
-            <div className={statusCode == 200 ? 'visible' : 'invisible'}>
-                {table}
-            </div>
+    
+            <Table
+                columns={columns}
+                data={tableData}
+                isLoading={isLoading}
+                error={error}
+                sortField={sortField}
+                sortOrder={sortOrder}
+                onSortChange={handleSortChange}
+            />
         </>
     );
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<GizmoSpinner />}>
+      <ContestIdClientPage />
+    </Suspense>
+  );
 }

@@ -1,18 +1,17 @@
 'use client';
 
 import { useTranslation } from 'react-i18next';
-import '../../i18n/client';
-import { useState, useEffect } from 'react';
 import GizmoSpinner from '../components/gizmo-spinner';
 import Styles from "../components/network-table.module.css";
+import { useIsClient } from '@/hooks/useIsClient';
+import { UpdateData } from '@/app/models/Updates';
+import { UpdateRow } from '../components/UpdateRow';
 
 export default function Page() {
     const { t } = useTranslation();
-    const [isClient, setIsClient] = useState(false);
+    const isClient = useIsClient();
 
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
+    const updates = t('about:updates', { returnObjects: true }) as UpdateData[];
 
     if (!isClient) {
         return <GizmoSpinner />;
@@ -23,39 +22,17 @@ export default function Page() {
             <h1 className="text-3xl font-bold text-center mb-5">{t('about:updatesTitle')}</h1>
             <div className={Styles.container}>
                 <table className={Styles.table}>
-                    <thead>
-                        <tr>
-                            <th className={Styles.th}>{t('about:version')}</th>
-                            <th className={Styles.th}>{t('about:changes')}</th>    
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {(t('about:updates', { returnObjects: true }) as any[]).map((update, index) => (
-                            <tr key={index}>
-                                <td className={Styles.cell}>
-                                    <div className="text-center">{update.date}</div>
-                                </td>
-                                <td className={Styles.cell}>
-                                    <div className="ml-8">
-                                        <ul className="w-[80%] list-disc">
-                                            {update.items.map((item: any, itemIndex: number) => (
-                                                <li key={itemIndex}>
-                                                    {item.type}
-                                                    <div className="ml-6">
-                                                        <ul className="list-circle">
-                                                            {item.details.map((detail: string, detailIndex: number) => (
-                                                                <li key={detailIndex}>{detail}</li>
-                                                            ))}
-                                                        </ul>
-                                                    </div>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
+                <thead>
+                    <tr>
+                        <th className={Styles.th}>{t('about:version')}</th>
+                        <th className={Styles.th}>{t('about:changes')}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {updates.map((update) => (
+                        <UpdateRow key={update.date} update={update} />
+                    ))}
+                </tbody>
                 </table>
             </div>
         </div>

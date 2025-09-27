@@ -13,7 +13,7 @@
       "timeConsumedMillis": "Time",
       "memoryConsumedBytes": "Memory",
       "userName": "User Name",
-      "totalSolved": "Total Solved"
+      "solvedCount": "Total Solved"
     },
     "filtersTitle": "Filters",
     "selectDate": "Select date",

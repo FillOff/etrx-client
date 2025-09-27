@@ -1,200 +1,216 @@
 'use client';
 
-import { Entry, RequestProps, Table, TableEntry, TableProps } from "@/app/components/table";
-import { getIndexes, getProblems, getTags } from "@/app/services/problems";
-import { useState, useMemo, useEffect } from "react";
-import TableStyles from '@/app/components/network-table.module.css';
-import GizmoSpinner from "@/app/components/gizmo-spinner";
-import { GetDivTagsList } from "@/app/components/problem-tags";
-import { TagsFilter } from "@/app/components/tags-filter";
-import { useTranslation } from "react-i18next";
-import '../../i18n/client';
+import { useEffect, useState, useMemo, useCallback, useRef, Suspense } from "react";
+import { useTranslation } from 'react-i18next';
+import { useIsClient } from "@/hooks/useIsClient";
+import { useQueryState } from "@/hooks/useQueryState";
+import { getProblems } from "@/app/services/problems";
 import { GetProblemsArgs } from "../models/GetProblemsArgs";
+import GizmoSpinner from "@/app/components/gizmo-spinner";
+import { Table } from "@/app/components/Table";
+import { TagsFilter } from "@/app/components/tags-filter";
+import { GetDivTagsList } from "@/app/components/problem-tags";
+import { Column, SortOrder } from "@/app/models/TableTypes";
+import { Problem, ProblemForTable } from "@/app/models/Problem";
 
-export default function Page()
-{
-    const { t, i18n } = useTranslation();
-    const [statusCode, setStatusCode] = useState(0);
-    const [isClient, setIsClient] = useState(false);
-    const [selectedTags, setSelectedTags] = useState<string[]>([]);
-    const [indexes, setIndexes] = useState<string[]>([]);
-    const [problemName, setProblemName] = useState<string>('');
-    const [minRating, setMinRating] = useState<number>(0);
-    const [maxRating, setMaxRating] = useState<number>(10000);
-    const [minPoints, setMinPoints] = useState<number>(0);
-    const [maxPoints, setMaxPoints] = useState<number>(10000);
+const DEFAULT_PAGE = 1;
+const DEFAULT_SORT_FIELD: keyof Problem = 'contestId';
+const DEFAULT_SORT_ORDER: SortOrder = 'desc';
+const DEFAULT_TAGS: string[] = [];
+const DEFAULT_INDEXES: string[] = [];
+const DEFAULT_PROBLEM_NAME = '';
+const DEFAULT_MIN_RATING = 0;
+const DEFAULT_MAX_RATING = 10000;
+const DEFAULT_MIN_POINTS = 0;
+const DEFAULT_MAX_POINTS = 10000;
+
+function ProblemClientPage() {
+    const { t, i18n } = useTranslation('problem');
+    const isClient = useIsClient();
+
+    const { searchParams, setQueryParams } = useQueryState({
+        page: DEFAULT_PAGE,
+        sortField: DEFAULT_SORT_FIELD,
+        sortOrder: DEFAULT_SORT_ORDER,
+        tags: DEFAULT_TAGS.join(','), 
+        indexes: DEFAULT_INDEXES.join(','),
+        problemName: DEFAULT_PROBLEM_NAME,
+        minRating: DEFAULT_MIN_RATING,
+        maxRating: DEFAULT_MAX_RATING,
+        minPoints: DEFAULT_MIN_POINTS,
+        maxPoints: DEFAULT_MAX_POINTS,
+    });
+
+    const page = useMemo(() => Number(searchParams.get('page')) || DEFAULT_PAGE, [searchParams]);
+    const sortField = useMemo(() => (searchParams.get('sortField') as keyof Problem) || DEFAULT_SORT_FIELD, [searchParams]);
+    const sortOrder = useMemo(() => (searchParams.get('sortOrder') as SortOrder) || DEFAULT_SORT_ORDER, [searchParams]);
+    const problemName = useMemo(() => searchParams.get('problemName') || DEFAULT_PROBLEM_NAME, [searchParams]);
+    const minRating = useMemo(() => Number(searchParams.get('minRating')) || DEFAULT_MIN_RATING, [searchParams]);
+    const maxRating = useMemo(() => Number(searchParams.get('maxRating')) || DEFAULT_MAX_RATING, [searchParams]);
+    const minPoints = useMemo(() => Number(searchParams.get('minPoints')) || DEFAULT_MIN_POINTS, [searchParams]);
+    const maxPoints = useMemo(() => Number(searchParams.get('maxPoints')) || DEFAULT_MAX_POINTS, [searchParams]);
+
+    const selectedTags = useMemo(() => {
+        const tagsParam = searchParams.get('tags');
+        return tagsParam ? tagsParam.split(',') : DEFAULT_TAGS;
+    }, [searchParams]);
+    const indexes = useMemo(() => {
+        const indexesParam = searchParams.get('indexes');
+        return indexesParam ? indexesParam.split(',') : DEFAULT_INDEXES;
+    }, [searchParams]);
+
+    const [problems, setProblems] = useState<Problem[]>([]);
+    const [maxPage, setMaxPage] = useState<number>(1);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [error, setError] = useState<Error | null>(null);
+    const isMounted = useRef(true);
+
+    const fetchProblems = useCallback(async () => {
+        setIsLoading(true);
+        setError(null);
+        
+        const args = new GetProblemsArgs(
+            page, 100, sortField, sortOrder === 'asc',
+            selectedTags, indexes, problemName, minRating, maxRating,
+            minPoints, maxPoints, i18n.language
+        );
+
+        try {
+            const response = await getProblems(args);
+            if (!isMounted.current) return;
+            if (!response.ok) throw new Error(t('common:error', { statusCode: response.status }));
+            
+            const data = await response.json();
+            setProblems(data.problems || []);
+            setMaxPage(data.pageCount || 1);
+        } catch (err) {
+            if (!isMounted.current) return;
+            setError(err as Error);
+        } finally {
+            if (!isMounted.current) return;
+            setIsLoading(false);
+        }
+    }, [page, sortField, sortOrder, selectedTags, indexes, problemName, minRating, maxRating, minPoints, maxPoints, i18n.language, t]);
 
     useEffect(() => {
-        setIsClient(true);
-    }, []);
-
-    async function getData(props: RequestProps)
-    {
-        props.page = props.page ? props.page : 1;
-        props.sortField = props.sortField ? props.sortField : 'contestId';
-        props.sortOrder = props.sortOrder != null ? props.sortOrder : false;
-        const args = new GetProblemsArgs(
-            props.page,
-            100,
-            props.sortField,
-            props.sortOrder,
-            selectedTags,
-            indexes,
-            problemName,
-            minRating,
-            maxRating,
-            minPoints,
-            maxPoints,
-            i18n.language
-        )
-
-        let response : Response;
-        try
-        {
-            response = await getProblems(args);
+        isMounted.current = true;
+        if (isClient) {
+            fetchProblems();
         }
-        catch (error)
-        {
-            setStatusCode(-1);
-            return { entries: [], props: props };
-        }
+        return () => { isMounted.current = false; };
+    }, [isClient, fetchProblems]);
 
-        const data = await response.json();
-        const rawEntries = Array.from(data.problems);
-
-        // Set status code to track request state
-        setStatusCode(response.status);
-
-        // Set new page that we got from response
-        if(data['pageCount'] && typeof(data['pageCount']) == 'number')
-            props.maxPage = data['pageCount'];
-
-        // Set field keys that we got
-        if(rawEntries[0])
-            props.fieldKeys = Object.keys(rawEntries[0]);
-
-        // Create viewable content from raw data
-        const entries: TableEntry[] = [];
-        rawEntries.forEach((raw: any, i) => {
-            const len = Object.keys(raw).length;
-            const entry: Entry = new Entry();
-
-            entry.cells = Array(len);
-            Object.keys(raw).forEach((key, i) =>
-            {
-                if (key == 'tags')
-                {
-                    const tags = GetDivTagsList(raw[key]);
-                    entry.cells.push(<td key={i} className={TableStyles.cell}>{tags}</td>);
-                }
-                else
-                {
-                    entry.cells.push(<td key={i} className={TableStyles.cell}>{raw[key]}</td>);
-                }
-            });
-
-            const tEntry = new TableEntry;
-            tEntry.row = <tr key={i} className={TableStyles.tr_link}
-            onClick={() => window.open(`https://codeforces.com/problemset/problem/${raw['contestId']}/${raw['index']}`)}>
-                {entry.cells}
-            </tr>;
-            entries.push(tEntry);
+    const handleSortChange = (newSortField: keyof ProblemForTable) => {
+        const effectiveSortField = newSortField as keyof Problem;
+        const newSortOrder = (sortField === effectiveSortField && sortOrder === 'asc') ? 'desc' : 'asc';
+        
+        setQueryParams({
+            sortField: effectiveSortField,
+            sortOrder: newSortOrder,
+            page: 1,
         });
-
-        return { entries: entries, props: props };
-    }
-
-    async function getTagsList()
-    {
-        let response : Response;
-        try
-        {
-            response = await getTags();
-        }
-        catch (error)
-        {
-            setStatusCode(-1);
-            return { tags: [] };
-        }
-
-        const data: string[] = await response.json();
-        
-        return { tags: data }
-    }
-
-    async function getIndexesList()
-    {
-        let response : Response;
-        try
-        {
-            response = await getIndexes();
-        }
-        catch (error)
-        {
-            setStatusCode(-1);
-            return { indexes: [] };
-        }
-
-        const data: string[] = await response.json();
-        
-        return { indexes: data }
-    }
-
-    const tableProps = new TableProps([
-        t('problem:tableHeaders.id'),
-        t('problem:tableHeaders.contest'),
-        t('problem:tableHeaders.index'),
-        t('problem:tableHeaders.name'),
-        t('problem:tableHeaders.points'),
-        t('problem:tableHeaders.rating'),
-        t('problem:tableHeaders.tags')
-      ]);
+    };
     
+    const handleFilterChange = (paramName: string, value: any) => {
+        const paramValue = Array.isArray(value) ? value.join(',') : value;
+        setQueryParams({
+            [paramName]: paramValue,
+            page: 1,
+        });
+    };
 
-    const table = useMemo(() => {
-        if (!isClient) return null;
+    const handlePageChange = (newPage: number) => {
+        setQueryParams({ page: newPage });
+    };
 
-        return (
-            <>
-            <div>
-                <Table getData={getData} props={tableProps}></Table>
-            </div>          
-            </>
-        )
-    }, [i18n.language, isClient, selectedTags, indexes, problemName, minRating, maxRating, minPoints, maxPoints])
+    const columns: Column<ProblemForTable>[] = useMemo(() => [
+        { 
+            key: 'id', 
+            header: t('problem:tableHeaders.id'), 
+            accessor: 'id' 
+        },
+        { 
+            key: 'contestId', 
+            header: t('problem:tableHeaders.contest'), 
+            accessor: 'contestId' 
+        },
+        { 
+            key: 'index', 
+            header: t('problem:tableHeaders.index'), 
+            accessor: 'index' 
+        },
+        { 
+            key: 'name', 
+            header: t('problem:tableHeaders.name'), 
+            accessor: 'name' 
+        },
+        { 
+            key: 'points', 
+            header: t('problem:tableHeaders.points'), 
+            accessor: 'points' 
+        },
+        { 
+            key: 'rating', 
+            header: t('problem:tableHeaders.rating'), 
+            accessor: 'rating' 
+        },
+        {
+            key: 'tags',
+            header: t('problem:tableHeaders.tags'),
+            accessor: 'tags',
+            render: (problem) => GetDivTagsList(problem.tags),
+            isSortable: false
+        },
+    ], [t]);
 
-    const tagsFilter = useMemo(() => {
-        return (
-            <>
-                <TagsFilter 
-                    getTags={getTagsList} selTags={selectedTags} onChangeTags={setSelectedTags}
-                    getIndexes={getIndexesList} selIndexes={indexes} onChangeIndexes={setIndexes}
-                    problemName={problemName} onChangeProblemName={setProblemName}
-                    minRating={minRating} setMinRating={setMinRating}
-                    maxRating={maxRating} setMaxRating={setMaxRating}
-                    minPoints={minPoints} setMinPoints={setMinPoints}
-                    maxPoints={maxPoints} setMaxPoints={setMaxPoints}/>
-            </>
-        )
-    }, [selectedTags, indexes, problemName, minRating, maxRating, minPoints, maxPoints])
+    const tableData: ProblemForTable[] = problems.map(problem => ({ ...problem, id: problem.id }));
     
     if (!isClient) {
         return <GizmoSpinner />;
     }
 
-    return(
+    return (
         <>
             <h1 className='text-3xl w-full text-center font-bold mb-5'>{t('problem:problemsTableTitle')}</h1>
-            {tagsFilter}
-            {statusCode == 0 && <div className='mb-[150px]'><GizmoSpinner></GizmoSpinner></div>}
-            {statusCode != 200 && statusCode != 0 && 
-                <h1 className="w-full text-center text-2xl font-bold">
-                    {t('common:error', { statusCode })}
-                </h1>
-            }
-            <div className={statusCode == 200 ? 'visible' : 'invisible'}>
-                {table}
-            </div>
+            
+            <TagsFilter
+                selectedTags={selectedTags}
+                onSelectedTagsChange={(value) => handleFilterChange('tags', value)}
+                selectedIndexes={indexes}
+                onSelectedIndexesChange={(value) => handleFilterChange('indexes', value)}
+                problemName={problemName}
+                onProblemNameChange={(value) => handleFilterChange('problemName', value)}
+                minRating={minRating}
+                onMinRatingChange={(value) => handleFilterChange('minRating', value)}
+                maxRating={maxRating}
+                onMaxRatingChange={(value) => handleFilterChange('maxRating', value)}
+                minPoints={minPoints}
+                onMinPointsChange={(value) => handleFilterChange('minPoints', value)}
+                maxPoints={maxPoints}
+                onMaxPointsChange={(value) => handleFilterChange('maxPoints', value)}
+            />
+
+            <Table
+                columns={columns}
+                data={tableData}
+                isLoading={isLoading}
+                error={error}
+                page={page}
+                maxPage={maxPage}
+                onPageChange={handlePageChange}
+                sortField={sortField}
+                sortOrder={sortOrder}
+                onSortChange={handleSortChange}
+                onRowClick={(problem) => window.open(`https://codeforces.com/problemset/problem/${problem.contestId}/${problem.index}`)}
+            />
         </>
-    )
+    );
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<GizmoSpinner />}>
+      <ProblemClientPage />
+    </Suspense>
+  );
 }
