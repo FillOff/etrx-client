@@ -72,7 +72,7 @@ function ContestIdClientPage() {
                 const args = new GetRanklistRowsArgs(
                     contestId,
                     sortField,
-                    sortOrder === 'desc',
+                    sortOrder === 'asc',
                     participantType,
                     i18n.language
                 );

@@ -70,9 +70,18 @@ function ProblemClientPage() {
         setError(null);
         
         const args = new GetProblemsArgs(
-            page, 100, sortField, sortOrder === 'asc',
-            selectedTags, indexes, problemName, minRating, maxRating,
-            minPoints, maxPoints, i18n.language
+            page, 
+            100,
+            sortField, 
+            sortOrder === 'asc',
+            selectedTags, 
+            indexes, 
+            problemName, 
+            minRating, 
+            maxRating,
+            minPoints, 
+            maxPoints, 
+            i18n.language
         );
 
         try {

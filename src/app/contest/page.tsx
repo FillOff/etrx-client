@@ -14,7 +14,7 @@ import { Contest, ContestForTable } from "@/app/models/Contest";
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_SORT_FIELD: keyof Contest = 'startTime';
-const DEFAULT_SORT_ORDER: SortOrder = 'asc';
+const DEFAULT_SORT_ORDER: SortOrder = 'desc';
 const DEFAULT_GYM_FILTER = 2; 
 
 function ContestClientPage() {
@@ -36,7 +36,6 @@ function ContestClientPage() {
         return param !== null ? Number(param) : DEFAULT_GYM_FILTER;
     }, [searchParams]);
 
-    // Локальное состояние для данных
     const [contests, setContests] = useState<Contest[]>([]);
     const [maxPage, setMaxPage] = useState<number>(1);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -49,7 +48,7 @@ function ContestClientPage() {
             page,
             100,
             sortField,
-            sortOrder === 'desc',
+            sortOrder === 'asc',
             gymFilter == 2 ? null : gymFilter == 1,
             i18n.language
         );
