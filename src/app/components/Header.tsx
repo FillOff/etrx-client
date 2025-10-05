@@ -98,7 +98,6 @@ export default function Header()
                     {/* Version and Build Info */}
                     <div className="flex flex-col items-left text-xs text-white">
                         <div>Version: {process.env.NEXT_PUBLIC_VERSION}</div>
-                        <div>Build: {process.env.NODE_ENV}</div>
                     </div>
                 </div>
             </div>
