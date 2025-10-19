@@ -9,15 +9,14 @@
           {
             "type": "Added",
             "details": [
-              "Добавлен таймер на странице contest/[id], который отображает сколько заняло получение данных"
+              "Added timer on contest/[id] page, which displays how long it took to get the data"
             ]
           },
           {
-            "type": "Переработано/Изменено",
+            "type": "Reworked/Changed",
             "details": [
-              "Унифицирована работа с URL query-параметрами во всем приложении путем рефакторинга компонентов для использования хуков React (useQueryState, useSearchParams) вместо отдельной библиотеки утилит.",
-              "Улучшена консистентность кода и его соответствие современным практикам Next.js.",
-              "Убрана надпись build в поле, где отображается версия проекта"
+              "Unified work with URL query parameters throughout the application by refactoring components to use React hooks (useQueryState, useSearchParams) instead of a separate library of utilities",
+              "The build label has been removed from the field where the project version is displayed"
             ]
           }
         ]
