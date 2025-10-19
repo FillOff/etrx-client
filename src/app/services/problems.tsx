@@ -18,7 +18,8 @@ export async function getProblems(
         `${args.maxPoints != null? `&maxPoints=${args.maxPoints}` : ''}` +
         `${args.sortField != null? `&sortField=${args.sortField}` : ''}` + 
         `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : '&sortOrder=false'}` +
-        `${args.lang != null? `&lang=${args.lang}` : 'lang=ru'}`,
+        `${(args as any).isOnly != null? `&isOnly=${String((args as any).isOnly)}` : ''}` +
+        `${args.lang != null? `&lang=${args.lang}` : '&lang=ru'}`,
         {
             redirect: 'error',
         });

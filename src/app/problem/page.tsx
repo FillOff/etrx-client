@@ -23,6 +23,8 @@ const DEFAULT_MIN_RATING = 0;
 const DEFAULT_MAX_RATING = 10000;
 const DEFAULT_MIN_POINTS = 0;
 const DEFAULT_MAX_POINTS = 10000;
+// ✅ добавлено
+const DEFAULT_IS_ONLY = 'true';
 
 function ProblemClientPage() {
     const { t, i18n } = useTranslation('problem');
@@ -39,6 +41,8 @@ function ProblemClientPage() {
         maxRating: DEFAULT_MAX_RATING,
         minPoints: DEFAULT_MIN_POINTS,
         maxPoints: DEFAULT_MAX_POINTS,
+        // ✅ добавлено
+        isOnly: DEFAULT_IS_ONLY,
     });
 
     const page = useMemo(() => Number(searchParams.get('page')) || DEFAULT_PAGE, [searchParams]);
@@ -58,6 +62,9 @@ function ProblemClientPage() {
         const indexesParam = searchParams.get('indexes');
         return indexesParam ? indexesParam.split(',') : DEFAULT_INDEXES;
     }, [searchParams]);
+
+    // ✅ добавлено: читаем флаг из QueryString
+    const isOnly = useMemo(() => searchParams.get('isOnly') === 'true', [searchParams]);
 
     const [problems, setProblems] = useState<Problem[]>([]);
     const [maxPage, setMaxPage] = useState<number>(1);
@@ -81,7 +88,9 @@ function ProblemClientPage() {
             maxRating,
             minPoints, 
             maxPoints, 
-            i18n.language
+            i18n.language,
+            // ✅ добавлено
+            isOnly
         );
 
         try {
@@ -99,7 +108,10 @@ function ProblemClientPage() {
             if (!isMounted.current) return;
             setIsLoading(false);
         }
-    }, [page, sortField, sortOrder, selectedTags, indexes, problemName, minRating, maxRating, minPoints, maxPoints, i18n.language, t]);
+    }, [page, sortField, sortOrder, selectedTags, indexes, problemName, minRating, maxRating, minPoints, maxPoints, i18n.language, t, 
+        // ✅ добавлено: зависимость
+        isOnly
+    ]);
 
     useEffect(() => {
         isMounted.current = true;
@@ -180,24 +192,45 @@ function ProblemClientPage() {
 
     return (
         <>
-            <h1 className='text-3xl w-full text-center font-bold mb-5'>{t('problem:problemsTableTitle')}</h1>
-            
-            <TagsFilter
-                selectedTags={selectedTags}
-                onSelectedTagsChange={(value) => handleFilterChange('tags', value)}
-                selectedIndexes={indexes}
-                onSelectedIndexesChange={(value) => handleFilterChange('indexes', value)}
-                problemName={problemName}
-                onProblemNameChange={(value) => handleFilterChange('problemName', value)}
-                minRating={minRating}
-                onMinRatingChange={(value) => handleFilterChange('minRating', value)}
-                maxRating={maxRating}
-                onMaxRatingChange={(value) => handleFilterChange('maxRating', value)}
-                minPoints={minPoints}
-                onMinPointsChange={(value) => handleFilterChange('minPoints', value)}
-                maxPoints={maxPoints}
-                onMaxPointsChange={(value) => handleFilterChange('maxPoints', value)}
-            />
+           <h1 className="text-3xl w-full text-center font-bold mb-5">{t('problem:problemsTableTitle')}</h1>
+
+    <div className="grid grid-cols-[1fr_auto_1fr] items-center mb-4">
+        <div className="col-start-1 flex justify-center">
+            <button
+            className="px-2 py-2 bg-blue-500 text-white rounded self-center"
+            onClick={() => {
+            setQueryParams({
+            isOnly: (!isOnly).toString(),
+            page: 1,
+            });
+        }}
+        >
+            {isOnly ? "isOnly = true" : "isOnly = false"}
+            </button>
+        </div>
+
+  <div className="col-start-2">
+    <TagsFilter
+      selectedTags={selectedTags}
+      onSelectedTagsChange={(value) => handleFilterChange('tags', value)}
+      selectedIndexes={indexes}
+      onSelectedIndexesChange={(value) => handleFilterChange('indexes', value)}
+      problemName={problemName}
+      onProblemNameChange={(value) => handleFilterChange('problemName', value)}
+      minRating={minRating}
+      onMinRatingChange={(value) => handleFilterChange('minRating', value)}
+      maxRating={maxRating}
+      onMaxRatingChange={(value) => handleFilterChange('maxRating', value)}
+      minPoints={minPoints}
+      onMinPointsChange={(value) => handleFilterChange('minPoints', value)}
+      maxPoints={maxPoints}
+      onMaxPointsChange={(value) => handleFilterChange('maxPoints', value)}
+    />
+  </div>
+
+  {/* Правая колонка для симметрии */}
+  <div className="col-start-3" />
+</div>
 
             <Table
                 columns={columns}

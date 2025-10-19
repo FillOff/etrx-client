@@ -15,7 +15,8 @@ export class GetProblemsArgs extends Pageable
         maxRating: number | undefined,
         minPoints: number,
         maxPoints: number | undefined,
-        lang: string | null
+        lang: string | null,
+        isOnly: boolean = false
     ) 
     {
         super(page, pageSize, sortField, sortOrder);
@@ -27,6 +28,7 @@ export class GetProblemsArgs extends Pageable
         this.minPoints = minPoints;
         this.maxPoints = maxPoints;
         this.lang = lang;
+        this.isOnly = isOnly;
     }
 
     tags: string[] | null;
@@ -37,4 +39,5 @@ export class GetProblemsArgs extends Pageable
     minPoints: number;
     maxPoints: number | undefined;
     lang: string | null;
+    isOnly: boolean;
 }
