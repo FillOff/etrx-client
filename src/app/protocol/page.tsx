@@ -11,7 +11,6 @@ import { Column } from "@/app/models/TableTypes";
 import { ProtocolForTable, SubmissionProtocol } from "../models/Submission";
 import { useQueryState } from "@/hooks/useQueryState";
 import { useDebounce } from "@/hooks/useDebounce";
-import { getQueryParamAsDate } from "@/libs/queryParams";
 
 function ProtocolClientPage() {
     const { t } = useTranslation('protocol');
@@ -36,9 +35,30 @@ function ProtocolClientPage() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<Error | null>(null);
 
-    const now = new Date();
-    const fromDate = useMemo(() => getQueryParamAsDate(searchParams, 'f', now), [searchParams]);
-    const toDate = useMemo(() => getQueryParamAsDate(searchParams, 't', now), [searchParams]);
+    const fromDate = useMemo(() => {
+        const year = searchParams.get('fyear');
+        const month = searchParams.get('fmonth');
+        const day = searchParams.get('fday');
+        
+        if (year && month && day) {
+            return new Date(Number(year), Number(month) - 1, Number(day));
+        }
+
+        return new Date();
+    }, [searchParams]);
+
+    const toDate = useMemo(() => {
+        const year = searchParams.get('tyear');
+        const month = searchParams.get('tmonth');
+        const day = searchParams.get('tday');
+
+        if (year && month && day) {
+            return new Date(Number(year), Number(month) - 1, Number(day));
+        }
+        
+        return new Date();
+    }, [searchParams]);
+
     const contestId = useMemo(() => {
         const id = searchParams.get('contestid');
         return id ? Number(id) : null;

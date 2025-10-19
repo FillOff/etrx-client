@@ -1,13 +1,10 @@
 'use client'
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import DdStyles from "./dropdown.module.css"
-import MiscStyles from "./misc.module.css"
-import { usePathname, useRouter } from "next/navigation"
-import Dropdown from "./dropdown";
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useTranslation } from 'react-i18next';
 import { changeLanguage } from '../../i18n/client';
-import { pushRouteWithQueryParams } from "@/libs/queryParams";
 
 export default function Header()
 {
@@ -15,6 +12,7 @@ export default function Header()
     const [key, setKey] = useState(0);
     const router = useRouter();
     const pathname = usePathname();
+    const searchParams = useSearchParams(); 
     const { t, i18n } = useTranslation();
 
     useEffect(() => {
@@ -28,13 +26,21 @@ export default function Header()
         setKey(prev => prev + 1);
     };
 
+    const handleNavigation = useCallback((targetPath: string) => {
+        if (pathname === targetPath) {
+            const currentParams = searchParams.toString();
+            router.push(`${targetPath}?${currentParams}`);
+        } else {
+            router.push(targetPath);
+        }
+    }, [pathname, router, searchParams]); 
+
     if (!mounted) {
         return null;
     }
 
     return(
         <>
-            {/* Header Section */}
             <div key={key} className="flex items-center fixed w-full h-16 bg-main">
                 {/* Left Side: Navigation Buttons */}
                 <div className="flex items-center w-fit">
@@ -43,20 +49,18 @@ export default function Header()
                         ETRX
                     </h1>
 
-                    {/* Main Page Button */}
-                    <button onClick={() => pushRouteWithQueryParams('/', pathname, router)} className={DdStyles.header_elem}>
+                    <button onClick={() => handleNavigation('/')} className={DdStyles.header_elem}>
                         {t('header:main')}
                     </button>
 
-                    {/* Contests Dropdown */}
-                    <button onClick={() => pushRouteWithQueryParams('/contest', pathname, router)} className={DdStyles.header_elem}>
+                    <button onClick={() => handleNavigation('/contest')} className={DdStyles.header_elem}>
                         {t('header:contests')}
                     </button>
 
-                    {/* Users Dropdown */}
-                    <button onClick={() => pushRouteWithQueryParams('/user', pathname, router)} className={DdStyles.header_elem}>
+                    <button onClick={() => handleNavigation('/user')} className={DdStyles.header_elem}>
                         {t('header:users')}
                     </button>
+                    
                     {/* <Dropdown header={t('header:users')} onClick={() => pushRouteWithQueryParams('/user', pathname, router)}>
                         <button onClick={() => pushRouteWithQueryParams('/user', pathname, router)} className={DdStyles.dropdown_elem}>
                             {t('header:view_all_users')}
@@ -66,21 +70,15 @@ export default function Header()
                         </button>
                     </Dropdown> */}
 
-                    {/* Problems Button */}
-                    <button onClick={() => pushRouteWithQueryParams('/problem', pathname, router)} className={DdStyles.header_elem}>
+                    <button onClick={() => handleNavigation('/problem')} className={DdStyles.header_elem}>
                         {t('header:problems')}
                     </button>
 
-                    {/* Protocol Button */}
-                    <button
-                        onClick={() => pushRouteWithQueryParams('/protocol', pathname, router)}
-                        className={DdStyles.header_elem}
-                    >
+                    <button onClick={() => handleNavigation('/protocol')} className={DdStyles.header_elem}>
                         {t('header:protocol')}
                     </button>
 
-                    {/* About Button */}
-                    <button onClick={() => pushRouteWithQueryParams('/about', pathname, router)} className={DdStyles.header_elem}>
+                    <button onClick={() => handleNavigation('/about')} className={DdStyles.header_elem}>
                         {t('header:about')}
                     </button>
                 </div>
@@ -103,7 +101,6 @@ export default function Header()
                 </div>
             </div>
 
-            {/* Spacer for Bottom Margin */}
             <div className="w-full h-20"></div>
         </>
     )
