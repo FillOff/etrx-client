@@ -23,7 +23,6 @@ const DEFAULT_MIN_RATING = 0;
 const DEFAULT_MAX_RATING = 10000;
 const DEFAULT_MIN_POINTS = 0;
 const DEFAULT_MAX_POINTS = 10000;
-// ✅ добавлено
 const DEFAULT_IS_ONLY = 'true';
 
 function ProblemClientPage() {
@@ -41,7 +40,6 @@ function ProblemClientPage() {
         maxRating: DEFAULT_MAX_RATING,
         minPoints: DEFAULT_MIN_POINTS,
         maxPoints: DEFAULT_MAX_POINTS,
-        // ✅ добавлено
         isOnly: DEFAULT_IS_ONLY,
     });
 
@@ -63,7 +61,6 @@ function ProblemClientPage() {
         return indexesParam ? indexesParam.split(',') : DEFAULT_INDEXES;
     }, [searchParams]);
 
-    // ✅ добавлено: читаем флаг из QueryString
     const isOnly = useMemo(() => searchParams.get('isOnly') === 'true', [searchParams]);
 
     const [problems, setProblems] = useState<Problem[]>([]);
@@ -89,7 +86,6 @@ function ProblemClientPage() {
             minPoints, 
             maxPoints, 
             i18n.language,
-            // ✅ добавлено
             isOnly
         );
 
@@ -109,7 +105,6 @@ function ProblemClientPage() {
             setIsLoading(false);
         }
     }, [page, sortField, sortOrder, selectedTags, indexes, problemName, minRating, maxRating, minPoints, maxPoints, i18n.language, t, 
-        // ✅ добавлено: зависимость
         isOnly
     ]);
 
@@ -228,7 +223,6 @@ function ProblemClientPage() {
     />
   </div>
 
-  {/* Правая колонка для симметрии */}
   <div className="col-start-3" />
 </div>
 
