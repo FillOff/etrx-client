@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  useEffect,
-  useState,
-  useMemo,
-  useCallback,
-  useRef,
-  Suspense,
-} from "react";
+import { useEffect, useState, useMemo, useCallback, useRef, Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import { useIsClient } from "@/hooks/useIsClient";
 import { useQueryState } from "@/hooks/useQueryState";
@@ -30,7 +23,7 @@ const DEFAULT_MIN_RATING = 0;
 const DEFAULT_MAX_RATING = 10000;
 const DEFAULT_MIN_POINTS = 0;
 const DEFAULT_MAX_POINTS = 10000;
-const DEFAULT_IS_ONLY = "true";
+const DEFAULT_IS_ONLY = true;
 
 function ProblemClientPage() {
   const { t, i18n } = useTranslation("problem");
@@ -50,45 +43,17 @@ function ProblemClientPage() {
     isOnly: DEFAULT_IS_ONLY,
   });
 
-  const page = useMemo(
-    () => Number(searchParams.get("page")) || DEFAULT_PAGE,
-    [searchParams]
-  );
-  const sortField = useMemo(
-    () =>
-      (searchParams.get("sortField") as keyof Problem) || DEFAULT_SORT_FIELD,
-    [searchParams]
-  );
-  const sortOrder = useMemo(
-    () => (searchParams.get("sortOrder") as SortOrder) || DEFAULT_SORT_ORDER,
-    [searchParams]
-  );
-  const problemName = useMemo(
-    () => searchParams.get("problemName") || DEFAULT_PROBLEM_NAME,
-    [searchParams]
-  );
-  const minRating = useMemo(
-    () => Number(searchParams.get("minRating")) || DEFAULT_MIN_RATING,
-    [searchParams]
-  );
-  const maxRating = useMemo(
-    () => Number(searchParams.get("maxRating")) || DEFAULT_MAX_RATING,
-    [searchParams]
-  );
-  const minPoints = useMemo(
-    () => Number(searchParams.get("minPoints")) || DEFAULT_MIN_POINTS,
-    [searchParams]
-  );
-  const maxPoints = useMemo(
-    () => Number(searchParams.get("maxPoints")) || DEFAULT_MAX_POINTS,
-    [searchParams]
-  );
-  const isOnly = useMemo(
-    () => searchParams.get("isOnly") === "true",
-    [searchParams]
-  );
+  const page = useMemo(() => Number(searchParams.get("page")) || DEFAULT_PAGE, [searchParams]);
+  const sortField = useMemo(() => (searchParams.get("sortField") as keyof Problem) || DEFAULT_SORT_FIELD, [searchParams]);
+  const sortOrder = useMemo(() => (searchParams.get("sortOrder") as SortOrder) || DEFAULT_SORT_ORDER, [searchParams]);
+  const problemName = useMemo(() => searchParams.get("problemName") || DEFAULT_PROBLEM_NAME, [searchParams]);
+  const minRating = useMemo(() => Number(searchParams.get("minRating")) || DEFAULT_MIN_RATING, [searchParams]);
+  const maxRating = useMemo(() => Number(searchParams.get("maxRating")) || DEFAULT_MAX_RATING, [searchParams]);
+  const minPoints = useMemo(() => Number(searchParams.get("minPoints")) || DEFAULT_MIN_POINTS, [searchParams]);
+  const maxPoints = useMemo(() => Number(searchParams.get("maxPoints")) || DEFAULT_MAX_POINTS, [searchParams]);
+  const isOnly = useMemo(() => searchParams.get("isOnly") === "true", [searchParams]);
 
-  const selectedTags = useMemo(() => {
+  const selectedTags = useMemo(() => { 
     const tagsParam = searchParams.get("tags");
     return tagsParam ? tagsParam.split(",") : DEFAULT_TAGS;
   }, [searchParams]);
@@ -126,8 +91,7 @@ function ProblemClientPage() {
     try {
       const response = await getProblems(args);
       if (!isMounted.current) return;
-      if (!response.ok)
-        throw new Error(t("common:error", { statusCode: response.status }));
+      if (!response.ok) throw new Error(t("common:error", { statusCode: response.status }));
 
       const data = await response.json();
       setProblems(data.problems || []);
@@ -139,36 +103,20 @@ function ProblemClientPage() {
       if (!isMounted.current) return;
       setIsLoading(false);
     }
-  }, [
-    page,
-    sortField,
-    sortOrder,
-    selectedTags,
-    indexes,
-    problemName,
-    minRating,
-    maxRating,
-    minPoints,
-    maxPoints,
-    isOnly,
-    i18n.language,
-    t,
-  ]);
+  }, [page, sortField, sortOrder, selectedTags, indexes, problemName, minRating, maxRating, minPoints, maxPoints, isOnly,
+    i18n.language, t]);
 
   useEffect(() => {
     isMounted.current = true;
     if (isClient) {
       fetchProblems();
     }
-    return () => {
-      isMounted.current = false;
-    };
+    return () => { isMounted.current = false; };
   }, [isClient, fetchProblems]);
 
   const handleSortChange = (newSortField: keyof ProblemForTable) => {
     const effectiveSortField = newSortField as keyof Problem;
-    const newSortOrder =
-      sortField === effectiveSortField && sortOrder === "asc" ? "desc" : "asc";
+    const newSortOrder = sortField === effectiveSortField && sortOrder === "asc" ? "desc" : "asc";
 
     setQueryParams({
       sortField: effectiveSortField,
@@ -189,8 +137,7 @@ function ProblemClientPage() {
     setQueryParams({ page: newPage });
   };
 
-  const columns: Column<ProblemForTable>[] = useMemo(
-    () => [
+  const columns: Column<ProblemForTable>[] = useMemo( () => [
       {
         key: "id",
         header: t("problem:tableHeaders.id"),
@@ -228,14 +175,9 @@ function ProblemClientPage() {
         render: (problem) => GetDivTagsList(problem.tags),
         isSortable: false,
       },
-    ],
-    [t]
-  );
+    ], [t]);
 
-  const tableData: ProblemForTable[] = problems.map((problem) => ({
-    ...problem,
-    id: problem.id,
-  }));
+  const tableData: ProblemForTable[] = problems.map(problem => ({ ...problem, id: problem.id }));
 
   if (!isClient) {
     return <GizmoSpinner />;
@@ -243,9 +185,7 @@ function ProblemClientPage() {
 
   return (
     <>
-      <h1 className="text-3xl w-full text-center font-bold mb-5">
-        {t("problem:problemsTableTitle")}
-      </h1>
+      <h1 className="text-3xl w-full text-center font-bold mb-5">{t('problem:problemsTableTitle')}</h1>
 
       <div className="grid grid-cols-[1fr_auto_1fr] items-center mb-4">
         <div className="col-start-1 flex justify-center">
@@ -253,7 +193,7 @@ function ProblemClientPage() {
             className="px-2 py-2 bg-blue-500 text-white rounded self-center"
             onClick={() => {
               setQueryParams({
-                isOnly: (!isOnly).toString(),
+                isOnly: !isOnly,
                 page: 1,
               });
             }}
@@ -267,29 +207,17 @@ function ProblemClientPage() {
             selectedTags={selectedTags}
             onSelectedTagsChange={(value) => handleFilterChange("tags", value)}
             selectedIndexes={indexes}
-            onSelectedIndexesChange={(value) =>
-              handleFilterChange("indexes", value)
-            }
+            onSelectedIndexesChange={(value) => handleFilterChange("indexes", value)}
             problemName={problemName}
-            onProblemNameChange={(value) =>
-              handleFilterChange("problemName", value)
-            }
+            onProblemNameChange={(value) => handleFilterChange("problemName", value)}
             minRating={minRating}
-            onMinRatingChange={(value) =>
-              handleFilterChange("minRating", value)
-            }
+            onMinRatingChange={(value) => handleFilterChange("minRating", value)}
             maxRating={maxRating}
-            onMaxRatingChange={(value) =>
-              handleFilterChange("maxRating", value)
-            }
+            onMaxRatingChange={(value) => handleFilterChange("maxRating", value)}
             minPoints={minPoints}
-            onMinPointsChange={(value) =>
-              handleFilterChange("minPoints", value)
-            }
+            onMinPointsChange={(value) => handleFilterChange("minPoints", value)}
             maxPoints={maxPoints}
-            onMaxPointsChange={(value) =>
-              handleFilterChange("maxPoints", value)
-            }
+            onMaxPointsChange={(value) => handleFilterChange("maxPoints", value)}
           />
         </div>
 
@@ -307,11 +235,7 @@ function ProblemClientPage() {
         sortField={sortField}
         sortOrder={sortOrder}
         onSortChange={handleSortChange}
-        onRowClick={(problem) =>
-          window.open(
-            `https://codeforces.com/problemset/problem/${problem.contestId}/${problem.index}`
-          )
-        }
+        onRowClick={(problem) => window.open(`https://codeforces.com/problemset/problem/${problem.contestId}/${problem.index}`)}
       />
     </>
   );
