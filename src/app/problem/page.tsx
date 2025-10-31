@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  useEffect,
-  useState,
-  useMemo,
-  useCallback,
-  useRef,
-  Suspense,
-} from "react";
+import { useEffect, useState, useMemo, useCallback, useRef, Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import { useIsClient } from "@/hooks/useIsClient";
 import { useQueryState } from "@/hooks/useQueryState";
@@ -50,43 +43,15 @@ function ProblemClientPage() {
     isOnly: DEFAULT_IS_ONLY,
   });
 
-  const page = useMemo(
-    () => Number(searchParams.get("page")) || DEFAULT_PAGE,
-    [searchParams]
-  );
-  const sortField = useMemo(
-    () =>
-      (searchParams.get("sortField") as keyof Problem) || DEFAULT_SORT_FIELD,
-    [searchParams]
-  );
-  const sortOrder = useMemo(
-    () => (searchParams.get("sortOrder") as SortOrder) || DEFAULT_SORT_ORDER,
-    [searchParams]
-  );
-  const problemName = useMemo(
-    () => searchParams.get("problemName") || DEFAULT_PROBLEM_NAME,
-    [searchParams]
-  );
-  const minRating = useMemo(
-    () => Number(searchParams.get("minRating")) || DEFAULT_MIN_RATING,
-    [searchParams]
-  );
-  const maxRating = useMemo(
-    () => Number(searchParams.get("maxRating")) || DEFAULT_MAX_RATING,
-    [searchParams]
-  );
-  const minPoints = useMemo(
-    () => Number(searchParams.get("minPoints")) || DEFAULT_MIN_POINTS,
-    [searchParams]
-  );
-  const maxPoints = useMemo(
-    () => Number(searchParams.get("maxPoints")) || DEFAULT_MAX_POINTS,
-    [searchParams]
-  );
-  const isOnly = useMemo(
-    () => searchParams.get("isOnly") === "true",
-    [searchParams]
-  );
+  const page = useMemo(() => Number(searchParams.get("page")) || DEFAULT_PAGE, [searchParams]);
+  const sortField = useMemo(() => (searchParams.get("sortField") as keyof Problem) || DEFAULT_SORT_FIELD, [searchParams]);
+  const sortOrder = useMemo(() => (searchParams.get("sortOrder") as SortOrder) || DEFAULT_SORT_ORDER, [searchParams]);
+  const problemName = useMemo(() => searchParams.get("problemName") || DEFAULT_PROBLEM_NAME, [searchParams]);
+  const minRating = useMemo(() => Number(searchParams.get("minRating")) || DEFAULT_MIN_RATING, [searchParams]);
+  const maxRating = useMemo(() => Number(searchParams.get("maxRating")) || DEFAULT_MAX_RATING, [searchParams]);
+  const minPoints = useMemo(() => Number(searchParams.get("minPoints")) || DEFAULT_MIN_POINTS, [searchParams]);
+  const maxPoints = useMemo(() => Number(searchParams.get("maxPoints")) || DEFAULT_MAX_POINTS, [searchParams]);
+  const isOnly = useMemo(() => searchParams.get("isOnly") === "true", [searchParams]);
 
   const selectedTags = useMemo(() => {
     const tagsParam = searchParams.get("tags");
@@ -139,21 +104,8 @@ function ProblemClientPage() {
       if (!isMounted.current) return;
       setIsLoading(false);
     }
-  }, [
-    page,
-    sortField,
-    sortOrder,
-    selectedTags,
-    indexes,
-    problemName,
-    minRating,
-    maxRating,
-    minPoints,
-    maxPoints,
-    isOnly,
-    i18n.language,
-    t,
-  ]);
+  }, [page, sortField, sortOrder, selectedTags, indexes, problemName, minRating, maxRating, minPoints, maxPoints, isOnly,
+    i18n.language, t]);
 
   useEffect(() => {
     isMounted.current = true;
