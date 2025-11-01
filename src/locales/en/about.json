@@ -4,6 +4,23 @@
     "changes": "Changes",
     "updates": [
       {
+        "date": "31.10.2025",
+        "items":[
+          {
+            "type":"Added",
+            "details":[
+              "The isOnly button on the task page filters tasks only by the tags that are selected and no others"
+            ]
+          },
+          {
+            "type":"Reworked/Changed",
+            "details":[
+              "Now only those tags are shown in the tag table that are in tasks with the minimum to maximum rating"
+            ]
+          }
+        ]
+      },
+      {
         "date": "27.9.2025",
         "items": [
           {
