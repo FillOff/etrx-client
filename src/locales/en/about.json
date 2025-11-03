@@ -21,6 +21,24 @@
         ]
       },
       {
+        "date": "19.10.2025",
+        "items": [
+          {
+            "type": "Added",
+            "details": [
+              "Added timer on contest/[id] page, which displays how long it took to get the data"
+            ]
+          },
+          {
+            "type": "Reworked/Changed",
+            "details": [
+              "Unified work with URL query parameters throughout the application by refactoring components to use React hooks (useQueryState, useSearchParams) instead of a separate library of utilities",
+              "The build label has been removed from the field where the project version is displayed"
+            ]
+          }
+        ]
+      },
+      {
         "date": "27.9.2025",
         "items": [
           {

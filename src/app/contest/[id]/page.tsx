@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, useMemo, useCallback, useRef, Suspense } from "react";
+import { useEffect, useState, useMemo, useRef, Suspense } from "react";
 import { useParams } from "next/navigation";
 import { useTranslation } from 'react-i18next';
 import { useIsClient } from "@/hooks/useIsClient";
@@ -12,6 +12,7 @@ import { Problem, RanklistRow, RanklistRowForTable } from "@/app/models/Ranklist
 import { Table } from "@/app/components/Table";
 import { RadioGroup, Option } from "@/app/components/contest-radiogroup";
 import GizmoSpinner from "@/app/components/gizmo-spinner";
+import { useStopwatch } from "@/hooks/useStopwatch";
 
 const DEFAULT_PARTICIPANT_TYPE = 'CONTESTANT';
 const DEFAULT_SORT_FIELD: keyof RanklistRow = 'solvedCount';
@@ -39,6 +40,8 @@ function ContestIdClientPage() {
     const [error, setError] = useState<Error | null>(null);
     const updatePerformed = useRef(false);
 
+    const { elapsedTime: loadingTime, start: startStopwatch, stop: stopStopwatch, reset: resetStopwatch } = useStopwatch();
+
     useEffect(() => {
         if (!isClient) return;
 
@@ -62,6 +65,9 @@ function ContestIdClientPage() {
         const fetchRanklist = async () => {
             setIsLoading(true);
             setError(null);
+            resetStopwatch();
+            startStopwatch();
+
             try {
                 const shouldUpdate = !contest.isContestLoaded || participantType !== 'CONTESTANT';
                 if (shouldUpdate && !updatePerformed.current) {
@@ -88,12 +94,12 @@ function ContestIdClientPage() {
                 setProblems([]);
             } finally {
                 setIsLoading(false);
+                stopStopwatch();
             }
         };
 
         fetchRanklist();
-    }, [isClient, contest, participantType, sortField, sortOrder, i18n.language, t]);
-
+    }, [isClient, contest, participantType, sortField, sortOrder, i18n.language, t, startStopwatch, stopStopwatch, resetStopwatch]);
 
     const handleSortChange = (newSortField: keyof RanklistRowForTable) => {
         const effectiveSortField = newSortField === 'id' ? 'handle' : newSortField;
@@ -184,6 +190,12 @@ function ContestIdClientPage() {
                 sortOrder={sortOrder}
                 onSortChange={handleSortChange}
             />
+
+            {loadingTime !== null && (
+                <p className="text-center">
+                    {t('common:loadingTime', { seconds: (loadingTime / 1000).toFixed(2) })}
+                </p>
+            )}
         </>
     );
 }

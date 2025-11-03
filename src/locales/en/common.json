@@ -16,5 +16,6 @@
       "october": "October",
       "november": "November",
       "december": "December"
-    }
+    },
+    "loadingTime": "Data loaded in {{seconds}} seconds"
 }

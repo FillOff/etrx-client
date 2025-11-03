@@ -16,5 +16,6 @@
       "october": "Октябрь",
       "november": "Ноябрь",
       "december": "Декабрь"
-    }
+    },
+    "loadingTime": "Данные загружены за {{seconds}} секунд"
 }
