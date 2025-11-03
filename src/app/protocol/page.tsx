@@ -7,10 +7,13 @@ import "react-datepicker/dist/react-datepicker.css";
 import { getSubmissionsProtocol, GetSubmissionsProtocolArgs } from "../services/submissions";
 import GizmoSpinner from "@/app/components/gizmo-spinner";
 import { Table } from "@/app/components/Table";
-import { Column } from "@/app/models/TableTypes";
+import { Column, SortOrder } from "@/app/models/TableTypes";
 import { ProtocolForTable, SubmissionProtocol } from "../models/Submission";
 import { useQueryState } from "@/hooks/useQueryState";
 import { useDebounce } from "@/hooks/useDebounce";
+
+const DEFAULT_SORT_FIELD: keyof SubmissionProtocol = "contestId";
+const DEFAULT_SORT_ORDER: SortOrder = "desc";
 
 function ProtocolClientPage() {
     const { t } = useTranslation('protocol');
@@ -18,6 +21,8 @@ function ProtocolClientPage() {
     const defaultFilters = useMemo(() => {
         const now = new Date();
         return {
+            sortField: DEFAULT_SORT_FIELD,
+            sortOrder: DEFAULT_SORT_ORDER,
             fyear: now.getFullYear(),
             fmonth: now.getMonth() + 1,
             fday: now.getDate(),
@@ -63,6 +68,9 @@ function ProtocolClientPage() {
         const id = searchParams.get('contestid');
         return id ? Number(id) : null;
     }, [searchParams]);
+
+    const sortField = useMemo(() => (searchParams.get("sortField") as keyof SubmissionProtocol) || DEFAULT_SORT_FIELD, [searchParams]);
+    const sortOrder = useMemo(() => (searchParams.get("sortOrder") as SortOrder) || DEFAULT_SORT_ORDER, [searchParams]);
     
     const filters = useMemo(() => ({
         fYear: fromDate.getFullYear(),
@@ -75,13 +83,32 @@ function ProtocolClientPage() {
     }), [fromDate, toDate, contestId]);
 
     const debouncedFilters = useDebounce(filters, 500);
+    const { 
+        fYear: debouncedFYear, 
+        fMonth: debouncedFMonth, 
+        fDay: debouncedFDay, 
+        tYear: debouncedTYear, 
+        tMonth: debouncedTMonth, 
+        tDay: debouncedTDay, 
+        contestId: debouncedContestId 
+    } = debouncedFilters || {};
+
 
     const fetchData = useCallback(async () => {
         setIsLoading(true);
         setError(null);
 
-        const { fYear, fMonth, fDay, tYear, tMonth, tDay, contestId } = debouncedFilters;
-        const args = new GetSubmissionsProtocolArgs(fYear, fMonth, fDay, tYear, tMonth, tDay, contestId);
+        const args = new GetSubmissionsProtocolArgs(
+            sortField, 
+            sortOrder === "asc", 
+            debouncedFYear, 
+            debouncedFMonth, 
+            debouncedFDay, 
+            debouncedTYear, 
+            debouncedTMonth, 
+            debouncedTDay, 
+            debouncedContestId
+        );
 
         try {
             const response = await getSubmissionsProtocol(args);
@@ -89,7 +116,7 @@ function ProtocolClientPage() {
             if (!response.ok) throw new Error(t('common:error', { statusCode: response.status }));
             
             const data = await response.json();
-            setSubmissions(data || []);
+            setSubmissions(data.submissions || []);
         } catch (err) {
             if (!isMounted.current) return;
             setError(err as Error);
@@ -98,13 +125,24 @@ function ProtocolClientPage() {
             if (!isMounted.current) return;
             setIsLoading(false);
         }
-    }, [debouncedFilters, t]);
+    }, [sortField, sortOrder, debouncedFYear, debouncedFMonth, debouncedFDay, debouncedTYear, debouncedTMonth, debouncedTDay, debouncedContestId, t]);
 
     useEffect(() => {
         isMounted.current = true;
         fetchData();
         return () => { isMounted.current = false; };
     }, [fetchData]);
+
+    const handleSortChange = (newSortField: keyof ProtocolForTable) => {
+        const effectiveSortField = newSortField as string;
+        const newSortOrder =
+          sortField === effectiveSortField && sortOrder === "asc" ? "desc" : "asc";
+    
+        setQueryParams({
+          sortField: effectiveSortField,
+          sortOrder: newSortOrder
+        });
+      };
     
     const handleFromDateChange = (date: Date | null) => {
         if (date) {
@@ -131,12 +169,12 @@ function ProtocolClientPage() {
     };
 
     const columns: Column<ProtocolForTable>[] = useMemo(() => [
-        { key: 'userName', header: t('protocol:tableHeaders.userName'), accessor: 'userName', isSortable: false },
-        { key: 'contestId', header: t('protocol:tableHeaders.contestId'), accessor: 'contestId', isSortable: false },
-        { key: 'solvedCount', header: t('protocol:tableHeaders.solvedCount'), accessor: 'solvedCount', isSortable: false },
+        { key: 'userName', header: t('protocol:tableHeaders.userName'), accessor: 'userName' },
+        { key: 'contestId', header: t('protocol:tableHeaders.contestId'), accessor: 'contestId' },
+        { key: 'solvedCount', header: t('protocol:tableHeaders.solvedCount'), accessor: 'solvedCount' },
     ], [t]);
 
-    const tableData: ProtocolForTable[] = submissions.map(sub => ({ ...sub, id: sub.userName }));
+    const tableData: ProtocolForTable[] = submissions.map((sub) => ({ ...sub, id: `${sub.userName}-${sub.contestId}` }));
 
     return (
         <>
@@ -178,6 +216,9 @@ function ProtocolClientPage() {
                 data={tableData}
                 isLoading={isLoading}
                 error={error}
+                sortField={sortField}
+                sortOrder={sortOrder}
+                onSortChange={handleSortChange}
             />
         </>
     );

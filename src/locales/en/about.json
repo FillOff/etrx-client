@@ -4,6 +4,29 @@
     "changes": "Changes",
     "updates": [
       {
+        "date": "3.11.2025",
+        "items":[
+          {
+            "type":"Added",
+            "details":[
+              "Sorting the protocol table"
+            ]
+          },
+          {
+            "type":"Reworked/Changed",
+            "details":[
+              "Renamed the query parameter for filtering by type of participation (filterByParticipantType -> participantType)"
+            ]
+          },
+          {
+            "type": "Fixed",
+            "details": [
+              "The protocol data was grouped only by user name. Now the data is also divided by contests"
+            ]
+          }
+        ]
+      },
+      {
         "date": "31.10.2025",
         "items":[
           {
@@ -52,6 +75,17 @@
             "type": "Reworked/Changed",
             "details": [
               "Code refactoring"
+            ]
+          }
+        ]
+      },
+      {
+        "date": "5.5.2025",
+        "items": [
+          {
+            "type": "Reworked/Changed",
+            "details": [
+              "Now the results of the contestants are uploaded instantly, if they were uploaded before and the contest has already ended"
             ]
           }
         ]

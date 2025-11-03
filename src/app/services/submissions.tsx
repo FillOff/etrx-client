@@ -1,6 +1,10 @@
-export class GetSubmissionsProtocolArgs {
+import Sortable from "../models/Sortable";
+
+export class GetSubmissionsProtocolArgs extends Sortable {
     constructor
     (
+        sortField: string | null = null,
+        sortOrder: boolean | null = true,
         fYear: number | null,
         fMonth: number | null,
         fDay: number | null,
@@ -10,6 +14,7 @@ export class GetSubmissionsProtocolArgs {
         contestId: number | null = null,
     )
     {
+        super(sortField, sortOrder);
         this.fYear = fYear;
         this.fMonth = fMonth;
         this.fDay = fDay;
@@ -33,6 +38,8 @@ export async function getSubmissionsProtocol(
 ) 
 {
     return fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Submissions?` +
+        `${args.sortField != null? `&sortField=${args.sortField}` : ''}` +
+        `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : ''}` +
         `${args.fYear != null? `&fYear=${args.fYear}` : ''}` + 
         `${args.fMonth != null? `&fMonth=${args.fMonth}` : ''}` + 
         `${args.fDay != null? `&fDay=${args.fDay}` : ''}` + 

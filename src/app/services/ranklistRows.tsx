@@ -9,14 +9,14 @@ export class GetRanklistRowsArgs {
         this.contestId = contestId;
         this.sortField = sortField;
         this.sortOrder = sortOrder;
-        this.filterByParticipantType = filterByParticipantType;
+        this.participantType = filterByParticipantType;
         this.lang = lang;
     }
 
     contestId : number;
     sortField : string | null;
     sortOrder : boolean | null;
-    filterByParticipantType : string | null;
+    participantType : string | null;
     lang : string | null;
 }
 
@@ -25,7 +25,7 @@ export async function getRanklistRows(args: GetRanklistRowsArgs)
     return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/RanklistRows/${args.contestId}?` +
         `${args.sortField != null? `&sortField=${args.sortField}` : ''}` +
         `${args.sortOrder != null? `&sortOrder=${args.sortOrder}` : ''}` +
-        `${args.filterByParticipantType != null? `&filterByParticipantType=${args.filterByParticipantType}` : ''}` +
+        `${args.participantType != null? `&participantType=${args.participantType}` : ''}` +
         `${args.lang != null? `&lang=${args.lang}` : 'lang=ru'}`,
         {
             redirect: 'error',     
