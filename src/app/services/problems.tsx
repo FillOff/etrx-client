@@ -15,8 +15,8 @@ export async function getProblems(args: GetProblemsArgs) {
       `${args.minPoints != null ? `&minPoints=${args.minPoints}` : ""}` +
       `${args.maxPoints != null ? `&maxPoints=${args.maxPoints}` : ""}` +
       `${args.sortField != null ? `&sortField=${args.sortField}` : ""}` +
-      `${args.sortOrder != null? `&sortOrder=${args.sortOrder}`: "&sortOrder=false"}` +
-      `${args.isOnly != null? `&isOnly=${args.isOnly}` : ""}` +
+      `${args.sortOrder != null ? `&sortOrder=${args.sortOrder}` : "&sortOrder=false"}` +
+      `${args.isOnly != null ? `&isOnly=${args.isOnly}` : ""}` +
       `${args.lang != null ? `&lang=${args.lang}` : "&lang=ru"}`,
     {
       redirect: "error",
@@ -24,10 +24,21 @@ export async function getProblems(args: GetProblemsArgs) {
   );
 }
 
-export async function getTags() {
-  return fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Problems/tags`, {
-    redirect: "error",
-  });
+export async function getTags(params?: {
+  minRating?: number;
+  maxRating?: number;
+}) {
+  const query = new URLSearchParams();
+  if (params?.minRating !== undefined)
+    query.append("minRating", params.minRating.toString());
+  if (params?.maxRating !== undefined)
+    query.append("maxRating", params.maxRating.toString());
+  return fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/Problems/tags?${query.toString()}`,
+    {
+      redirect: "error",
+    }
+  );
 }
 
 export async function getIndexes() {
