@@ -6,13 +6,13 @@ import { useIsClient } from "@/hooks/useIsClient";
 import { useQueryState } from "@/hooks/useQueryState";
 import { getContest } from "@/app/services/contests";
 import { getRanklistRows, GetRanklistRowsArgs, updateRanklistRows } from "@/app/services/ranklistRows";
-import ContestData from "@/app/models/ContestData";
 import { Column, SortOrder } from "@/app/models/TableTypes";
 import { Problem, RanklistRow, RanklistRowForTable } from "@/app/models/Ranklist";
 import { Table } from "@/app/components/Table";
 import { RadioGroup, Option } from "@/app/components/contest-radiogroup";
 import GizmoSpinner from "@/app/components/gizmo-spinner";
 import { useStopwatch } from "@/hooks/useStopwatch";
+import { Contest } from "@/app/models/Contest";
 
 const DEFAULT_PARTICIPANT_TYPE = 'CONTESTANT';
 const DEFAULT_SORT_FIELD: keyof RanklistRow = 'solvedCount';
@@ -33,7 +33,7 @@ function ContestIdClientPage() {
     const sortField = useMemo(() => (searchParams.get('sortField') as keyof RanklistRow) || DEFAULT_SORT_FIELD, [searchParams]);
     const sortOrder = useMemo(() => (searchParams.get('sortOrder') as SortOrder) || DEFAULT_SORT_ORDER, [searchParams]);
     
-    const [contest, setContest] = useState<ContestData | null>(null);
+    const [contest, setContest] = useState<Contest | null>(null);
     const [ranklistRows, setRanklistRows] = useState<RanklistRow[]>([]);
     const [problems, setProblems] = useState<Problem[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -45,18 +45,18 @@ function ContestIdClientPage() {
     useEffect(() => {
         if (!isClient) return;
 
-        const fetchContestData = async () => {
+        const fetchContest = async () => {
             try {
                 const contestResponse = await getContest(contestId, i18n.language);
                 if (!contestResponse.ok) throw new Error(t('common:error', { statusCode: contestResponse.status }));
-                const contestData: ContestData = await contestResponse.json();
-                setContest(contestData);
+                const contest: Contest = await contestResponse.json();
+                setContest(contest);
             } catch (err) {
                 setError(err as Error);
             }
         };
 
-        fetchContestData();
+        fetchContest();
     }, [isClient, contestId, i18n.language, t]);
 
     useEffect(() => {

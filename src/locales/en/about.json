@@ -4,6 +4,17 @@
     "changes": "Changes",
     "updates": [
       {
+        "date": "5.11.2025",
+        "items":[
+          {
+            "type":"Добавлено",
+            "details":[
+              "Detailed protocol of user submissions for a specific contest"
+            ]
+          }
+        ]
+      },
+      {
         "date": "3.11.2025",
         "items":[
           {
