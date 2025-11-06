@@ -24,3 +24,13 @@ export async function getUsers(
             redirect: 'error',                
         });
 }
+
+export async function getUser(
+    handle: string
+) 
+{
+    return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Users/${handle}`,
+        {
+            redirect: 'error',                
+        });
+}

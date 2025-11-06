@@ -4,15 +4,15 @@ import { Suspense, useEffect, useState, useMemo, useCallback, useRef } from "rea
 import { useTranslation } from "react-i18next";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { getSubmissionsProtocol, GetSubmissionsProtocolArgs } from "../services/submissions";
+import { getGroupProtocol, GetGroupProtocolArgs } from "../services/submissions";
 import GizmoSpinner from "@/app/components/gizmo-spinner";
 import { Table } from "@/app/components/Table";
 import { Column, SortOrder } from "@/app/models/TableTypes";
-import { ProtocolForTable, SubmissionProtocol } from "../models/Submission";
+import { GroupProtocolForTable, GroupProtocol } from "../models/Submission";
 import { useQueryState } from "@/hooks/useQueryState";
 import { useDebounce } from "@/hooks/useDebounce";
 
-const DEFAULT_SORT_FIELD: keyof SubmissionProtocol = "contestId";
+const DEFAULT_SORT_FIELD: keyof GroupProtocol = "contestId";
 const DEFAULT_SORT_ORDER: SortOrder = "desc";
 
 function ProtocolClientPage() {
@@ -36,7 +36,7 @@ function ProtocolClientPage() {
     const { searchParams, setQueryParams } = useQueryState(defaultFilters);
 
     const isMounted = useRef(true);
-    const [submissions, setSubmissions] = useState<SubmissionProtocol[]>([]);
+    const [submissions, setSubmissions] = useState<GroupProtocol[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<Error | null>(null);
 
@@ -69,7 +69,7 @@ function ProtocolClientPage() {
         return id ? Number(id) : null;
     }, [searchParams]);
 
-    const sortField = useMemo(() => (searchParams.get("sortField") as keyof SubmissionProtocol) || DEFAULT_SORT_FIELD, [searchParams]);
+    const sortField = useMemo(() => (searchParams.get("sortField") as keyof GroupProtocol) || DEFAULT_SORT_FIELD, [searchParams]);
     const sortOrder = useMemo(() => (searchParams.get("sortOrder") as SortOrder) || DEFAULT_SORT_ORDER, [searchParams]);
     
     const filters = useMemo(() => ({
@@ -98,7 +98,7 @@ function ProtocolClientPage() {
         setIsLoading(true);
         setError(null);
 
-        const args = new GetSubmissionsProtocolArgs(
+        const args = new GetGroupProtocolArgs(
             sortField, 
             sortOrder === "asc", 
             debouncedFYear, 
@@ -111,7 +111,7 @@ function ProtocolClientPage() {
         );
 
         try {
-            const response = await getSubmissionsProtocol(args);
+            const response = await getGroupProtocol(args);
             if (!isMounted.current) return;
             if (!response.ok) throw new Error(t('common:error', { statusCode: response.status }));
             
@@ -133,7 +133,7 @@ function ProtocolClientPage() {
         return () => { isMounted.current = false; };
     }, [fetchData]);
 
-    const handleSortChange = (newSortField: keyof ProtocolForTable) => {
+    const handleSortChange = (newSortField: keyof GroupProtocolForTable) => {
         const effectiveSortField = newSortField as string;
         const newSortOrder =
           sortField === effectiveSortField && sortOrder === "asc" ? "desc" : "asc";
@@ -168,13 +168,13 @@ function ProtocolClientPage() {
         setQueryParams({ contestid: e.target.value === "" ? null : Number(e.target.value) });
     };
 
-    const columns: Column<ProtocolForTable>[] = useMemo(() => [
+    const columns: Column<GroupProtocolForTable>[] = useMemo(() => [
         { key: 'userName', header: t('protocol:tableHeaders.userName'), accessor: 'userName' },
         { key: 'contestId', header: t('protocol:tableHeaders.contestId'), accessor: 'contestId' },
         { key: 'solvedCount', header: t('protocol:tableHeaders.solvedCount'), accessor: 'solvedCount' },
     ], [t]);
 
-    const tableData: ProtocolForTable[] = submissions.map((sub) => ({ ...sub, id: `${sub.userName}-${sub.contestId}` }));
+    const tableData: GroupProtocolForTable[] = submissions.map((sub) => ({ ...sub, id: `${sub.userName}-${sub.contestId}` }));
 
     return (
         <>
@@ -219,6 +219,10 @@ function ProtocolClientPage() {
                 sortField={sortField}
                 sortOrder={sortOrder}
                 onSortChange={handleSortChange}
+                onRowClick={(sub) => window.open(`/etrx2/protocol/${sub.handle}/${sub.contestId}?` + 
+                    `fDay=${debouncedFDay}&fMonth=${debouncedFMonth}&fYear=${debouncedFYear}` + 
+                    `&tDay=${debouncedTDay}&tMonth=${debouncedTMonth}&tYear=${debouncedTYear}`
+                )}
             />
         </>
     );
