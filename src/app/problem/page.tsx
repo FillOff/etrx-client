@@ -23,6 +23,8 @@ const DEFAULT_MIN_RATING = 0;
 const DEFAULT_MAX_RATING = 10000;
 const DEFAULT_MIN_POINTS = 0;
 const DEFAULT_MAX_POINTS = 10000;
+const DEFAULT_MIN_DIFFICULTY = 0;
+const DEFAULT_MAX_DIFFICULTY = 10000;
 const DEFAULT_IS_ONLY = true;
 
 function ProblemClientPage() {
@@ -40,6 +42,8 @@ function ProblemClientPage() {
     maxRating: DEFAULT_MAX_RATING,
     minPoints: DEFAULT_MIN_POINTS,
     maxPoints: DEFAULT_MAX_POINTS,
+    minDifficulty: DEFAULT_MIN_DIFFICULTY,
+    maxDifficulty: DEFAULT_MAX_DIFFICULTY,    
     isOnly: DEFAULT_IS_ONLY,
   });
 
@@ -51,6 +55,8 @@ function ProblemClientPage() {
   const maxRating = useMemo(() => Number(searchParams.get("maxRating")) || DEFAULT_MAX_RATING, [searchParams]);
   const minPoints = useMemo(() => Number(searchParams.get("minPoints")) || DEFAULT_MIN_POINTS, [searchParams]);
   const maxPoints = useMemo(() => Number(searchParams.get("maxPoints")) || DEFAULT_MAX_POINTS, [searchParams]);
+  const minDifficulty = useMemo(() => Number(searchParams.get("minDifficulty")) || DEFAULT_MIN_DIFFICULTY, [searchParams]);
+  const maxDifficulty = useMemo(() => Number(searchParams.get("maxDifficulty")) || DEFAULT_MAX_DIFFICULTY, [searchParams]);
   const isOnly = useMemo(() => searchParams.get("isOnly") === "true", [searchParams]);
 
   const selectedTags = useMemo(() => {
@@ -84,6 +90,8 @@ function ProblemClientPage() {
       maxRating,
       minPoints,
       maxPoints,
+      minDifficulty,
+      maxDifficulty,
       isOnly,
       i18n.language
     );
@@ -104,7 +112,7 @@ function ProblemClientPage() {
       if (!isMounted.current) return;
       setIsLoading(false);
     }
-  }, [page, sortField, sortOrder, selectedTags, indexes, problemName, minRating, maxRating, minPoints, maxPoints, isOnly,
+  }, [page, sortField, sortOrder, selectedTags, indexes, problemName, minRating, maxRating, minPoints, maxPoints, minDifficulty, maxDifficulty, isOnly,
     i18n.language, t]);
 
   useEffect(() => {
@@ -143,36 +151,12 @@ function ProblemClientPage() {
 
   const columns: Column<ProblemForTable>[] = useMemo(
     () => [
-      {
-        key: "id",
-        header: t("problem:tableHeaders.id"),
-        accessor: "id",
-      },
-      {
-        key: "contestId",
-        header: t("problem:tableHeaders.contest"),
-        accessor: "contestId",
-      },
-      {
-        key: "index",
-        header: t("problem:tableHeaders.index"),
-        accessor: "index",
-      },
-      {
-        key: "name",
-        header: t("problem:tableHeaders.name"),
-        accessor: "name",
-      },
-      {
-        key: "points",
-        header: t("problem:tableHeaders.points"),
-        accessor: "points",
-      },
-      {
-        key: "rating",
-        header: t("problem:tableHeaders.rating"),
-        accessor: "rating",
-      },
+      { key: "contestId", header: t("problem:tableHeaders.contest"), accessor: "contestId" },
+      { key: "index", header: t("problem:tableHeaders.index"), accessor: "index" },
+      { key: "name", header: t("problem:tableHeaders.name"), accessor: "name" },
+      { key: "points", header: t("problem:tableHeaders.points"), accessor: "points" },
+      { key: "rating", header: t("problem:tableHeaders.rating"), accessor: "rating" },
+      { key: "difficulty", header: t("problem:tableHeaders.difficulty"), accessor: "difficulty" },
       {
         key: "tags",
         header: t("problem:tableHeaders.tags"),
@@ -186,7 +170,7 @@ function ProblemClientPage() {
 
   const tableData: ProblemForTable[] = problems.map((problem) => ({
     ...problem,
-    id: problem.id,
+    id: `${problem.contestId}-${problem.index}`,
   }));
 
   if (!isClient) {
@@ -241,6 +225,14 @@ function ProblemClientPage() {
             maxPoints={maxPoints}
             onMaxPointsChange={(value) =>
               handleFilterChange("maxPoints", value)
+            }
+            minDifficulty={minDifficulty}
+            onMinDifficultyChange={(value) =>
+              handleFilterChange("minDifficulty", value)
+            }
+            maxDifficulty={maxDifficulty}
+            onMaxDifficultyChange={(value) =>
+              handleFilterChange("maxDifficulty", value)
             }
           />
         </div>

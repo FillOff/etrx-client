@@ -72,7 +72,6 @@ function UserClientPage() {
     };
 
     const columns: Column<UserForTable>[] = useMemo(() => [
-        { key: 'id', header: t('user:tableHeaders.id'), accessor: 'id' },
         { key: 'handle', header: t('user:tableHeaders.handle'), accessor: 'handle' },
         { key: 'firstName', header: t('user:tableHeaders.firstName'), accessor: 'firstName' },
         { key: 'lastName', header: t('user:tableHeaders.lastName'), accessor: 'lastName' },
@@ -81,7 +80,7 @@ function UserClientPage() {
         { key: 'grade', header: t('user:tableHeaders.class'), accessor: 'grade' },
     ], [t]);
 
-    const tableData: UserForTable[] = users.map(user => ({ ...user, id: user.id }));
+    const tableData: UserForTable[] = users.map(user => ({ ...user, id: user.handle }));
 
     if (!isClient) {
         return <GizmoSpinner />;

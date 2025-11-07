@@ -19,6 +19,10 @@ interface TagsFilterProps {
     onMinPointsChange: (points: number) => void;
     maxPoints: number;
     onMaxPointsChange: (points: number) => void;
+    minDifficulty: number;
+    onMinDifficultyChange: (difficulty: number) => void;
+    maxDifficulty: number;
+    onMaxDifficultyChange: (difficulty: number) => void;
 }
 
 export function TagsFilter({
@@ -36,6 +40,10 @@ export function TagsFilter({
     onMinPointsChange,
     maxPoints,
     onMaxPointsChange,
+    minDifficulty,
+    onMinDifficultyChange,
+    maxDifficulty,
+    onMaxDifficultyChange
 }: TagsFilterProps) {
     const { t } = useTranslation('problem');
 
@@ -127,26 +135,56 @@ export function TagsFilter({
                     }
                 />
 
-                <Widget
-                    title={t('widgetTitles.search')}
-                    data={
-                        <div>
-                            <label htmlFor="problemName">{t('filters.problemName')}: </label>
-                            <input
-                                type="text"
-                                name="problemName"
-                                value={problemName}
-                                onChange={e => onProblemNameChange(e.target.value)}
-                                className={Styles.input}
-                            />
-                        </div>
-                    }
-                />
+                <div className="flex flex-row w-full">
+                    <div className="flex-1 mr-2">
+                        <Widget
+                            title={t('widgetTitles.search')}
+                            data={
+                                <div>
+                                    <label htmlFor="problemName">{t('filters.problemName')}: </label>
+                                    <input
+                                        type="text"
+                                        name="problemName"
+                                        value={problemName}
+                                        onChange={e => onProblemNameChange(e.target.value)}
+                                        className={Styles.input}
+                                    />
+                                </div>
+                            }
+                        />
+                    </div>
+                    <div className="flex-1">
+                        <Widget
+                            title={t('widgetTitles.difficultyFilter')}
+                            data={
+                                <div>
+                                    <label htmlFor="minDifficulty">{t('filters.min')}: </label>
+                                    <input
+                                        type="number"
+                                        name="minDifficulty"
+                                        value={minDifficulty || ''}
+                                        onChange={e => handleNumberInputChange(e, onMinDifficultyChange)}
+                                        className={Styles.input}
+                                    />
+                                    <br />
+                                    <label htmlFor="maxDifficulty">{t('filters.max')}: </label>
+                                    <input
+                                        type="number"
+                                        name="maxDifficulty"
+                                        value={maxDifficulty || ''}
+                                        onChange={e => handleNumberInputChange(e, onMaxDifficultyChange)}
+                                        className={Styles.input}
+                                    />
+                                </div>
+                            }
+                        />
+                    </div>
+                </div>
 
                 <div className="flex flex-row w-full">
                     <div className="flex-1 mr-2">
                         <Widget
-                            title={t('widgetTitles.ratingSort')}
+                            title={t('widgetTitles.ratingFilter')}
                             data={
                                 <div>
                                     <label htmlFor="minRating">{t('filters.min')}: </label>
@@ -172,7 +210,7 @@ export function TagsFilter({
                     </div>
                     <div className="flex-1">
                         <Widget
-                            title={t('widgetTitles.pointsSort')}
+                            title={t('widgetTitles.pointsFilter')}
                             data={
                                 <div>
                                     <label htmlFor="minPoints">{t('filters.min')}: </label>

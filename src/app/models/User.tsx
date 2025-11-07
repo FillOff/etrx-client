@@ -1,5 +1,4 @@
 export interface User {
-  id: number;
   handle: string;
   firstName: string;
   lastName: string;
@@ -8,4 +7,4 @@ export interface User {
   grade: string;
 }
 
-export type UserForTable = User & { id: number };
+export type UserForTable = User & { id: string };

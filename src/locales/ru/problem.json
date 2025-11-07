@@ -7,7 +7,8 @@
       "name": "Имя",
       "points": "Очки",
       "rating": "Рейтинг",
-      "tags": "Теги"
+      "tags": "Теги",
+      "difficulty": "Сложность"
     },
     "filtersTitle": "Фильтры",
     "filters": {
@@ -24,7 +25,8 @@
       "tags": "Теги",
       "indexes": "Индексы",
       "search": "Поиск",
-      "ratingSort": "Сортировка по рейтингу",
-      "pointsSort": "Сортировка по очкам"
+      "ratingFilter": "Фильтрация по рейтингу",
+      "pointsFilter": "Фильтрация по очкам",
+      "difficultyFilter": "Фильтрация по сложности"
     }
   }
