@@ -15,7 +15,7 @@ import { useStopwatch } from "@/hooks/useStopwatch";
 import { Contest } from "@/app/models/Contest";
 
 const DEFAULT_PARTICIPANT_TYPE = 'CONTESTANT';
-const DEFAULT_SORT_FIELD: keyof RanklistRow = 'solvedCount';
+const DEFAULT_SORT_FIELD: keyof RanklistRow = 'points';
 const DEFAULT_SORT_ORDER: SortOrder = 'desc';
 
 function ContestIdClientPage() {
