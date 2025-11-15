@@ -8,7 +8,9 @@
       "points": "Очки",
       "rating": "Рейтинг",
       "tags": "Теги",
-      "difficulty": "Сложность"
+      "difficulty": "Сложность",
+      "solvedCount": "Количество сдавших",
+      "startTime": "Дата контеста"
     },
     "filtersTitle": "Фильтры",
     "filters": {

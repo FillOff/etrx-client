@@ -5,6 +5,8 @@ export interface Problem {
   points: number;
   rating: number;
   difficulty: number;
+  solvedCount: number;
+  startTime: number;
   tags: string[];
 }
 

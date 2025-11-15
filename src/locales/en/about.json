@@ -4,12 +4,29 @@
     "changes": "Changes",
     "updates": [
       {
+        "date": "15.11.2025",
+        "items":[
+          {
+            "type":"Added",
+            "details":[
+              "Added the Contest date and Solved count fields in the problem table"
+            ]
+          },
+          {
+            "type": "Reworked/Changed",
+            "details": [
+              "Sorting on the contest/[id] page by default is now based on the Points field"
+            ]
+          }
+        ]
+      },
+      {
         "date": "11.11.2025",
         "items":[
           {
             "type": "Reworked/Changed",
             "details": [
-              "The way information is entered into the field has been redesigned. Now the page will only refresh when the user has fully entered a number and pressed Enter or when they are outside the field."
+              "The way information is entered into the field has been redesigned. Now the page will only refresh when the user has fully entered a number and pressed Enter or when they are outside the field"
             ]
           }
         ]

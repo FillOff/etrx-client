@@ -12,6 +12,7 @@ import { TagsFilter } from "@/app/components/tags-filter";
 import { GetDivTagsList } from "@/app/components/problem-tags";
 import { Column, SortOrder } from "@/app/models/TableTypes";
 import { Problem, ProblemForTable } from "@/app/models/Problem";
+import { unixToFormattedDate } from "@/libs/date";
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_SORT_FIELD: keyof Problem = "contestId";
@@ -154,6 +155,13 @@ function ProblemClientPage() {
       { key: "points", header: t("problem:tableHeaders.points"), accessor: "points" },
       { key: "rating", header: t("problem:tableHeaders.rating"), accessor: "rating" },
       { key: "difficulty", header: t("problem:tableHeaders.difficulty"), accessor: "difficulty" },
+      { key: "solvedCount", header: t("problem:tableHeaders.solvedCount"), accessor: "solvedCount" },
+      { 
+          key: 'startTime',
+          header: t('contest:tableHeaders.startTime'),
+          accessor: 'startTime',
+          render: (item) => unixToFormattedDate(item.startTime, t),
+      },
       {
         key: "tags",
         header: t("problem:tableHeaders.tags"),

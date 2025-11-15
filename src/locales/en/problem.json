@@ -8,7 +8,9 @@
       "points": "Points",
       "rating": "Rating",
       "tags": "Tags",
-      "difficulty": "Difficulty"
+      "difficulty": "Difficulty",
+      "solvedCount": "Solved count",
+      "startTime": "Contest date"
     },
     "filtersTitle": "Filters",
     "filters": {
