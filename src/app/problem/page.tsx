@@ -43,7 +43,7 @@ function ProblemClientPage() {
     minPoints: DEFAULT_MIN_POINTS,
     maxPoints: DEFAULT_MAX_POINTS,
     minDifficulty: DEFAULT_MIN_DIFFICULTY,
-    maxDifficulty: DEFAULT_MAX_DIFFICULTY,    
+    maxDifficulty: DEFAULT_MAX_DIFFICULTY,
     isOnly: DEFAULT_IS_ONLY,
   });
 
@@ -139,10 +139,7 @@ function ProblemClientPage() {
 
   const handleFilterChange = (paramName: string, value: any) => {
     const paramValue = Array.isArray(value) ? value.join(",") : value;
-    setQueryParams({
-      [paramName]: paramValue,
-      page: 1,
-    });
+    setQueryParams({ [paramName]: paramValue, page: 1 });
   };
 
   const handlePageChange = (newPage: number) => {
@@ -187,12 +184,7 @@ function ProblemClientPage() {
         <div className="col-start-1 flex justify-center">
           <button
             className="px-2 py-2 bg-blue-500 text-white rounded self-center"
-            onClick={() => {
-              setQueryParams({
-                isOnly: !isOnly,
-                page: 1,
-              });
-            }}
+            onClick={() => setQueryParams({ isOnly: !isOnly, page: 1 })}
           >
             {isOnly ? "isOnly = true" : "isOnly = false"}
           </button>
@@ -203,37 +195,25 @@ function ProblemClientPage() {
             selectedTags={selectedTags}
             onSelectedTagsChange={(value) => handleFilterChange("tags", value)}
             selectedIndexes={indexes}
-            onSelectedIndexesChange={(value) =>
-              handleFilterChange("indexes", value)
-            }
+            onSelectedIndexesChange={(value) => handleFilterChange("indexes", value)}
             problemName={problemName}
-            onProblemNameChange={(value) =>
-              handleFilterChange("problemName", value)
-            }
+            onProblemNameChange={(value) => handleFilterChange("problemName", value)}
             minRating={minRating}
-            onMinRatingChange={(value) =>
-              handleFilterChange("minRating", value)
-            }
+            onMinRatingChange={(value, syncMax = false) => {
+              const params: Record<string, any> = { minRating: value, page: 1 };
+              if (syncMax) params.maxRating = value;
+              setQueryParams(params);
+            }}
             maxRating={maxRating}
-            onMaxRatingChange={(value) =>
-              handleFilterChange("maxRating", value)
-            }
+            onMaxRatingChange={(value) => setQueryParams({ maxRating: value, page: 1 })}
             minPoints={minPoints}
-            onMinPointsChange={(value) =>
-              handleFilterChange("minPoints", value)
-            }
+            onMinPointsChange={(value) => handleFilterChange("minPoints", value)}
             maxPoints={maxPoints}
-            onMaxPointsChange={(value) =>
-              handleFilterChange("maxPoints", value)
-            }
+            onMaxPointsChange={(value) => handleFilterChange("maxPoints", value)}
             minDifficulty={minDifficulty}
-            onMinDifficultyChange={(value) =>
-              handleFilterChange("minDifficulty", value)
-            }
+            onMinDifficultyChange={(value) => handleFilterChange("minDifficulty", value)}
             maxDifficulty={maxDifficulty}
-            onMaxDifficultyChange={(value) =>
-              handleFilterChange("maxDifficulty", value)
-            }
+            onMaxDifficultyChange={(value) => handleFilterChange("maxDifficulty", value)}
           />
         </div>
 
@@ -252,9 +232,7 @@ function ProblemClientPage() {
         sortOrder={sortOrder}
         onSortChange={handleSortChange}
         onRowClick={(problem) =>
-          window.open(
-            `https://codeforces.com/problemset/problem/${problem.contestId}/${problem.index}`
-          )
+          window.open(`https://codeforces.com/problemset/problem/${problem.contestId}/${problem.index}`)
         }
       />
     </>

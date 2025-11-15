@@ -5,83 +5,134 @@ import Styles from './tags-filter.module.css';
 import { Widget } from './widget';
 
 interface TagsFilterProps {
-    selectedTags: string[];
-    onSelectedTagsChange: (tags: string[]) => void;
-    selectedIndexes: string[];
-    onSelectedIndexesChange: (indexes: string[]) => void;
-    problemName: string;
-    onProblemNameChange: (name: string) => void;
-    minRating: number;
-    onMinRatingChange: (rating: number) => void;
-    maxRating: number;
-    onMaxRatingChange: (rating: number) => void;
-    minPoints: number;
-    onMinPointsChange: (points: number) => void;
-    maxPoints: number;
-    onMaxPointsChange: (points: number) => void;
-    minDifficulty: number;
-    onMinDifficultyChange: (difficulty: number) => void;
-    maxDifficulty: number;
-    onMaxDifficultyChange: (difficulty: number) => void;
+  selectedTags: string[];
+  onSelectedTagsChange: (tags: string[]) => void;
+  selectedIndexes: string[];
+  onSelectedIndexesChange: (indexes: string[]) => void;
+  problemName: string;
+  onProblemNameChange: (name: string) => void;
+
+  minRating: number;
+  onMinRatingChange: (rating: number, syncMax?: boolean) => void;
+  maxRating: number;
+  onMaxRatingChange: (rating: number) => void;
+
+  minPoints: number;
+  onMinPointsChange: (points: number) => void;
+  maxPoints: number;
+  onMaxPointsChange: (points: number) => void;
+
+  minDifficulty: number;
+  onMinDifficultyChange: (difficulty: number) => void;
+  maxDifficulty: number;
+  onMaxDifficultyChange: (difficulty: number) => void;
 }
 
 export function TagsFilter({
-    selectedTags,
-    onSelectedTagsChange,
-    selectedIndexes,
-    onSelectedIndexesChange,
-    problemName,
-    onProblemNameChange,
-    minRating,
-    onMinRatingChange,
-    maxRating,
-    onMaxRatingChange,
-    minPoints,
-    onMinPointsChange,
-    maxPoints,
-    onMaxPointsChange,
-    minDifficulty,
-    onMinDifficultyChange,
-    maxDifficulty,
-    onMaxDifficultyChange
+  selectedTags,
+  onSelectedTagsChange,
+  selectedIndexes,
+  onSelectedIndexesChange,
+  problemName,
+  onProblemNameChange,
+  minRating,
+  onMinRatingChange,
+  maxRating,
+  onMaxRatingChange,
+  minPoints,
+  onMinPointsChange,
+  maxPoints,
+  onMaxPointsChange,
+  minDifficulty,
+  onMinDifficultyChange,
+  maxDifficulty,
+  onMaxDifficultyChange,
 }: TagsFilterProps) {
-    const { t } = useTranslation('problem');
+  const { t } = useTranslation('problem');
 
-    const [allTags, setAllTags] = useState<string[]>([]);
-    const [allIndexes, setAllIndexes] = useState<string[]>([]);
+  const [allTags, setAllTags] = useState<string[]>([]);
+  const [allIndexes, setAllIndexes] = useState<string[]>([]);
 
-    useEffect(() => {
-        const fetchFilterOptions = async () => {
-            try {
-                const tagsResponse = await getTags({ minRating, maxRating });
-                const tagsData = await tagsResponse.json();
-                setAllTags(tagsData);
+  const [draftMinRating, setDraftMinRating] = useState(minRating.toString());
+  const [draftMaxRating, setDraftMaxRating] = useState(maxRating.toString());
+  const [draftMinPoints, setDraftMinPoints] = useState(minPoints.toString());
+  const [draftMaxPoints, setDraftMaxPoints] = useState(maxPoints.toString());
+  const [draftMinDifficulty, setDraftMinDifficulty] = useState(minDifficulty.toString());
+  const [draftMaxDifficulty, setDraftMaxDifficulty] = useState(maxDifficulty.toString());
 
-                const indexesResponse = await getIndexes();
-                const indexesData = await indexesResponse.json();
-                setAllIndexes(indexesData);
-            } catch (error) {
-                console.error('Failed to load filter options:', error);
-            }
-        };
-        fetchFilterOptions();
-    }, [minRating, maxRating]);
+  useEffect(() => { setDraftMinRating(minRating.toString()); }, [minRating]);
+  useEffect(() => { setDraftMaxRating(maxRating.toString()); }, [maxRating]);
+  useEffect(() => { setDraftMinPoints(minPoints.toString()); }, [minPoints]);
+  useEffect(() => { setDraftMaxPoints(maxPoints.toString()); }, [maxPoints]);
+  useEffect(() => { setDraftMinDifficulty(minDifficulty.toString()); }, [minDifficulty]);
+  useEffect(() => { setDraftMaxDifficulty(maxDifficulty.toString()); }, [maxDifficulty]);
 
-    const handleSelectTag = (tag: string) => onSelectedTagsChange([...selectedTags, tag]);
-    const handleDeselectTag = (tag: string) => onSelectedTagsChange(selectedTags.filter(t => t !== tag));
-    const handleSelectIndex = (index: string) => onSelectedIndexesChange([...selectedIndexes, index]);
-    const handleDeselectIndex = (index: string) => onSelectedIndexesChange(selectedIndexes.filter(i => i !== index));
+  useEffect(() => {
+    const fetchFilterOptions = async () => {
+      try {
+        const tagsResponse = await getTags({ minRating, maxRating });
+        const tagsData = await tagsResponse.json();
+        setAllTags(tagsData);
 
-    const handleNumberInputChange = (event: React.ChangeEvent<HTMLInputElement>, setter: (value: number) => void) => {
-        const value = event.target.value;
-        setter(value === '' ? 0 : parseInt(value, 10));
+        const indexesResponse = await getIndexes();
+        const indexesData = await indexesResponse.json();
+        setAllIndexes(indexesData);
+      } catch (error) {
+        console.error('Failed to load filter options:', error);
+      }
     };
+    fetchFilterOptions();
+  }, [minRating, maxRating]);
 
-    const availableTags = allTags.filter(tag => !selectedTags.includes(tag));
-    const availableIndexes = allIndexes.filter(index => !selectedIndexes.includes(index));
+  const handleSelectTag = (tag: string) => onSelectedTagsChange([...selectedTags, tag]);
+  const handleDeselectTag = (tag: string) => onSelectedTagsChange(selectedTags.filter(t => t !== tag));
+  const handleSelectIndex = (index: string) => onSelectedIndexesChange([...selectedIndexes, index]);
+  const handleDeselectIndex = (index: string) => onSelectedIndexesChange(selectedIndexes.filter(i => i !== index));
 
-    return (
-        <div className={Styles.container}>
+  const parseDraftInt = (s: string): number | null => {
+    const trimmed = s.trim();
+    if (trimmed === '') return null;
+    const n = parseInt(trimmed, 10);
+    return Number.isNaN(n) ? null : n;
+  };
+
+  const commitMinRating = () => {
+    const min = parseDraftInt(draftMinRating);
+    if (min === null) return;
+    onMinRatingChange(min, true);      
+    setDraftMaxRating(min.toString());
+  };
+  const commitMaxRating = () => {
+    const max = parseDraftInt(draftMaxRating);
+    if (max === null) return;
+    onMaxRatingChange(max);
+  };
+  const commitMinPoints = () => {
+    const val = parseDraftInt(draftMinPoints);
+    if (val === null) return;
+    onMinPointsChange(val);
+  };
+  const commitMaxPoints = () => {
+    const val = parseDraftInt(draftMaxPoints);
+    if (val === null) return;
+    onMaxPointsChange(val);
+  };
+  const commitMinDifficulty = () => {
+    const val = parseDraftInt(draftMinDifficulty);
+    if (val === null) return;
+    onMinDifficultyChange(val);
+  };
+  const commitMaxDifficulty = () => {
+    const val = parseDraftInt(draftMaxDifficulty);
+    if (val === null) return;
+    onMaxDifficultyChange(val);
+  };
+
+  const availableTags = allTags.filter(tag => !selectedTags.includes(tag));
+  const availableIndexes = allIndexes.filter(index => !selectedIndexes.includes(index));
+
+  return (
+    <div className={Styles.container}>
             <div className={Styles.main}>
                 <div className="text-center">{t('filtersTitle')}</div>
 
@@ -153,89 +204,107 @@ export function TagsFilter({
                             }
                         />
                     </div>
-                    <div className="flex-1">
-                        <Widget
-                            title={t('widgetTitles.difficultyFilter')}
-                            data={
-                                <div>
-                                    <label htmlFor="minDifficulty">{t('filters.min')}: </label>
-                                    <input
-                                        type="number"
-                                        name="minDifficulty"
-                                        value={minDifficulty || ''}
-                                        onChange={e => handleNumberInputChange(e, onMinDifficultyChange)}
-                                        className={Styles.input}
-                                    />
-                                    <br />
-                                    <label htmlFor="maxDifficulty">{t('filters.max')}: </label>
-                                    <input
-                                        type="number"
-                                        name="maxDifficulty"
-                                        value={maxDifficulty || ''}
-                                        onChange={e => handleNumberInputChange(e, onMaxDifficultyChange)}
-                                        className={Styles.input}
-                                    />
-                                </div>
-                            }
-                        />
-                    </div>
+          <div className="flex-1">
+            <Widget
+              title={t("widgetTitles.difficultyFilter")}
+              data={
+                <div>
+                  <label htmlFor="minDifficulty">{t("filters.min")}: </label>
+                  <input
+                    type="number"
+                    name="minDifficulty"
+                    value={draftMinDifficulty}
+                    onChange={e => setDraftMinDifficulty(e.target.value)}
+                    onKeyDown={e => e.key === "Enter" && commitMinDifficulty()}
+                    onBlur={commitMinDifficulty}
+                    onFocus={e => e.target.select()}
+                    className={Styles.input}
+                  />
+                  <br />
+                  <label htmlFor="maxDifficulty">{t("filters.max")}: </label>
+                  <input
+                    type="number"
+                    name="maxDifficulty"
+                    value={draftMaxDifficulty}
+                    onChange={e => setDraftMaxDifficulty(e.target.value)}
+                    onKeyDown={e => e.key === "Enter" && commitMaxDifficulty()}
+                    onBlur={commitMaxDifficulty}
+                    onFocus={e => e.target.select()}
+                    className={Styles.input}
+                  />
                 </div>
-
-                <div className="flex flex-row w-full">
-                    <div className="flex-1 mr-2">
-                        <Widget
-                            title={t('widgetTitles.ratingFilter')}
-                            data={
-                                <div>
-                                    <label htmlFor="minRating">{t('filters.min')}: </label>
-                                    <input
-                                        type="number"
-                                        name="minRating"
-                                        value={minRating || ''}
-                                        onChange={e => handleNumberInputChange(e, onMinRatingChange)}
-                                        className={Styles.input}
-                                    />
-                                    <br />
-                                    <label htmlFor="maxRating">{t('filters.max')}: </label>
-                                    <input
-                                        type="number"
-                                        name="maxRating"
-                                        value={maxRating || ''}
-                                        onChange={e => handleNumberInputChange(e, onMaxRatingChange)}
-                                        className={Styles.input}
-                                    />
-                                </div>
-                            }
-                        />
-                    </div>
-                    <div className="flex-1">
-                        <Widget
-                            title={t('widgetTitles.pointsFilter')}
-                            data={
-                                <div>
-                                    <label htmlFor="minPoints">{t('filters.min')}: </label>
-                                    <input
-                                        type="number"
-                                        name="minPoints"
-                                        value={minPoints || ''}
-                                        onChange={e => handleNumberInputChange(e, onMinPointsChange)}
-                                        className={Styles.input}
-                                    />
-                                    <br />
-                                    <label htmlFor="maxPoints">{t('filters.max')}: </label>
-                                    <input
-                                        type="number"
-                                        name="maxPoints"
-                                        value={maxPoints || ''}
-                                        onChange={e => handleNumberInputChange(e, onMaxPointsChange)}
-                                        className={Styles.input}
-                                    />
-                                </div>
-                            }
-                        />
-                    </div>
-                </div>
-            </div>
+              }
+            />
+          </div>
         </div>
-    );
+
+        <div className="flex flex-row w-full">
+          <div className="flex-1 mr-2">
+            <Widget
+              title={t("widgetTitles.ratingFilter")}
+              data={
+                <div>
+                  <label htmlFor="minRating">{t("filters.min")}: </label>
+                  <input
+                    type="number"
+                    name="minRating"
+                    value={draftMinRating}
+                    onChange={e => setDraftMinRating(e.target.value)}
+                    onKeyDown={e => e.key === "Enter" && commitMinRating()}
+                    onBlur={commitMinRating}
+                    onFocus={e => e.target.select()}
+                    className={Styles.input}
+                  />
+                  <br />
+                  <label htmlFor="maxRating">{t("filters.max")}: </label>
+                  <input
+                    type="number"
+                    name="maxRating"
+                    value={draftMaxRating}
+                    onChange={e => setDraftMaxRating(e.target.value)}
+                    onKeyDown={e => e.key === "Enter" && commitMaxRating()}
+                    onBlur={commitMaxRating}
+                    onFocus={e => e.target.select()}
+                    className={Styles.input}
+                  />
+                </div>
+              }
+            />
+          </div>
+          <div className="flex-1">
+            <Widget
+              title={t("widgetTitles.pointsFilter")}
+              data={
+                <div>
+                  <label htmlFor="minPoints">{t("filters.min")}: </label>
+                  <input
+                    type="number"
+                    name="minPoints"
+                    value={draftMinPoints}
+                    onChange={e => setDraftMinPoints(e.target.value)}
+                    onKeyDown={e => e.key === "Enter" && commitMinPoints()}
+                    onBlur={commitMinPoints}
+                    onFocus={e => e.target.select()}
+                    className={Styles.input}
+                  />
+                  <br />
+                  <label htmlFor="maxPoints">{t("filters.max")}: </label>
+                  <input
+                    type="number"
+                    name="maxPoints"
+                    value={draftMaxPoints}
+                    onChange={e => setDraftMaxPoints(e.target.value)}
+                    onKeyDown={e => e.key === "Enter" && commitMaxPoints()}
+                    onBlur={commitMaxPoints}
+                    onFocus={e => e.target.select()}
+                    className={Styles.input}
+                  />
+                </div>
+              }
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }

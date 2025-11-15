@@ -4,6 +4,17 @@
     "changes": "Changes",
     "updates": [
       {
+        "date": "11.11.2025",
+        "items":[
+          {
+            "type": "Reworked/Changed",
+            "details": [
+              "The way information is entered into the field has been redesigned. Now the page will only refresh when the user has fully entered a number and pressed Enter or when they are outside the field."
+            ]
+          }
+        ]
+      },
+      {
         "date": "7.11.2025",
         "items":[
           {
