@@ -1,6 +1,7 @@
 export interface Problem {
   contestId: number;
   index: string;
+  division: string;
   name: string;
   points: number;
   rating: number;

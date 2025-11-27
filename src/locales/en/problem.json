@@ -4,6 +4,7 @@
       "id": "ID",
       "contest": "Contest",
       "index": "Index",
+      "division": "Division",
       "name": "Name",
       "points": "Points",
       "rating": "Rating",
@@ -16,6 +17,7 @@
     "filters": {
       "tags": "Tags",
       "indexes": "Indexes",
+      "division": "Divisions",
       "search": "Search",
       "rating": "Rating",
       "points": "Points",
@@ -26,6 +28,7 @@
     "widgetTitles": {
       "tags": "Tags",
       "indexes": "Indexes",
+      "division": "Divisions",
       "search": "Search",
       "ratingFilter": "Filter by Rating",
       "pointsFilter": "Filter by Points",

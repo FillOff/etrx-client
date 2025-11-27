@@ -9,6 +9,7 @@ export class GetProblemsArgs extends Pageable {
     sortOrder: boolean | null = true,
     tags: string[] | null = [],
     indexes: string[] | null = [],
+    divisions: string[] | null = [],
     problemName: string,
     minRating: number,
     maxRating: number | undefined,
@@ -22,6 +23,7 @@ export class GetProblemsArgs extends Pageable {
     super(page, pageSize, sortField, sortOrder);
     this.tags = tags;
     this.indexes = indexes;
+    this.divisions = divisions;
     this.problemName = problemName;
     this.minRating = minRating;
     this.maxRating = maxRating;
@@ -35,6 +37,7 @@ export class GetProblemsArgs extends Pageable {
 
   tags: string[] | null;
   indexes: string[] | null;
+  divisions: string[] | null;
   problemName: string;
   minRating: number;
   maxRating: number | undefined;
