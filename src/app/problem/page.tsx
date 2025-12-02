@@ -19,6 +19,7 @@ const DEFAULT_SORT_FIELD: keyof Problem = "contestId";
 const DEFAULT_SORT_ORDER: SortOrder = "desc";
 const DEFAULT_TAGS: string[] = [];
 const DEFAULT_INDEXES: string[] = [];
+const DEFAULT_DIVISIONS: string[] = [];
 const DEFAULT_PROBLEM_NAME = "";
 const DEFAULT_MIN_RATING = 0;
 const DEFAULT_MAX_RATING = 10000;
@@ -38,6 +39,7 @@ function ProblemClientPage() {
     sortOrder: DEFAULT_SORT_ORDER,
     tags: DEFAULT_TAGS.join(","),
     indexes: DEFAULT_INDEXES.join(","),
+    divisions: DEFAULT_DIVISIONS.join(","),
     problemName: DEFAULT_PROBLEM_NAME,
     minRating: DEFAULT_MIN_RATING,
     maxRating: DEFAULT_MAX_RATING,
@@ -64,9 +66,15 @@ function ProblemClientPage() {
     const tagsParam = searchParams.get("tags");
     return tagsParam ? tagsParam.split(",") : DEFAULT_TAGS;
   }, [searchParams]);
+
   const indexes = useMemo(() => {
     const indexesParam = searchParams.get("indexes");
     return indexesParam ? indexesParam.split(",") : DEFAULT_INDEXES;
+  }, [searchParams]);
+
+  const divisions = useMemo(() => {
+    const divisionsParam = searchParams.get("divisions");
+    return divisionsParam ? divisionsParam.split(",") : DEFAULT_DIVISIONS;
   }, [searchParams]);
 
   const [problems, setProblems] = useState<Problem[]>([]);
@@ -86,6 +94,7 @@ function ProblemClientPage() {
       sortOrder === "asc",
       selectedTags,
       indexes,
+      divisions,
       problemName,
       minRating,
       maxRating,
@@ -100,8 +109,7 @@ function ProblemClientPage() {
     try {
       const response = await getProblems(args);
       if (!isMounted.current) return;
-      if (!response.ok)
-        throw new Error(t("common:error", { statusCode: response.status }));
+      if (!response.ok) throw new Error(t("common:error", { statusCode: response.status }));
 
       const data = await response.json();
       setProblems(data.problems || []);
@@ -113,29 +121,22 @@ function ProblemClientPage() {
       if (!isMounted.current) return;
       setIsLoading(false);
     }
-  }, [page, sortField, sortOrder, selectedTags, indexes, problemName, minRating, maxRating, minPoints, maxPoints, minDifficulty, maxDifficulty, isOnly,
-    i18n.language, t]);
+  }, [
+    page, sortField, sortOrder, selectedTags, indexes, divisions, problemName,
+    minRating, maxRating, minPoints, maxPoints, minDifficulty, maxDifficulty,
+    isOnly, i18n.language, t
+  ]);
 
   useEffect(() => {
     isMounted.current = true;
-    if (isClient) {
-      fetchProblems();
-    }
-    return () => {
-      isMounted.current = false;
-    };
+    if (isClient) fetchProblems();
+    return () => { isMounted.current = false; };
   }, [isClient, fetchProblems]);
 
   const handleSortChange = (newSortField: keyof ProblemForTable) => {
     const effectiveSortField = newSortField as keyof Problem;
-    const newSortOrder =
-      sortField === effectiveSortField && sortOrder === "asc" ? "desc" : "asc";
-
-    setQueryParams({
-      sortField: effectiveSortField,
-      sortOrder: newSortOrder,
-      page: 1,
-    });
+    const newSortOrder = sortField === effectiveSortField && sortOrder === "asc" ? "desc" : "asc";
+    setQueryParams({ sortField: effectiveSortField, sortOrder: newSortOrder, page: 1 });
   };
 
   const handleFilterChange = (paramName: string, value: any) => {
@@ -156,11 +157,17 @@ function ProblemClientPage() {
       { key: "rating", header: t("problem:tableHeaders.rating"), accessor: "rating" },
       { key: "difficulty", header: t("problem:tableHeaders.difficulty"), accessor: "difficulty" },
       { key: "solvedCount", header: t("problem:tableHeaders.solvedCount"), accessor: "solvedCount" },
-      { 
-          key: 'startTime',
-          header: t('contest:tableHeaders.startTime'),
-          accessor: 'startTime',
-          render: (item) => unixToFormattedDate(item.startTime, t),
+      {
+        key: "startTime",
+        header: t("contest:tableHeaders.startTime"),
+        accessor: "startTime",
+        render: (item) => unixToFormattedDate(item.startTime, t),
+      },
+      {
+        key: "division",
+        header: t("problem:tableHeaders.division"),
+        accessor: "division",
+        isSortable: false,
       },
       {
         key: "tags",
@@ -178,9 +185,7 @@ function ProblemClientPage() {
     id: `${problem.contestId}-${problem.index}`,
   }));
 
-  if (!isClient) {
-    return <GizmoSpinner />;
-  }
+  if (!isClient) return <GizmoSpinner />;
 
   return (
     <>
@@ -204,6 +209,8 @@ function ProblemClientPage() {
             onSelectedTagsChange={(value) => handleFilterChange("tags", value)}
             selectedIndexes={indexes}
             onSelectedIndexesChange={(value) => handleFilterChange("indexes", value)}
+            selectedDivisions={divisions}
+            onSelectedDivisionsChange={(value) => handleFilterChange("divisions", value)}
             problemName={problemName}
             onProblemNameChange={(value) => handleFilterChange("problemName", value)}
             minRating={minRating}

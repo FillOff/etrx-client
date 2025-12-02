@@ -9,6 +9,10 @@ interface TagsFilterProps {
   onSelectedTagsChange: (tags: string[]) => void;
   selectedIndexes: string[];
   onSelectedIndexesChange: (indexes: string[]) => void;
+
+  selectedDivisions: string[];
+  onSelectedDivisionsChange: (divisions: string[]) => void;
+
   problemName: string;
   onProblemNameChange: (name: string) => void;
 
@@ -33,6 +37,8 @@ export function TagsFilter({
   onSelectedTagsChange,
   selectedIndexes,
   onSelectedIndexesChange,
+  selectedDivisions,
+  onSelectedDivisionsChange,
   problemName,
   onProblemNameChange,
   minRating,
@@ -52,6 +58,7 @@ export function TagsFilter({
 
   const [allTags, setAllTags] = useState<string[]>([]);
   const [allIndexes, setAllIndexes] = useState<string[]>([]);
+  const allDivisions: string[] = ["Div1", "Div2", "Div3", "Div4"];
 
   const [draftMinRating, setDraftMinRating] = useState(minRating.toString());
   const [draftMaxRating, setDraftMaxRating] = useState(maxRating.toString());
@@ -71,11 +78,11 @@ export function TagsFilter({
     const fetchFilterOptions = async () => {
       try {
         const tagsResponse = await getTags({ minRating, maxRating });
-        const tagsData = await tagsResponse.json();
+        const tagsData: string[] = await tagsResponse.json();
         setAllTags(tagsData);
 
         const indexesResponse = await getIndexes();
-        const indexesData = await indexesResponse.json();
+        const indexesData: string[] = await indexesResponse.json();
         setAllIndexes(indexesData);
       } catch (error) {
         console.error('Failed to load filter options:', error);
@@ -88,6 +95,8 @@ export function TagsFilter({
   const handleDeselectTag = (tag: string) => onSelectedTagsChange(selectedTags.filter(t => t !== tag));
   const handleSelectIndex = (index: string) => onSelectedIndexesChange([...selectedIndexes, index]);
   const handleDeselectIndex = (index: string) => onSelectedIndexesChange(selectedIndexes.filter(i => i !== index));
+  const handleSelectDivision = (division: string) => onSelectedDivisionsChange([...selectedDivisions, division]);
+  const handleDeselectDivision = (division: string) => onSelectedDivisionsChange(selectedDivisions.filter(d => d !== division));
 
   const parseDraftInt = (s: string): number | null => {
     const trimmed = s.trim();
@@ -130,80 +139,104 @@ export function TagsFilter({
 
   const availableTags = allTags.filter(tag => !selectedTags.includes(tag));
   const availableIndexes = allIndexes.filter(index => !selectedIndexes.includes(index));
+  const availableDivisions = allDivisions.filter(d => !selectedDivisions.includes(d));
 
   return (
     <div className={Styles.container}>
-            <div className={Styles.main}>
-                <div className="text-center">{t('filtersTitle')}</div>
+      <div className={Styles.main}>
+        <div className="text-center">{t('filtersTitle')}</div>
 
-                <div className={Styles.selected_tags}>
-                    {selectedTags.length > 0 && (
-                        <fieldset className={Styles.fieldset}>
-                            <legend className={Styles.legend}>{t('filters.tags')}</legend>
-                            {selectedTags.map(tag => (
-                                <div key={tag} className={Styles.tag} onClick={() => handleDeselectTag(tag)}>
-                                    {tag}
-                                    <div className={Styles.close_btn}></div>
-                                </div>
-                            ))}
-                        </fieldset>
-                    )}
-                    {selectedIndexes.length > 0 && (
-                        <fieldset className={Styles.fieldset}>
-                            <legend className={Styles.legend}>{t('filters.indexes')}</legend>
-                            {selectedIndexes.map(index => (
-                                <div key={index} className={Styles.tag} onClick={() => handleDeselectIndex(index)}>
-                                    {index}
-                                    <div className={Styles.close_btn}></div>
-                                </div>
-                            ))}
-                        </fieldset>
-                    )}
+        <div className={Styles.selected_tags}>
+          {selectedTags.length > 0 && (
+            <fieldset className={Styles.fieldset}>
+              <legend className={Styles.legend}>{t('filters.tags')}</legend>
+              {selectedTags.map(tag => (
+                <div key={tag} className={Styles.tag} onClick={() => handleDeselectTag(tag)}>
+                  {tag}
+                  <div className={Styles.close_btn}></div>
                 </div>
+              ))}
+            </fieldset>
+          )}
+          {selectedIndexes.length > 0 && (
+            <fieldset className={Styles.fieldset}>
+              <legend className={Styles.legend}>{t('filters.indexes')}</legend>
+              {selectedIndexes.map(index => (
+                <div key={index} className={Styles.tag} onClick={() => handleDeselectIndex(index)}>
+                  {index}
+                  <div className={Styles.close_btn}></div>
+                </div>
+              ))}
+            </fieldset>
+          )}
+          {selectedDivisions.length > 0 && (
+            <fieldset className={Styles.fieldset}>
+              <legend className={Styles.legend}>{t('filters.division')}</legend>
+              {selectedDivisions.map(division => (
+                <div key={division} className={Styles.tag} onClick={() => handleDeselectDivision(division)}>
+                  {division}
+                  <div className={Styles.close_btn}></div>
+                </div>
+              ))}
+            </fieldset>
+          )}
+        </div>
 
-                <Widget
-                    title={t('widgetTitles.tags')}
-                    data={
-                        <div>
-                            {availableTags.map(tag => (
-                                <div key={tag} className={Styles.tag} onClick={() => handleSelectTag(tag)}>
-                                    {tag}
-                                </div>
-                            ))}
-                        </div>
-                    }
-                />
-                <Widget
-                    title={t('widgetTitles.indexes')}
-                    data={
-                        <div>
-                            {availableIndexes.map(index => (
-                                <div key={index} className={Styles.tag} onClick={() => handleSelectIndex(index)}>
-                                    {index}
-                                </div>
-                            ))}
-                        </div>
-                    }
-                />
-
-                <div className="flex flex-row w-full">
-                    <div className="flex-1 mr-2">
-                        <Widget
-                            title={t('widgetTitles.search')}
-                            data={
-                                <div>
-                                    <label htmlFor="problemName">{t('filters.problemName')}: </label>
-                                    <input
-                                        type="text"
-                                        name="problemName"
-                                        value={problemName}
-                                        onChange={e => onProblemNameChange(e.target.value)}
-                                        className={Styles.input}
-                                    />
-                                </div>
-                            }
-                        />
-                    </div>
+        <Widget
+          title={t('widgetTitles.tags')}
+          data={
+            <div>
+              {availableTags.map(tag => (
+                <div key={tag} className={Styles.tag} onClick={() => handleSelectTag(tag)}>
+                  {tag}
+                </div>
+              ))}
+            </div>
+          }
+        />
+        <Widget
+          title={t('widgetTitles.indexes')}
+          data={
+            <div>
+              {availableIndexes.map(index => (
+                <div key={index} className={Styles.tag} onClick={() => handleSelectIndex(index)}>
+                  {index}
+                </div>
+              ))}
+            </div>
+          }
+        />
+        <Widget
+          title={t('widgetTitles.division')}
+          data={
+            <div>
+              {availableDivisions.map(division => (
+                <div key={division} className={Styles.tag} onClick={() => handleSelectDivision(division)}>
+                  {division}
+                </div>
+              ))}
+            </div>
+          }
+        />
+        
+        <div className="flex flex-row w-full">
+          <div className="flex-1 mr-2">
+            <Widget
+              title={t('widgetTitles.search')}
+              data={
+                <div>
+                  <label htmlFor="problemName">{t('filters.problemName')}: </label>
+                  <input
+                    type="text"
+                    name="problemName"
+                    value={problemName}
+                    onChange={e => onProblemNameChange(e.target.value)}
+                    className={Styles.input}
+                  />
+                </div>
+              }
+            />
+          </div>
           <div className="flex-1">
             <Widget
               title={t("widgetTitles.difficultyFilter")}

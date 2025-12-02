@@ -9,6 +9,7 @@ export async function getProblems(args: GetProblemsArgs) {
       `${args.pageSize != null ? `&pageSize=${args.pageSize}` : ""}` +
       `${args.tags != null ? `&tags=${args.tags.join(";")}` : ""}` +
       `${args.indexes != null ? `&indexes=${args.indexes.join(";")}` : ""}` +
+      `${args.divisions ? args.divisions.map(d => `&divisions=${d}`).join("") : ""}` +
       `${args.problemName != null ? `&problemName=${args.problemName}` : ""}` +
       `${args.minRating != null ? `&minRating=${args.minRating}` : ""}` +
       `${args.maxRating != null ? `&maxRating=${args.maxRating}` : ""}` +
@@ -26,17 +27,11 @@ export async function getProblems(args: GetProblemsArgs) {
   );
 }
 
-export async function getTags(params?: {
-  minRating?: number;
-  maxRating?: number;
-}) {
-  const query = new URLSearchParams();
-  if (params?.minRating !== undefined)
-    query.append("minRating", params.minRating.toString());
-  if (params?.maxRating !== undefined)
-    query.append("maxRating", params.maxRating.toString());
+export async function getTags(params?: { minRating?: number; maxRating?: number }) {
   return fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/Problems/tags?${query.toString()}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/api/Problems/tags?` +
+      `${params?.minRating != null ? `&minRating=${params.minRating}` : ""}` +
+      `${params?.maxRating != null ? `&maxRating=${params.maxRating}` : ""}`,
     {
       redirect: "error",
     }
