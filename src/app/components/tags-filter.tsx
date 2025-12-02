@@ -218,25 +218,25 @@ export function TagsFilter({
             </div>
           }
         />
-
-                <div className="flex flex-row w-full">
-                    <div className="flex-1 mr-2">
-                        <Widget
-                            title={t('widgetTitles.search')}
-                            data={
-                                <div>
-                                    <label htmlFor="problemName">{t('filters.problemName')}: </label>
-                                    <input
-                                        type="text"
-                                        name="problemName"
-                                        value={problemName}
-                                        onChange={e => onProblemNameChange(e.target.value)}
-                                        className={Styles.input}
-                                    />
-                                </div>
-                            }
-                        />
-                    </div>
+        
+        <div className="flex flex-row w-full">
+          <div className="flex-1 mr-2">
+            <Widget
+              title={t('widgetTitles.search')}
+              data={
+                <div>
+                  <label htmlFor="problemName">{t('filters.problemName')}: </label>
+                  <input
+                    type="text"
+                    name="problemName"
+                    value={problemName}
+                    onChange={e => onProblemNameChange(e.target.value)}
+                    className={Styles.input}
+                  />
+                </div>
+              }
+            />
+          </div>
           <div className="flex-1">
             <Widget
               title={t("widgetTitles.difficultyFilter")}
