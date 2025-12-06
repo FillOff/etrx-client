@@ -74,6 +74,10 @@ export default function Header()
                         {t('header:problems')}
                     </button>
 
+                    <button onClick={() => handleNavigation('/tags-manager')} className={DdStyles.header_elem}>
+                        Tags
+                    </button>
+
                     <button onClick={() => handleNavigation('/protocol')} className={DdStyles.header_elem}>
                         {t('header:protocol')}
                     </button>
