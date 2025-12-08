@@ -4,12 +4,23 @@
     "changes": "Changes",
     "updates": [
       {
+        "date": "08.12.2025",
+        "items": [
+          {
+            "type": "Added",
+            "details": [
+              "Sorting by count of solves have been added"
+            ]
+          }
+        ]
+      },
+      {
         "date": "29.11.2025",
         "items": [
           {
             "type": "Added",
             "details": [
-              "Divisions have been added to the filter and task characteristics. A task’s division is determined by its rating:",
+              "Divisions have been added to the filter and task characteristics. A task's division is determined by its rating:",
               "Div1: >2100",
               "Div2: 1600-2099",
               "Div3: 1400-1599",
