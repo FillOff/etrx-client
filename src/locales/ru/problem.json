@@ -4,7 +4,7 @@
       "id": "ID",
       "contest": "Контест",
       "index": "Индекс",
-      "division": "Дивизион",
+      "rank": "Ранг",
       "name": "Имя",
       "points": "Очки",
       "rating": "Рейтинг",
@@ -17,7 +17,7 @@
     "filters": {
       "tags": "Теги",
       "indexes": "Индексы",
-      "division": "Дивизионы",
+      "rank": "Ранги",
       "search": "Поиск",
       "rating": "Рейтинг",
       "points": "Очки",
@@ -28,7 +28,7 @@
     "widgetTitles": {
       "tags": "Теги",
       "indexes": "Индексы",
-      "division": "Дивизионы",
+      "ranks": "Ранги",
       "search": "Поиск",
       "ratingFilter": "Фильтрация по рейтингу",
       "pointsFilter": "Фильтрация по очкам",

@@ -10,8 +10,8 @@ interface TagsFilterProps {
   selectedIndexes: string[];
   onSelectedIndexesChange: (indexes: string[]) => void;
 
-  selectedDivisions: string[];
-  onSelectedDivisionsChange: (divisions: string[]) => void;
+  selectedRanks: string[];
+  onSelectedRanksChange: (ranks: string[]) => void;
 
   problemName: string;
   onProblemNameChange: (name: string) => void;
@@ -37,8 +37,8 @@ export function TagsFilter({
   onSelectedTagsChange,
   selectedIndexes,
   onSelectedIndexesChange,
-  selectedDivisions,
-  onSelectedDivisionsChange,
+  selectedRanks,
+  onSelectedRanksChange,
   problemName,
   onProblemNameChange,
   minRating,
@@ -58,7 +58,7 @@ export function TagsFilter({
 
   const [allTags, setAllTags] = useState<string[]>([]);
   const [allIndexes, setAllIndexes] = useState<string[]>([]);
-  const allDivisions: string[] = ["Div1", "Div2", "Div3", "Div4"];
+  const allRanks: string[] = ["Rank1", "Rank2", "Rank3", "Rank4"];
 
   const [draftMinRating, setDraftMinRating] = useState(minRating.toString());
   const [draftMaxRating, setDraftMaxRating] = useState(maxRating.toString());
@@ -95,8 +95,8 @@ export function TagsFilter({
   const handleDeselectTag = (tag: string) => onSelectedTagsChange(selectedTags.filter(t => t !== tag));
   const handleSelectIndex = (index: string) => onSelectedIndexesChange([...selectedIndexes, index]);
   const handleDeselectIndex = (index: string) => onSelectedIndexesChange(selectedIndexes.filter(i => i !== index));
-  const handleSelectDivision = (division: string) => onSelectedDivisionsChange([...selectedDivisions, division]);
-  const handleDeselectDivision = (division: string) => onSelectedDivisionsChange(selectedDivisions.filter(d => d !== division));
+  const handleSelectRank = (rank: string) => onSelectedRanksChange([...selectedRanks, rank]);
+  const handleDeselectRank = (rank: string) => onSelectedRanksChange(selectedRanks.filter(r => r !== rank));
 
   const parseDraftInt = (s: string): number | null => {
     const trimmed = s.trim();
@@ -139,7 +139,7 @@ export function TagsFilter({
 
   const availableTags = allTags.filter(tag => !selectedTags.includes(tag));
   const availableIndexes = allIndexes.filter(index => !selectedIndexes.includes(index));
-  const availableDivisions = allDivisions.filter(d => !selectedDivisions.includes(d));
+  const availableRanks = allRanks.filter(r => !selectedRanks.includes(r));
 
   return (
     <div className={Styles.container}>
@@ -169,12 +169,12 @@ export function TagsFilter({
               ))}
             </fieldset>
           )}
-          {selectedDivisions.length > 0 && (
+          {selectedRanks.length > 0 && (
             <fieldset className={Styles.fieldset}>
-              <legend className={Styles.legend}>{t('filters.division')}</legend>
-              {selectedDivisions.map(division => (
-                <div key={division} className={Styles.tag} onClick={() => handleDeselectDivision(division)}>
-                  {division}
+              <legend className={Styles.legend}>{t('filters.rank')}</legend>
+              {selectedRanks.map(rank => (
+                <div key={rank} className={Styles.tag} onClick={() => handleDeselectRank(rank)}>
+                  {rank}
                   <div className={Styles.close_btn}></div>
                 </div>
               ))}
@@ -207,18 +207,18 @@ export function TagsFilter({
           }
         />
         <Widget
-          title={t('widgetTitles.division')}
+          title={t('widgetTitles.ranks')}
           data={
             <div>
-              {availableDivisions.map(division => (
-                <div key={division} className={Styles.tag} onClick={() => handleSelectDivision(division)}>
-                  {division}
+              {availableRanks.map(rank => (
+                <div key={rank} className={Styles.tag} onClick={() => handleSelectRank(rank)}>
+                  {rank}
                 </div>
               ))}
             </div>
           }
         />
-        
+     
         <div className="flex flex-row w-full">
           <div className="flex-1 mr-2">
             <Widget

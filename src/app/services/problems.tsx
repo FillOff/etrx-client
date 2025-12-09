@@ -9,7 +9,7 @@ export async function getProblems(args: GetProblemsArgs) {
       `${args.pageSize != null ? `&pageSize=${args.pageSize}` : ""}` +
       `${args.tags != null ? `&tags=${args.tags.join(";")}` : ""}` +
       `${args.indexes != null ? `&indexes=${args.indexes.join(";")}` : ""}` +
-      `${args.divisions ? args.divisions.map(d => `&divisions=${d}`).join("") : ""}` +
+      `${args.ranks ? args.ranks.map(r => `&ranks=${r}`).join("") : ""}` +
       `${args.problemName != null ? `&problemName=${args.problemName}` : ""}` +
       `${args.minRating != null ? `&minRating=${args.minRating}` : ""}` +
       `${args.maxRating != null ? `&maxRating=${args.maxRating}` : ""}` +
