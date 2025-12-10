@@ -15,6 +15,8 @@ export async function getProblems(args: GetProblemsArgs) {
       `${args.maxRating != null ? `&maxRating=${args.maxRating}` : ""}` +
       `${args.minPoints != null ? `&minPoints=${args.minPoints}` : ""}` +
       `${args.maxPoints != null ? `&maxPoints=${args.maxPoints}` : ""}` +
+      `${args.minSolved != null ? `&minSolved=${args.minSolved}` : ""}` +
+      `${args.maxSolved != null ? `&maxSolved=${args.maxSolved}` : ""}` +
       `${args.minDifficulty != null ? `&minDifficulty=${args.minDifficulty}` : ""}` +
       `${args.maxDifficulty != null ? `&maxDifficulty=${args.maxDifficulty}` : ""}` +
       `${args.sortField != null ? `&sortField=${args.sortField}` : ""}` +

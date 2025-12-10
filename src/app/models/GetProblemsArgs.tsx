@@ -15,6 +15,8 @@ export class GetProblemsArgs extends Pageable {
     maxRating: number | undefined,
     minPoints: number,
     maxPoints: number | undefined,
+    minSolved: number,
+    maxSolved: number | undefined,
     minDifficulty: number,
     maxDifficulty: number | undefined,
     isOnly: boolean = false,
@@ -29,6 +31,8 @@ export class GetProblemsArgs extends Pageable {
     this.maxRating = maxRating;
     this.minPoints = minPoints;
     this.maxPoints = maxPoints;
+    this.minSolved = minSolved;
+    this.maxSolved = maxSolved;
     this.minDifficulty = minDifficulty;
     this.maxDifficulty = maxDifficulty;
     this.isOnly = isOnly;
@@ -43,6 +47,8 @@ export class GetProblemsArgs extends Pageable {
   maxRating: number | undefined;
   minPoints: number;
   maxPoints: number | undefined;
+  minSolved: number;
+  maxSolved: number | undefined;
   minDifficulty: number;
   maxDifficulty: number | undefined;
   isOnly: boolean;
