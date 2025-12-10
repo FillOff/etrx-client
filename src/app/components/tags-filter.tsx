@@ -26,6 +26,11 @@ interface TagsFilterProps {
   maxPoints: number;
   onMaxPointsChange: (points: number) => void;
 
+  minSolved: number;
+  onMinSolvedChange: (solvedCount: number) => void;
+  maxSolved: number;
+  onMaxSolvedChange: (solvedCount: number) => void;
+
   minDifficulty: number;
   onMinDifficultyChange: (difficulty: number) => void;
   maxDifficulty: number;
@@ -49,6 +54,10 @@ export function TagsFilter({
   onMinPointsChange,
   maxPoints,
   onMaxPointsChange,
+  minSolved,
+  onMinSolvedChange,
+  maxSolved,
+  onMaxSolvedChange,
   minDifficulty,
   onMinDifficultyChange,
   maxDifficulty,
@@ -64,6 +73,8 @@ export function TagsFilter({
   const [draftMaxRating, setDraftMaxRating] = useState(maxRating.toString());
   const [draftMinPoints, setDraftMinPoints] = useState(minPoints.toString());
   const [draftMaxPoints, setDraftMaxPoints] = useState(maxPoints.toString());
+  const [draftMinSolved, setDraftMinSolved] = useState(minSolved.toString());
+  const [draftMaxSolved, setDraftMaxSolved] = useState(maxSolved.toString());
   const [draftMinDifficulty, setDraftMinDifficulty] = useState(minDifficulty.toString());
   const [draftMaxDifficulty, setDraftMaxDifficulty] = useState(maxDifficulty.toString());
 
@@ -71,6 +82,8 @@ export function TagsFilter({
   useEffect(() => { setDraftMaxRating(maxRating.toString()); }, [maxRating]);
   useEffect(() => { setDraftMinPoints(minPoints.toString()); }, [minPoints]);
   useEffect(() => { setDraftMaxPoints(maxPoints.toString()); }, [maxPoints]);
+  useEffect(() => { setDraftMinSolved(minSolved.toString()); }, [minSolved]);
+  useEffect(() => { setDraftMaxSolved(maxSolved.toString()); }, [maxSolved]);
   useEffect(() => { setDraftMinDifficulty(minDifficulty.toString()); }, [minDifficulty]);
   useEffect(() => { setDraftMaxDifficulty(maxDifficulty.toString()); }, [maxDifficulty]);
 
@@ -125,6 +138,16 @@ export function TagsFilter({
     const val = parseDraftInt(draftMaxPoints);
     if (val === null) return;
     onMaxPointsChange(val);
+  };
+  const commitMinSolved = () => {
+    const val = parseDraftInt(draftMinSolved);
+    if (val === null) return;
+    onMinSolvedChange(val);
+  };
+  const commitMaxSolved = () => {
+    const val = parseDraftInt(draftMaxSolved);
+    if (val === null) return;
+    onMaxSolvedChange(val);
   };
   const commitMinDifficulty = () => {
     const val = parseDraftInt(draftMinDifficulty);
@@ -218,6 +241,36 @@ export function TagsFilter({
             </div>
           }
         />
+        <Widget
+              title={t("widgetTitles.solvedCount")}
+              data={
+                <div>
+                  <label htmlFor="minSolved">{t("filters.min")}: </label>
+                  <input
+                    type="number"
+                    name="minSolved"
+                    value={draftMinSolved}
+                    onChange={e => setDraftMinSolved(e.target.value)}
+                    onKeyDown={e => e.key === "Enter" && commitMinSolved()}
+                    onBlur={commitMinSolved}
+                    onFocus={e => e.target.select()}
+                    className={Styles.input}
+                  />
+                  <br />
+                  <label htmlFor="maxSolved">{t("filters.max")}: </label>
+                  <input
+                    type="number"
+                    name="maxSolved"
+                    value={draftMaxSolved}
+                    onChange={e => setDraftMaxSolved(e.target.value)}
+                    onKeyDown={e => e.key === "Enter" && commitMaxSolved()}
+                    onBlur={commitMaxSolved}
+                    onFocus={e => e.target.select()}
+                    className={Styles.input}
+                  />
+                </div>
+              }
+            />
         
         <div className="flex flex-row w-full">
           <div className="flex-1 mr-2">

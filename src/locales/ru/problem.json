@@ -32,6 +32,7 @@
       "search": "Поиск",
       "ratingFilter": "Фильтрация по рейтингу",
       "pointsFilter": "Фильтрация по очкам",
+      "solvedCount": "Количество сдавших",
       "difficultyFilter": "Фильтрация по сложности"
     }
   }
