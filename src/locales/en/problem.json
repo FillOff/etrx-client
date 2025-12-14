@@ -35,6 +35,7 @@
       "search": "Search",
       "ratingFilter": "Filter by Rating",
       "pointsFilter": "Filter by Points",
+      "solvedCount": "Filter by Solves",
       "difficultyFilter": "Filter by difficulty"
     }
   }

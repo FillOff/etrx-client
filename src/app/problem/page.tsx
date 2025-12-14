@@ -28,6 +28,8 @@ const DEFAULT_MIN_POINTS = 0;
 const DEFAULT_MAX_POINTS = 10000;
 const DEFAULT_MIN_DIFFICULTY = 0;
 const DEFAULT_MAX_DIFFICULTY = 10000;
+const DEFAULT_MIN_SOLVED = 0;
+const DEFAULT_MAX_SOLVED = 10000;
 const DEFAULT_IS_ONLY = true;
 
 function ProblemClientPage() {
@@ -47,6 +49,8 @@ function ProblemClientPage() {
     maxRating: DEFAULT_MAX_RATING,
     minPoints: DEFAULT_MIN_POINTS,
     maxPoints: DEFAULT_MAX_POINTS,
+    minSolved: DEFAULT_MIN_SOLVED,
+    maxSolved: DEFAULT_MAX_SOLVED,
     minDifficulty: DEFAULT_MIN_DIFFICULTY,
     maxDifficulty: DEFAULT_MAX_DIFFICULTY,
     isOnly: DEFAULT_IS_ONLY,
@@ -60,6 +64,8 @@ function ProblemClientPage() {
   const maxRating = useMemo(() => Number(searchParams.get("maxRating")) || DEFAULT_MAX_RATING, [searchParams]);
   const minPoints = useMemo(() => Number(searchParams.get("minPoints")) || DEFAULT_MIN_POINTS, [searchParams]);
   const maxPoints = useMemo(() => Number(searchParams.get("maxPoints")) || DEFAULT_MAX_POINTS, [searchParams]);
+  const minSolved = useMemo(() => Number(searchParams.get("minSolved")) || DEFAULT_MIN_SOLVED, [searchParams]);
+  const maxSolved = useMemo(() => Number(searchParams.get("maxSolved")) || DEFAULT_MAX_SOLVED, [searchParams]);
   const minDifficulty = useMemo(() => Number(searchParams.get("minDifficulty")) || DEFAULT_MIN_DIFFICULTY, [searchParams]);
   const maxDifficulty = useMemo(() => Number(searchParams.get("maxDifficulty")) || DEFAULT_MAX_DIFFICULTY, [searchParams]);
   const isOnly = useMemo(() => searchParams.get("isOnly") === "true", [searchParams]);
@@ -108,6 +114,8 @@ function ProblemClientPage() {
       maxRating,
       minPoints,
       maxPoints,
+      minSolved,
+      maxSolved,
       minDifficulty,
       maxDifficulty,
       isOnly,
@@ -130,8 +138,8 @@ function ProblemClientPage() {
       setIsLoading(false);
     }
   }, [
-    page, sortField, sortOrder, selectedTags, indexes, ranks, problemName,
-    minRating, maxRating, minPoints, maxPoints, minDifficulty, maxDifficulty, divisions,
+    page, sortField, sortOrder, selectedTags, indexes, divisions, problemName,
+    minRating, maxRating, minPoints, maxPoints, minSolved, maxSolved, minDifficulty, maxDifficulty, divisions,
     isOnly, i18n.language, t
   ]);
 
@@ -218,9 +226,11 @@ function ProblemClientPage() {
         </div>
 
         <div className="col-start-2">
+          
           <TagsFilter
             selectedTags={selectedTags}
             onSelectedTagsChange={(value) => handleFilterChange("tags", value)}
+
             selectedIndexes={indexes}
             onSelectedIndexesChange={(value) => handleFilterChange("indexes", value)}
             selectedRanks={ranks}
@@ -241,11 +251,16 @@ function ProblemClientPage() {
             onMinPointsChange={(value) => handleFilterChange("minPoints", value)}
             maxPoints={maxPoints}
             onMaxPointsChange={(value) => handleFilterChange("maxPoints", value)}
+            minSolved={minSolved}
+            onMinSolvedChange={(value) => handleFilterChange("minSolved", value)}
+            maxSolved={maxSolved}
+            onMaxSolvedChange={(value) => handleFilterChange("maxSolved", value)}
             minDifficulty={minDifficulty}
             onMinDifficultyChange={(value) => handleFilterChange("minDifficulty", value)}
             maxDifficulty={maxDifficulty}
             onMaxDifficultyChange={(value) => handleFilterChange("maxDifficulty", value)}
           />
+          
         </div>
 
         <div className="col-start-3" />
