@@ -181,7 +181,6 @@ export function TagsFilter({
       <div className={Styles.main}>
         <div className="text-center">{t('filtersTitle')}</div>
 
-        {/* Выбранные фильтры */}
         <div className={Styles.selected_tags}>
           {selectedTags.length > 0 && (
             <fieldset className={Styles.fieldset}>
@@ -229,7 +228,6 @@ export function TagsFilter({
           )}
         </div>
 
-        {/* Доступные фильтры */}
         <Widget
           title={t('widgetTitles.tags')}
           data={

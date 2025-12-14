@@ -138,7 +138,7 @@ function ProblemClientPage() {
       setIsLoading(false);
     }
   }, [
-    page, sortField, sortOrder, selectedTags, indexes, divisions, problemName,
+    page, sortField, sortOrder, selectedTags, indexes, ranks, problemName,
     minRating, maxRating, minPoints, maxPoints, minSolved, maxSolved, minDifficulty, maxDifficulty, divisions,
     isOnly, i18n.language, t
   ]);
