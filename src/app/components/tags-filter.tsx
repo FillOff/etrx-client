@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'next-i18next';
-import { getTags, getIndexes } from '@/app/services/problems';
+import { getTags, getIndexes, getDivisions } from '@/app/services/problems';
 import Styles from './tags-filter.module.css';
 import { Widget } from './widget';
 
@@ -12,6 +12,9 @@ interface TagsFilterProps {
 
   selectedRanks: string[];
   onSelectedRanksChange: (ranks: string[]) => void;
+
+  selectedDivisions: string[];
+  onSelectedDivisionsChange: (divisions: string[]) => void;
 
   problemName: string;
   onProblemNameChange: (name: string) => void;
@@ -39,6 +42,8 @@ export function TagsFilter({
   onSelectedIndexesChange,
   selectedRanks,
   onSelectedRanksChange,
+  selectedDivisions,
+  onSelectedDivisionsChange,
   problemName,
   onProblemNameChange,
   minRating,
@@ -59,6 +64,7 @@ export function TagsFilter({
   const [allTags, setAllTags] = useState<string[]>([]);
   const [allIndexes, setAllIndexes] = useState<string[]>([]);
   const allRanks: string[] = ["Rank1", "Rank2", "Rank3", "Rank4"];
+  const [allDivisions, setAllDivisions] = useState<string[]>([]);
 
   const [draftMinRating, setDraftMinRating] = useState(minRating.toString());
   const [draftMaxRating, setDraftMaxRating] = useState(maxRating.toString());
@@ -84,6 +90,10 @@ export function TagsFilter({
         const indexesResponse = await getIndexes();
         const indexesData: string[] = await indexesResponse.json();
         setAllIndexes(indexesData);
+
+        const divisionsResponce = await getDivisions();
+        const divisionsData: string[] = await divisionsResponce.json();
+        setAllDivisions(divisionsData);
       } catch (error) {
         console.error('Failed to load filter options:', error);
       }
@@ -97,6 +107,8 @@ export function TagsFilter({
   const handleDeselectIndex = (index: string) => onSelectedIndexesChange(selectedIndexes.filter(i => i !== index));
   const handleSelectRank = (rank: string) => onSelectedRanksChange([...selectedRanks, rank]);
   const handleDeselectRank = (rank: string) => onSelectedRanksChange(selectedRanks.filter(r => r !== rank));
+  const handleSelectDivision = (division: string) => onSelectedDivisionsChange([...selectedDivisions, division]);
+  const handleDeselectDivision = (division: string) => onSelectedDivisionsChange(selectedDivisions.filter(d => d !== division));
 
   const parseDraftInt = (s: string): number | null => {
     const trimmed = s.trim();
@@ -140,12 +152,13 @@ export function TagsFilter({
   const availableTags = allTags.filter(tag => !selectedTags.includes(tag));
   const availableIndexes = allIndexes.filter(index => !selectedIndexes.includes(index));
   const availableRanks = allRanks.filter(r => !selectedRanks.includes(r));
-
+  const availableDivisions = allDivisions.filter(d => !selectedDivisions.includes(d));
   return (
     <div className={Styles.container}>
       <div className={Styles.main}>
         <div className="text-center">{t('filtersTitle')}</div>
 
+        {/* Выбранные фильтры */}
         <div className={Styles.selected_tags}>
           {selectedTags.length > 0 && (
             <fieldset className={Styles.fieldset}>
@@ -180,8 +193,20 @@ export function TagsFilter({
               ))}
             </fieldset>
           )}
+          {selectedDivisions.length > 0 && (
+            <fieldset className={Styles.fieldset}>
+              <legend className={Styles.legend}>{t('filters.division')}</legend>
+              {selectedDivisions.map(div => (
+                <div key={div} className={Styles.tag} onClick={() => handleDeselectDivision(div)}>
+                  {div}
+                  <div className={Styles.close_btn}></div>
+                </div>
+              ))}
+            </fieldset>
+          )}
         </div>
 
+        {/* Доступные фильтры */}
         <Widget
           title={t('widgetTitles.tags')}
           data={
@@ -218,7 +243,20 @@ export function TagsFilter({
             </div>
           }
         />
-     
+        <Widget
+          title={t('widgetTitles.divisions')}
+          data={
+            <div>
+              {availableDivisions.map(div => (
+                <div key={div} className={Styles.tag} onClick={() => handleSelectDivision(div)}>
+                  {div}
+                </div>
+              ))}
+            </div>
+          }
+        />
+
+        {/* Поиск и числовые фильтры */}
         <div className="flex flex-row w-full">
           <div className="flex-1 mr-2">
             <Widget

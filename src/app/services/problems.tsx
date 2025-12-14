@@ -10,6 +10,7 @@ export async function getProblems(args: GetProblemsArgs) {
       `${args.tags != null ? `&tags=${args.tags.join(";")}` : ""}` +
       `${args.indexes != null ? `&indexes=${args.indexes.join(";")}` : ""}` +
       `${args.ranks ? args.ranks.map(r => `&ranks=${r}`).join("") : ""}` +
+      `${args.divisions ? args.divisions.map(d => `&divisions=${d}`).join("") : ""}` +  
       `${args.problemName != null ? `&problemName=${args.problemName}` : ""}` +
       `${args.minRating != null ? `&minRating=${args.minRating}` : ""}` +
       `${args.maxRating != null ? `&maxRating=${args.maxRating}` : ""}` +
@@ -40,6 +41,12 @@ export async function getTags(params?: { minRating?: number; maxRating?: number 
 
 export async function getIndexes() {
   return fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Problems/indexes`, {
+    redirect: "error",
+  });
+}
+
+export async function getDivisions() {
+  return fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Problems/divisions`, {
     redirect: "error",
   });
 }

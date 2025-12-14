@@ -4,6 +4,17 @@
     "changes": "Changes",
     "updates": [
       {
+        "date": "15.12.2025",
+        "items":[
+          {
+            "type":"Added",
+            "details":[
+              "Division fields have been added to the filter and task characteristics. The task's division is taken from the contest (if not specified, it is marked with a '-')"
+            ]
+          }
+        ]
+      },
+      {
         "date": "29.11.2025",
         "items": [
           {

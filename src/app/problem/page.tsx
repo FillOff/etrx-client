@@ -20,6 +20,7 @@ const DEFAULT_SORT_ORDER: SortOrder = "desc";
 const DEFAULT_TAGS: string[] = [];
 const DEFAULT_INDEXES: string[] = [];
 const DEFAULT_RANKS: string[] = [];
+const DEFAULT_DIVISIONS: string[] = [];
 const DEFAULT_PROBLEM_NAME = "";
 const DEFAULT_MIN_RATING = 0;
 const DEFAULT_MAX_RATING = 10000;
@@ -40,6 +41,7 @@ function ProblemClientPage() {
     tags: DEFAULT_TAGS.join(","),
     indexes: DEFAULT_INDEXES.join(","),
     ranks: DEFAULT_RANKS.join(","),
+    divisions: DEFAULT_DIVISIONS.join(","),
     problemName: DEFAULT_PROBLEM_NAME,
     minRating: DEFAULT_MIN_RATING,
     maxRating: DEFAULT_MAX_RATING,
@@ -77,6 +79,11 @@ function ProblemClientPage() {
     return ranksParam ? ranksParam.split(",") : DEFAULT_RANKS;
   }, [searchParams]);
 
+  const divisions = useMemo(() => {
+  const divisionsParam = searchParams.get("divisions");
+  return divisionsParam ? divisionsParam.split(",") : DEFAULT_DIVISIONS;
+}, [searchParams]);
+
   const [problems, setProblems] = useState<Problem[]>([]);
   const [maxPage, setMaxPage] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -95,6 +102,7 @@ function ProblemClientPage() {
       selectedTags,
       indexes,
       ranks,
+      divisions,
       problemName,
       minRating,
       maxRating,
@@ -123,7 +131,7 @@ function ProblemClientPage() {
     }
   }, [
     page, sortField, sortOrder, selectedTags, indexes, ranks, problemName,
-    minRating, maxRating, minPoints, maxPoints, minDifficulty, maxDifficulty,
+    minRating, maxRating, minPoints, maxPoints, minDifficulty, maxDifficulty, divisions,
     isOnly, i18n.language, t
   ]);
 
@@ -170,6 +178,12 @@ function ProblemClientPage() {
         isSortable: false,
       },
       {
+        key: "division",
+        header: t("problem:tableHeaders.division"),
+        accessor: "division",
+        isSortable: false,
+      },
+      {
         key: "tags",
         header: t("problem:tableHeaders.tags"),
         accessor: "tags",
@@ -211,6 +225,8 @@ function ProblemClientPage() {
             onSelectedIndexesChange={(value) => handleFilterChange("indexes", value)}
             selectedRanks={ranks}
             onSelectedRanksChange={(value) => handleFilterChange("ranks", value)}
+            selectedDivisions={divisions}
+            onSelectedDivisionsChange={(value) => handleFilterChange("divisions", value)}
             problemName={problemName}
             onProblemNameChange={(value) => handleFilterChange("problemName", value)}
             minRating={minRating}
