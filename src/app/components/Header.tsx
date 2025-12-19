@@ -33,18 +33,6 @@ export default function Header()
         changeLanguage('en');
     }
 
-    const toggleLanguage = () =>{
-        var butEn = document.getElementById('lanEn');
-        var butRu = document.getElementById('lanRu');
-        if(butEn && butRu){
-            var colEn = (butEn.style.backgroundColor);
-            var colRu = (butRu.style.backgroundColor);
-            butRu.style.backgroundColor = colEn;
-            butEn.style.backgroundColor = colRu;
-        }
-
-    }
-
     const toggleList = () =>{
         var list = document.getElementById('list');
         if(list){
