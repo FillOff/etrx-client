@@ -140,3 +140,49 @@
         display: none;
     }
 }
+
+.selectLan{
+    background-color: #163055;    
+    width: 5em;
+    height: 2em;
+    text-align: center;
+    font-size: 18px;
+    border-radius: 5px;
+
+}
+
+.selectLan:hover{
+    background-color: #20477E;
+}
+
+.cl{
+    color: #EDEDED;
+    margin: .3em 0;
+}
+
+.lang_list{
+    position: relative;
+    visibility: hidden;
+    width: 100%;
+}
+
+.langs{
+    color: #EDEDED;
+    background-color: #6f88a8;
+    width: 5em;
+    height: 1.5em;
+    text-align: center;
+    border-bottom-width: 1px;
+    border-color: #5d799f;
+}
+.langs:hover{
+    background-color: #586e8c;
+}
+.langs:first-of-type{
+    border-radius: 5px 5px 0 0;
+}
+
+.langs:last-of-type{
+    border-bottom: none;
+    border-radius: 0 0 5px 5px;
+}

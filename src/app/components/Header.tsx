@@ -19,12 +19,39 @@ export default function Header()
         setMounted(true);
     }, []);
 
-    const toggleLanguage = () => {
-        const newLang = i18n.language === 'ru' ? 'en' : 'ru';
-        changeLanguage(newLang);
-        document.documentElement.lang = newLang;
-        setKey(prev => prev + 1);
-    };
+    // const toggleLanguage = () => {
+    //     const newLang = i18n.language === 'ru' ? 'en' : 'ru';
+    //     changeLanguage(newLang);
+    //     document.documentElement.lang = newLang;
+    //     setKey(prev => prev + 1);
+    // };
+
+    const SetLangRU = () => {
+        changeLanguage('ru');
+    }
+     const SetLangEN = () => {
+        changeLanguage('en');
+    }
+
+    const toggleLanguage = () =>{
+        var butEn = document.getElementById('lanEn');
+        var butRu = document.getElementById('lanRu');
+        if(butEn && butRu){
+            var colEn = (butEn.style.backgroundColor);
+            var colRu = (butRu.style.backgroundColor);
+            butRu.style.backgroundColor = colEn;
+            butEn.style.backgroundColor = colRu;
+        }
+
+    }
+
+    const toggleList = () =>{
+        var list = document.getElementById('list');
+        if(list){
+            if (list.style.visibility == 'hidden') list.style.visibility = 'visible';
+            else list.style.visibility = 'hidden'
+        }
+    }
 
     const handleNavigation = useCallback((targetPath: string) => {
         if (pathname === targetPath) {
@@ -86,12 +113,32 @@ export default function Header()
                 {/* Right Side: Language Toggle and Version Info */}
                 <div className="flex items-center gap-4 ml-auto mr-2">
                     {/* Language Toggle Button */}
-                    <button
-                        onClick={toggleLanguage}
-                        className="px-3 py-1 text-sm text-white bg-main-light rounded hover:bg-main-dark transition-colors"
+                    
+                <div 
+                className={DdStyles.selectLan}
+                onClick={toggleList}
+                >
+                <p className={DdStyles.cl}>{t('header:cl')}</p>
+                <ul
+                className={DdStyles.lang_list}
+                id="list"
+                >
+                    <li
+                        className={DdStyles.langs}
+                        onClick={SetLangRU}
                     >
-                        {i18n.language === 'ru' ? 'EN' : 'RU'}
-                    </button>
+                        Русский
+                    </li>
+
+                    <li
+                        className={DdStyles.langs}
+                        onClick={SetLangEN}
+                    >
+                        English
+                    </li>
+                    
+                </ul>
+                 </div>
 
                     {/* Version and Build Info */}
                     <div className="flex flex-col items-left text-xs text-white">
