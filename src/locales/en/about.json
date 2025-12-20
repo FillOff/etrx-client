@@ -4,6 +4,17 @@
     "changes": "Changes",
     "updates": [
       {
+        "date": "15.12.2025",
+        "items":[
+          {
+            "type":"Added",
+            "details":[
+              "Division fields have been added to the filter and task characteristics. The task's division is taken from the contest (if not specified, it is marked with a '-')"
+            ]
+          }
+        ]
+      },
+      {
         "date": "08.12.2025",
         "items": [
           {
@@ -20,11 +31,11 @@
           {
             "type": "Added",
             "details": [
-              "Divisions have been added to the filter and task characteristics. A task's division is determined by its rating:",
-              "Div1: >2100",
-              "Div2: 1600-2099",
-              "Div3: 1400-1599",
-              "Div4: 0-1399"
+              "Ranks have been added to the filter and task characteristics. A task’s rank is determined by its rating:",
+              "Rank1: >2100",
+              "Rank2: 1600-2099",
+              "Rank3: 1400-1599",
+              "Rank4: 0-1399"
             ]
           }
         ]

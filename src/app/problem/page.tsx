@@ -19,6 +19,7 @@ const DEFAULT_SORT_FIELD: keyof Problem = "contestId";
 const DEFAULT_SORT_ORDER: SortOrder = "desc";
 const DEFAULT_TAGS: string[] = [];
 const DEFAULT_INDEXES: string[] = [];
+const DEFAULT_RANKS: string[] = [];
 const DEFAULT_DIVISIONS: string[] = [];
 const DEFAULT_PROBLEM_NAME = "";
 const DEFAULT_MIN_RATING = 0;
@@ -41,6 +42,7 @@ function ProblemClientPage() {
     sortOrder: DEFAULT_SORT_ORDER,
     tags: DEFAULT_TAGS.join(","),
     indexes: DEFAULT_INDEXES.join(","),
+    ranks: DEFAULT_RANKS.join(","),
     divisions: DEFAULT_DIVISIONS.join(","),
     problemName: DEFAULT_PROBLEM_NAME,
     minRating: DEFAULT_MIN_RATING,
@@ -78,10 +80,15 @@ function ProblemClientPage() {
     return indexesParam ? indexesParam.split(",") : DEFAULT_INDEXES;
   }, [searchParams]);
 
-  const divisions = useMemo(() => {
-    const divisionsParam = searchParams.get("divisions");
-    return divisionsParam ? divisionsParam.split(",") : DEFAULT_DIVISIONS;
+  const ranks = useMemo(() => {
+    const ranksParam = searchParams.get("ranks");
+    return ranksParam ? ranksParam.split(",") : DEFAULT_RANKS;
   }, [searchParams]);
+
+  const divisions = useMemo(() => {
+  const divisionsParam = searchParams.get("divisions");
+  return divisionsParam ? divisionsParam.split(",") : DEFAULT_DIVISIONS;
+}, [searchParams]);
 
   const [problems, setProblems] = useState<Problem[]>([]);
   const [maxPage, setMaxPage] = useState<number>(1);
@@ -100,6 +107,7 @@ function ProblemClientPage() {
       sortOrder === "asc",
       selectedTags,
       indexes,
+      ranks,
       divisions,
       problemName,
       minRating,
@@ -130,8 +138,8 @@ function ProblemClientPage() {
       setIsLoading(false);
     }
   }, [
-    page, sortField, sortOrder, selectedTags, indexes, divisions, problemName,
-    minRating, maxRating, minPoints, maxPoints, minSolved, maxSolved, minDifficulty, maxDifficulty,
+    page, sortField, sortOrder, selectedTags, indexes, ranks, problemName,
+    minRating, maxRating, minPoints, maxPoints, minSolved, maxSolved, minDifficulty, maxDifficulty, divisions,
     isOnly, i18n.language, t
   ]);
 
@@ -170,6 +178,12 @@ function ProblemClientPage() {
         header: t("contest:tableHeaders.startTime"),
         accessor: "startTime",
         render: (item) => unixToFormattedDate(item.startTime, t),
+      },
+      {
+        key: "rank",
+        header: t("problem:tableHeaders.rank"),
+        accessor: "rank",
+        isSortable: false,
       },
       {
         key: "division",
@@ -219,6 +233,8 @@ function ProblemClientPage() {
 
             selectedIndexes={indexes}
             onSelectedIndexesChange={(value) => handleFilterChange("indexes", value)}
+            selectedRanks={ranks}
+            onSelectedRanksChange={(value) => handleFilterChange("ranks", value)}
             selectedDivisions={divisions}
             onSelectedDivisionsChange={(value) => handleFilterChange("divisions", value)}
             problemName={problemName}

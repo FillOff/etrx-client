@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'next-i18next';
-import { getTags, getIndexes } from '@/app/services/problems';
+import { getTags, getIndexes, getDivisions } from '@/app/services/problems';
 import Styles from './tags-filter.module.css';
 import { Widget } from './widget';
 
@@ -9,6 +9,9 @@ interface TagsFilterProps {
   onSelectedTagsChange: (tags: string[]) => void;
   selectedIndexes: string[];
   onSelectedIndexesChange: (indexes: string[]) => void;
+
+  selectedRanks: string[];
+  onSelectedRanksChange: (ranks: string[]) => void;
 
   selectedDivisions: string[];
   onSelectedDivisionsChange: (divisions: string[]) => void;
@@ -42,6 +45,8 @@ export function TagsFilter({
   onSelectedTagsChange,
   selectedIndexes,
   onSelectedIndexesChange,
+  selectedRanks,
+  onSelectedRanksChange,
   selectedDivisions,
   onSelectedDivisionsChange,
   problemName,
@@ -67,7 +72,8 @@ export function TagsFilter({
 
   const [allTags, setAllTags] = useState<string[]>([]);
   const [allIndexes, setAllIndexes] = useState<string[]>([]);
-  const allDivisions: string[] = ["Div1", "Div2", "Div3", "Div4"];
+  const allRanks: string[] = ["Rank1", "Rank2", "Rank3", "Rank4"];
+  const [allDivisions, setAllDivisions] = useState<string[]>([]);
 
   const [draftMinRating, setDraftMinRating] = useState(minRating.toString());
   const [draftMaxRating, setDraftMaxRating] = useState(maxRating.toString());
@@ -97,6 +103,10 @@ export function TagsFilter({
         const indexesResponse = await getIndexes();
         const indexesData: string[] = await indexesResponse.json();
         setAllIndexes(indexesData);
+
+        const divisionsResponce = await getDivisions();
+        const divisionsData: string[] = await divisionsResponce.json();
+        setAllDivisions(divisionsData);
       } catch (error) {
         console.error('Failed to load filter options:', error);
       }
@@ -108,6 +118,8 @@ export function TagsFilter({
   const handleDeselectTag = (tag: string) => onSelectedTagsChange(selectedTags.filter(t => t !== tag));
   const handleSelectIndex = (index: string) => onSelectedIndexesChange([...selectedIndexes, index]);
   const handleDeselectIndex = (index: string) => onSelectedIndexesChange(selectedIndexes.filter(i => i !== index));
+  const handleSelectRank = (rank: string) => onSelectedRanksChange([...selectedRanks, rank]);
+  const handleDeselectRank = (rank: string) => onSelectedRanksChange(selectedRanks.filter(r => r !== rank));
   const handleSelectDivision = (division: string) => onSelectedDivisionsChange([...selectedDivisions, division]);
   const handleDeselectDivision = (division: string) => onSelectedDivisionsChange(selectedDivisions.filter(d => d !== division));
 
@@ -162,8 +174,8 @@ export function TagsFilter({
 
   const availableTags = allTags.filter(tag => !selectedTags.includes(tag));
   const availableIndexes = allIndexes.filter(index => !selectedIndexes.includes(index));
+  const availableRanks = allRanks.filter(r => !selectedRanks.includes(r));
   const availableDivisions = allDivisions.filter(d => !selectedDivisions.includes(d));
-
   return (
     <div className={Styles.container}>
       <div className={Styles.main}>
@@ -192,12 +204,23 @@ export function TagsFilter({
               ))}
             </fieldset>
           )}
+          {selectedRanks.length > 0 && (
+            <fieldset className={Styles.fieldset}>
+              <legend className={Styles.legend}>{t('filters.rank')}</legend>
+              {selectedRanks.map(rank => (
+                <div key={rank} className={Styles.tag} onClick={() => handleDeselectRank(rank)}>
+                  {rank}
+                  <div className={Styles.close_btn}></div>
+                </div>
+              ))}
+            </fieldset>
+          )}
           {selectedDivisions.length > 0 && (
             <fieldset className={Styles.fieldset}>
               <legend className={Styles.legend}>{t('filters.division')}</legend>
-              {selectedDivisions.map(division => (
-                <div key={division} className={Styles.tag} onClick={() => handleDeselectDivision(division)}>
-                  {division}
+              {selectedDivisions.map(div => (
+                <div key={div} className={Styles.tag} onClick={() => handleDeselectDivision(div)}>
+                  {div}
                   <div className={Styles.close_btn}></div>
                 </div>
               ))}
@@ -230,47 +253,60 @@ export function TagsFilter({
           }
         />
         <Widget
-          title={t('widgetTitles.division')}
+          title={t('widgetTitles.ranks')}
           data={
             <div>
-              {availableDivisions.map(division => (
-                <div key={division} className={Styles.tag} onClick={() => handleSelectDivision(division)}>
-                  {division}
+              {availableRanks.map(rank => (
+                <div key={rank} className={Styles.tag} onClick={() => handleSelectRank(rank)}>
+                  {rank}
                 </div>
               ))}
             </div>
           }
         />
         <Widget
-              title={t("widgetTitles.solvedCount")}
-              data={
-                <div>
-                  <label htmlFor="minSolved">{t("filters.min")}: </label>
-                  <input
-                    type="number"
-                    name="minSolved"
-                    value={draftMinSolved}
-                    onChange={e => setDraftMinSolved(e.target.value)}
-                    onKeyDown={e => e.key === "Enter" && commitMinSolved()}
-                    onBlur={commitMinSolved}
-                    onFocus={e => e.target.select()}
-                    className={Styles.input}
-                  />
-                  <br />
-                  <label htmlFor="maxSolved">{t("filters.max")}: </label>
-                  <input
-                    type="number"
-                    name="maxSolved"
-                    value={draftMaxSolved}
-                    onChange={e => setDraftMaxSolved(e.target.value)}
-                    onKeyDown={e => e.key === "Enter" && commitMaxSolved()}
-                    onBlur={commitMaxSolved}
-                    onFocus={e => e.target.select()}
-                    className={Styles.input}
-                  />
+          title={t('widgetTitles.divisions')}
+          data={
+            <div>
+              {availableDivisions.map(div => (
+                <div key={div} className={Styles.tag} onClick={() => handleSelectDivision(div)}>
+                  {div}
                 </div>
-              }
-            />
+              ))}
+            </div>
+          }
+        />
+
+        <Widget
+           title={t("widgetTitles.solvedCount")}
+              data={
+              <div>
+                <label htmlFor="minSolved">{t("filters.min")}: </label>
+                <input
+                  type="number"
+                  name="minSolved"
+                  value={draftMinSolved}
+                  onChange={e => setDraftMinSolved(e.target.value)}
+                  onKeyDown={e => e.key === "Enter" && commitMinSolved()}
+                  onBlur={commitMinSolved}
+                  onFocus={e => e.target.select()}
+                  className={Styles.input}
+                />
+                <br />
+                <label htmlFor="maxSolved">{t("filters.max")}: </label>
+                <input
+                  type="number"
+                  name="maxSolved"
+                  value={draftMaxSolved}
+                  onChange={e => setDraftMaxSolved(e.target.value)}
+                  onKeyDown={e => e.key === "Enter" && commitMaxSolved()}
+                  onBlur={commitMaxSolved}
+                  onFocus={e => e.target.select()}
+                  className={Styles.input}
+                />
+              </div>
+            }
+        />
         
         <div className="flex flex-row w-full">
           <div className="flex-1 mr-2">
