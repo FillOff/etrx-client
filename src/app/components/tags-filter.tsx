@@ -96,7 +96,7 @@ export function TagsFilter({
   useEffect(() => {
     const fetchFilterOptions = async () => {
       try {
-        const tagsResponse = await getTags({ minRating, maxRating });
+        const tagsResponse = await getTags({ minRating, maxRating, divisions: selectedDivisions});
         const tagsData: string[] = await tagsResponse.json();
         setAllTags(tagsData);
 
@@ -112,7 +112,7 @@ export function TagsFilter({
       }
     };
     fetchFilterOptions();
-  }, [minRating, maxRating]);
+  }, [minRating, maxRating, selectedDivisions]);
 
   const handleSelectTag = (tag: string) => onSelectedTagsChange([...selectedTags, tag]);
   const handleDeselectTag = (tag: string) => onSelectedTagsChange(selectedTags.filter(t => t !== tag));
