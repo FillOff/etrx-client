@@ -30,11 +30,16 @@ export async function getProblems(args: GetProblemsArgs) {
   );
 }
 
-export async function getTags(params?: { minRating?: number; maxRating?: number }) {
+export async function getTags(params?: { 
+  minRating?: number; 
+  maxRating?: number; 
+  divisions?: string[]; 
+}) {
   return fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/Problems/tags?` +
       `${params?.minRating != null ? `&minRating=${params.minRating}` : ""}` +
-      `${params?.maxRating != null ? `&maxRating=${params.maxRating}` : ""}`,
+      `${params?.maxRating != null ? `&maxRating=${params.maxRating}` : ""}` +
+      `${params?.divisions ? params.divisions.map(d => `&divisions=${d}`).join("") : ""}`,
     {
       redirect: "error",
     }
