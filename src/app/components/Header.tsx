@@ -34,7 +34,7 @@ export default function Header()
     }
 
     const toggleList = () =>{
-        var list = document.getElementById('list');
+        const list = document.getElementById('list');
         if(list){
             if (list.style.visibility == 'hidden') list.style.visibility = 'visible';
             else list.style.visibility = 'hidden'
