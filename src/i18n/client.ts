@@ -21,6 +21,7 @@ import enContestId from '../locales/en/contestId.json';
 import enCommon from '../locales/en/common.json';
 import enProtocol from "../locales/en/protocol.json";
 import Cookies from 'js-cookie';
+import { i18n } from 'next-i18next';
 
 const LANGUAGE_COOKIE = 'selected_language';
 
@@ -67,6 +68,7 @@ export const changeLanguage = (lng: string) => {
     i18next.changeLanguage(lng);
     Cookies.set(LANGUAGE_COOKIE, lng, { expires: 365 });
     document.documentElement.lang = lng;
+    
 };
 
 export default i18next;

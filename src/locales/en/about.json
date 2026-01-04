@@ -4,6 +4,17 @@
     "changes": "Changes",
     "updates": [
       {
+        "date": "19.12.2025",
+        "items": [
+          {
+            "type": "Reworked/Changed",
+            "details": [
+              "Changing of language has been reworked"
+            ]
+          }
+        ]
+      },
+      {
         "date": "15.12.2025",
         "items":[
           {
@@ -20,7 +31,7 @@
           {
             "type": "Added",
             "details": [
-              "Sorting by count of solves have been added"
+              "Sorting by count of solves has been added"
             ]
           }
         ]
