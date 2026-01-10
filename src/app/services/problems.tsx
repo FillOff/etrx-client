@@ -2,58 +2,56 @@
 
 import { GetProblemsArgs } from "../models/GetProblemsArgs";
 
+function buildParams(args: Partial<GetProblemsArgs>): URLSearchParams {
+  const params = new URLSearchParams();
+
+  if (args["Pagination.Page"]) params.append("Pagination.Page", args["Pagination.Page"].toString());
+  if (args["Pagination.PageSize"]) params.append("Pagination.PageSize", args["Pagination.PageSize"].toString());
+
+  args["Filters.AvailableTags"]?.forEach(tag => params.append("Filters.AvailableTags", tag));
+  args["Filters.AvailableIndexes"]?.forEach(idx => params.append("Filters.AvailableIndexes", idx));
+  args["Filters.AvailableDivisions"]?.forEach(div => params.append("Filters.AvailableDivisions", div));
+  args["Filters.AvailableRanks"]?.forEach(rank => params.append("Filters.AvailableRanks", rank));
+
+  const numFilters: (keyof GetProblemsArgs)[] = [
+    "Filters.MinRating", "Filters.MaxRating",
+    "Filters.MinPoints", "Filters.MaxPoints",
+    "Filters.MinSolved", "Filters.MaxSolved",
+    "Filters.MinDifficulty", "Filters.MaxDifficulty"
+  ];
+
+  numFilters.forEach(key => {
+    if (args[key] !== undefined && args[key] !== null) {
+      params.append(key, args[key]!.toString());
+    }
+  });
+
+  if (args["Sorting.SortField"]) params.append("Sorting.SortField", args["Sorting.SortField"]);
+  if (args["Sorting.SortOrder"]) params.append("Sorting.SortOrder", args["Sorting.SortOrder"]);
+
+  if (args.ProblemName) params.append("ProblemName", args.ProblemName);
+  if (args.IsOnly !== undefined) params.append("IsOnly", args.IsOnly.toString());
+  params.append("Lang", args.Lang || "ru");
+
+  return params;
+}
+
 export async function getProblems(args: GetProblemsArgs) {
-  return await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/Problems?` +
-      `${args.page != null ? `&page=${args.page}` : ""}` +
-      `${args.pageSize != null ? `&pageSize=${args.pageSize}` : ""}` +
-      `${args.tags != null ? `&tags=${args.tags.join(";")}` : ""}` +
-      `${args.indexes != null ? `&indexes=${args.indexes.join(";")}` : ""}` +
-      `${args.ranks ? args.ranks.map(r => `&ranks=${r}`).join("") : ""}` +
-      `${args.divisions ? args.divisions.map(d => `&divisions=${d}`).join("") : ""}` +  
-      `${args.problemName != null ? `&problemName=${args.problemName}` : ""}` +
-      `${args.minRating != null ? `&minRating=${args.minRating}` : ""}` +
-      `${args.maxRating != null ? `&maxRating=${args.maxRating}` : ""}` +
-      `${args.minPoints != null ? `&minPoints=${args.minPoints}` : ""}` +
-      `${args.maxPoints != null ? `&maxPoints=${args.maxPoints}` : ""}` +
-      `${args.minSolved != null ? `&minSolved=${args.minSolved}` : ""}` +
-      `${args.maxSolved != null ? `&maxSolved=${args.maxSolved}` : ""}` +
-      `${args.minDifficulty != null ? `&minDifficulty=${args.minDifficulty}` : ""}` +
-      `${args.maxDifficulty != null ? `&maxDifficulty=${args.maxDifficulty}` : ""}` +
-      `${args.sortField != null ? `&sortField=${args.sortField}` : ""}` +
-      `${args.sortOrder != null ? `&sortOrder=${args.sortOrder}` : "&sortOrder=false"}` +
-      `${args.isOnly != null ? `&isOnly=${args.isOnly}` : ""}` +
-      `${args.lang != null ? `&lang=${args.lang}` : "&lang=ru"}`,
-    {
-      redirect: "error",
-    }
-  );
-}
+  const params = buildParams(args);
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/Problems?${params.toString()}`;
 
-export async function getTags(params?: { 
-  minRating?: number; 
-  maxRating?: number; 
-  divisions?: string[]; 
-}) {
-  return fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/Problems/tags?` +
-      `${params?.minRating != null ? `&minRating=${params.minRating}` : ""}` +
-      `${params?.maxRating != null ? `&maxRating=${params.maxRating}` : ""}` +
-      `${params?.divisions ? params.divisions.map(d => `&divisions=${d}`).join("") : ""}`,
-    {
-      redirect: "error",
-    }
-  );
-}
-
-export async function getIndexes() {
-  return fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Problems/indexes`, {
+  return await fetch(url, {
+    method: "GET",
     redirect: "error",
   });
 }
 
-export async function getDivisions() {
-  return fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Problems/divisions`, {
+export async function getFilters(args: Partial<GetProblemsArgs> = {}) {
+  const params = buildParams(args);
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/Problems/filters?${params.toString()}`;
+
+  return await fetch(url, {
+    method: "GET",
     redirect: "error",
   });
 }

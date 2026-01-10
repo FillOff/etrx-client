@@ -55,87 +55,83 @@ export default function Header()
     }
 
     return(
-        <>
-            <div key={key} className="flex items-center fixed w-full h-16 bg-main">
-                {/* Left Side: Navigation Buttons */}
-                <div className="flex items-center w-fit">
-                    {/* Logo */}
-                    <h1 className={`${DdStyles.header_elem_static} select-none bg-main-light font-bold italic text-[28px]`}>
-                        ETRX
-                    </h1>
+        <div key={key} className="flex items-center sticky top-0 z-50 w-full h-16 bg-main">
+            {/* Left Side: Navigation Buttons */}
+            <div className="flex items-center w-fit">
+                {/* Logo */}
+                <h1 className={`${DdStyles.header_elem_static} select-none bg-main-light font-bold italic text-[28px]`}>
+                    ETRX
+                </h1>
 
-                    <button onClick={() => handleNavigation('/')} className={DdStyles.header_elem}>
-                        {t('header:main')}
+                <button onClick={() => handleNavigation('/')} className={DdStyles.header_elem}>
+                    {t('header:main')}
+                </button>
+
+                <button onClick={() => handleNavigation('/contest')} className={DdStyles.header_elem}>
+                    {t('header:contests')}
+                </button>
+
+                <button onClick={() => handleNavigation('/user')} className={DdStyles.header_elem}>
+                    {t('header:users')}
+                </button>
+                
+                {/* <Dropdown header={t('header:users')} onClick={() => pushRouteWithQueryParams('/user', pathname, router)}>
+                    <button onClick={() => pushRouteWithQueryParams('/user', pathname, router)} className={DdStyles.dropdown_elem}>
+                        {t('header:view_all_users')}
                     </button>
-
-                    <button onClick={() => handleNavigation('/contest')} className={DdStyles.header_elem}>
-                        {t('header:contests')}
+                    <button className={DdStyles.dropdown_elem}>
+                        <div className={MiscStyles.add_ico}></div> {t('header:add_new')}
                     </button>
+                </Dropdown> */}
 
-                    <button onClick={() => handleNavigation('/user')} className={DdStyles.header_elem}>
-                        {t('header:users')}
-                    </button>
-                    
-                    {/* <Dropdown header={t('header:users')} onClick={() => pushRouteWithQueryParams('/user', pathname, router)}>
-                        <button onClick={() => pushRouteWithQueryParams('/user', pathname, router)} className={DdStyles.dropdown_elem}>
-                            {t('header:view_all_users')}
-                        </button>
-                        <button className={DdStyles.dropdown_elem}>
-                            <div className={MiscStyles.add_ico}></div> {t('header:add_new')}
-                        </button>
-                    </Dropdown> */}
+                <button onClick={() => handleNavigation('/problem')} className={DdStyles.header_elem}>
+                    {t('header:problems')}
+                </button>
 
-                    <button onClick={() => handleNavigation('/problem')} className={DdStyles.header_elem}>
-                        {t('header:problems')}
-                    </button>
+                <button onClick={() => handleNavigation('/protocol')} className={DdStyles.header_elem}>
+                    {t('header:protocol')}
+                </button>
 
-                    <button onClick={() => handleNavigation('/protocol')} className={DdStyles.header_elem}>
-                        {t('header:protocol')}
-                    </button>
-
-                    <button onClick={() => handleNavigation('/about')} className={DdStyles.header_elem}>
-                        {t('header:about')}
-                    </button>
-                </div>
-
-                {/* Right Side: Language Toggle and Version Info */}
-                <div className="flex items-center gap-4 ml-auto mr-2">
-                    {/* Language Toggle Button */}
-                    
-                <div 
-                className={DdStyles.selectLan}
-                onClick={toggleList}
-                >
-                <p className={DdStyles.cl}>{t('header:cl')}</p>
-                <ul
-                className={DdStyles.lang_list}
-                id="list"
-                >
-                    <li
-                        className={DdStyles.langs}
-                        onClick={SetLangRU}
-                    >
-                        Русский
-                    </li>
-
-                    <li
-                        className={DdStyles.langs}
-                        onClick={SetLangEN}
-                    >
-                        English
-                    </li>
-                    
-                </ul>
-                 </div>
-
-                    {/* Version and Build Info */}
-                    <div className="flex flex-col items-left text-xs text-white">
-                        <div>Version: {process.env.NEXT_PUBLIC_VERSION}</div>
-                    </div>
-                </div>
+                <button onClick={() => handleNavigation('/about')} className={DdStyles.header_elem}>
+                    {t('header:about')}
+                </button>
             </div>
 
-            <div className="w-full h-20"></div>
-        </>
+            {/* Right Side: Language Toggle and Version Info */}
+            <div className="flex items-center gap-4 ml-auto mr-2">
+                {/* Language Toggle Button */}
+                
+            <div 
+            className={DdStyles.selectLan}
+            onClick={toggleList}
+            >
+            <p className={DdStyles.cl}>{t('header:cl')}</p>
+            <ul
+            className={DdStyles.lang_list}
+            id="list"
+            >
+                <li
+                    className={DdStyles.langs}
+                    onClick={SetLangRU}
+                >
+                    Русский
+                </li>
+
+                <li
+                    className={DdStyles.langs}
+                    onClick={SetLangEN}
+                >
+                    English
+                </li>
+                
+            </ul>
+                </div>
+
+                {/* Version and Build Info */}
+                <div className="flex flex-col items-left text-xs text-white">
+                    <div>Version: {process.env.NEXT_PUBLIC_VERSION}</div>
+                </div>
+            </div>
+        </div>
     )
 }

@@ -4,6 +4,17 @@
     "changes": "Changes",
     "updates": [
       {
+        "date": "10.01.2026",
+        "items":[
+          {
+            "type":"Reworked/Changed",
+            "details":[
+              "Filter system on problem page has been redesigned. Dynamic filtering has been implemented"
+            ]
+          }
+        ]
+      },
+      {
         "date": "19.12.2025",
         "items": [
           {

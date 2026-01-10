@@ -14,28 +14,22 @@
       "solvedCount": "Solved count",
       "startTime": "Contest date"
     },
-    "filtersTitle": "Filters",
     "filters": {
-      "tags": "Tags",
-      "indexes": "Indexes",
-      "rank": "Ranks",
-      "division": "Divisions",
-      "search": "Search",
-      "rating": "Rating",
-      "points": "Points",
-      "min": "Min",
-      "max": "Max",
-      "problemName": "Problem Name"
-    },
-    "widgetTitles": {
       "tags": "Tags",
       "indexes": "Indexes",
       "ranks": "Ranks",
       "divisions": "Divisions",
-      "search": "Search",
-      "ratingFilter": "Filter by Rating",
-      "pointsFilter": "Filter by Points",
-      "solvedCount": "Filter by Solves",
-      "difficultyFilter": "Filter by difficulty"
+      "rating": "Rating",
+      "points": "Points",
+      "difficulty": "Difficulty",
+      "solvedCount": "Solved count",
+      "problemSearch": "Problem search",
+      "problemName": "Problem name",
+      "from": "From",
+      "to": "To",
+      "apply": "Apply",
+      "reset": "Reset",
+      "only": "Only",
+      "any": "Any"
     }
   }

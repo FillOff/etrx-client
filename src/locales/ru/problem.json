@@ -14,28 +14,23 @@
       "solvedCount": "Количество сдавших",
       "startTime": "Дата контеста"
     },
-    "filtersTitle": "Фильтры",
     "filters": {
-      "tags": "Теги",
-      "indexes": "Индексы",
-      "rank": "Ранги",
-      "division": "Дивизионы",
-      "search": "Поиск",
-      "rating": "Рейтинг",
-      "points": "Очки",
-      "min": "Мин",
-      "max": "Макс",
-      "problemName": "Название задачи"
-    },
-    "widgetTitles": {
       "tags": "Теги",
       "indexes": "Индексы",
       "ranks": "Ранги",
       "divisions": "Дивизионы",
       "search": "Поиск",
-      "ratingFilter": "Фильтрация по рейтингу",
-      "pointsFilter": "Фильтрация по очкам",
+      "rating": "Рейтинг",
+      "points": "Очки",
+      "difficulty": "Сложность",
       "solvedCount": "Количество сдавших",
-      "difficultyFilter": "Фильтрация по сложности"
+      "problemSearch": "Поиск задачи",
+      "problemName": "Название задачи",
+      "from": "От",
+      "to": "До",
+      "apply": "Применить",
+      "reset": "Сбросить",
+      "only": "Только",
+      "any": "Любой"
     }
   }
