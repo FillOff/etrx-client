@@ -1,17 +1,27 @@
-export interface GroupProtocol {
-  handle: string;
-  userName: string;
-  contestId: number;
-  solvedCount: number;
+export interface UsersProtocol {
+  lastTime: number
+  handle: string
+  userName: string
+  contestsCount: number
+  solvedCount: number
 }
 
-export type GroupProtocolForTable = GroupProtocol & { id: string };
+export type UsersProtocolForTable = UsersProtocol & { id: string };
 
-export interface HandleContestProtocol {
-  index: string,
-  participantType: string,
-  programmingLanguage: string,
+export interface UserProtocol {
+  lastTime: number
+  contestId: number
+  solvedCount: number
+}
+
+export type UserProtocolForTable = UserProtocol & { id: string };
+
+export interface UserContestProtocol {
+  time: number
+  index: string
+  participantType: string
+  programmingLanguage: string
   verdict: string | null
 }
 
-export type HandleContestProtocolForTable = HandleContestProtocol & { id: string };
+export type UserContestProtocolForTable = UserContestProtocol & { id: string };

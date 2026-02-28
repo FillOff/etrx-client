@@ -4,16 +4,14 @@ import { Suspense, useEffect, useState, useMemo, useCallback, useRef } from "rea
 import { useTranslation } from "react-i18next";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { getGroupProtocol, GetGroupProtocolArgs } from "../services/submissions";
+import { getUsersProtocol, GetUsersProtocolArgs } from "../services/submissions";
 import GizmoSpinner from "@/app/components/gizmo-spinner";
 import { Table } from "@/app/components/Table";
-import { Column, SortOrder } from "@/app/models/TableTypes";
-import { GroupProtocolForTable, GroupProtocol } from "../models/Submission";
+import { Column } from "@/app/models/TableTypes";
+import { UsersProtocolForTable, UsersProtocol } from "../models/Submission";
 import { useQueryState } from "@/hooks/useQueryState";
 import { useDebounce } from "@/hooks/useDebounce";
-
-const DEFAULT_SORT_FIELD: keyof GroupProtocol = "contestId";
-const DEFAULT_SORT_ORDER: SortOrder = "desc";
+import { unixToFormattedDateTime } from "@/libs/date";
 
 function ProtocolClientPage() {
     const { t } = useTranslation('protocol');
@@ -21,8 +19,6 @@ function ProtocolClientPage() {
     const defaultFilters = useMemo(() => {
         const now = new Date();
         return {
-            sortField: DEFAULT_SORT_FIELD,
-            sortOrder: DEFAULT_SORT_ORDER,
             fyear: now.getFullYear(),
             fmonth: now.getMonth() + 1,
             fday: now.getDate(),
@@ -36,7 +32,7 @@ function ProtocolClientPage() {
     const { searchParams, setQueryParams } = useQueryState(defaultFilters);
 
     const isMounted = useRef(true);
-    const [submissions, setSubmissions] = useState<GroupProtocol[]>([]);
+    const [submissions, setSubmissions] = useState<UsersProtocol[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<Error | null>(null);
 
@@ -69,9 +65,6 @@ function ProtocolClientPage() {
         return id ? Number(id) : null;
     }, [searchParams]);
 
-    const sortField = useMemo(() => (searchParams.get("sortField") as keyof GroupProtocol) || DEFAULT_SORT_FIELD, [searchParams]);
-    const sortOrder = useMemo(() => (searchParams.get("sortOrder") as SortOrder) || DEFAULT_SORT_ORDER, [searchParams]);
-    
     const filters = useMemo(() => ({
         fYear: fromDate.getFullYear(),
         fMonth: fromDate.getMonth() + 1,
@@ -98,9 +91,7 @@ function ProtocolClientPage() {
         setIsLoading(true);
         setError(null);
 
-        const args = new GetGroupProtocolArgs(
-            sortField, 
-            sortOrder === "asc", 
+        const args = new GetUsersProtocolArgs(
             debouncedFYear, 
             debouncedFMonth, 
             debouncedFDay, 
@@ -111,12 +102,12 @@ function ProtocolClientPage() {
         );
 
         try {
-            const response = await getGroupProtocol(args);
+            const response = await getUsersProtocol(args);
             if (!isMounted.current) return;
             if (!response.ok) throw new Error(t('common:error', { statusCode: response.status }));
             
             const data = await response.json();
-            setSubmissions(data.submissions || []);
+            setSubmissions(data || []);
         } catch (err) {
             if (!isMounted.current) return;
             setError(err as Error);
@@ -125,7 +116,7 @@ function ProtocolClientPage() {
             if (!isMounted.current) return;
             setIsLoading(false);
         }
-    }, [sortField, sortOrder, debouncedFYear, debouncedFMonth, debouncedFDay, debouncedTYear, debouncedTMonth, debouncedTDay, debouncedContestId, t]);
+    }, [debouncedFYear, debouncedFMonth, debouncedFDay, debouncedTYear, debouncedTMonth, debouncedTDay, debouncedContestId, t]);
 
     useEffect(() => {
         isMounted.current = true;
@@ -133,17 +124,6 @@ function ProtocolClientPage() {
         return () => { isMounted.current = false; };
     }, [fetchData]);
 
-    const handleSortChange = (newSortField: keyof GroupProtocolForTable) => {
-        const effectiveSortField = newSortField as string;
-        const newSortOrder =
-          sortField === effectiveSortField && sortOrder === "asc" ? "desc" : "asc";
-    
-        setQueryParams({
-          sortField: effectiveSortField,
-          sortOrder: newSortOrder
-        });
-      };
-    
     const handleFromDateChange = (date: Date | null) => {
         if (date) {
             setQueryParams({
@@ -168,13 +148,14 @@ function ProtocolClientPage() {
         setQueryParams({ contestid: e.target.value === "" ? null : Number(e.target.value) });
     };
 
-    const columns: Column<GroupProtocolForTable>[] = useMemo(() => [
+    const columns: Column<UsersProtocolForTable>[] = useMemo(() => [
+        { key: 'lastTime', header: t('protocol:tableHeaders.lastTime'), accessor: 'lastTime', render: (item) => unixToFormattedDateTime(item.lastTime, t),},
         { key: 'userName', header: t('protocol:tableHeaders.userName'), accessor: 'userName' },
-        { key: 'contestId', header: t('protocol:tableHeaders.contestId'), accessor: 'contestId' },
+        { key: 'contestsCount', header: t('protocol:tableHeaders.contestsCount'), accessor: 'contestsCount' },
         { key: 'solvedCount', header: t('protocol:tableHeaders.solvedCount'), accessor: 'solvedCount' },
     ], [t]);
 
-    const tableData: GroupProtocolForTable[] = submissions.map((sub) => ({ ...sub, id: `${sub.userName}-${sub.contestId}` }));
+    const tableData: UsersProtocolForTable[] = submissions.map((sub) => ({ ...sub, id: sub.userName }));
 
     return (
         <>
@@ -216,10 +197,7 @@ function ProtocolClientPage() {
                 data={tableData}
                 isLoading={isLoading}
                 error={error}
-                sortField={sortField}
-                sortOrder={sortOrder}
-                onSortChange={handleSortChange}
-                onRowClick={(sub) => window.open(`/etrx2/protocol/${sub.handle}/${sub.contestId}?` + 
+                onRowClick={(sub) => window.open(`/etrx2/protocol/${sub.handle}?` + 
                     `fDay=${debouncedFDay}&fMonth=${debouncedFMonth}&fYear=${debouncedFYear}` + 
                     `&tDay=${debouncedTDay}&tMonth=${debouncedTMonth}&tYear=${debouncedTYear}`
                 )}

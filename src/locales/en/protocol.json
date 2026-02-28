@@ -13,7 +13,10 @@
       "timeConsumedMillis": "Time",
       "memoryConsumedBytes": "Memory",
       "userName": "User Name",
-      "solvedCount": "Total Solved"
+      "solvedCount": "Total Solved",
+      "lastTime": "Last submission",
+      "contestsCount": "Count of contests",
+      "time": "Submission time"
     },
     "filtersTitle": "Filters",
     "selectDate": "Select date",

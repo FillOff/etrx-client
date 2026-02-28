@@ -4,6 +4,17 @@
     "changes": "Changes",
     "updates": [
       {
+        "date": "28.02.2026",
+        "items":[
+          {
+            "type":"Reworked/Changed",
+            "details":[
+              "Protocol system has been reworked"
+            ]
+          }
+        ]
+      },
+      {
         "date": "10.01.2026",
         "items":[
           {
