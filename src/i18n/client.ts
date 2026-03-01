@@ -11,6 +11,7 @@ import ruHome from '../locales/ru/home.json';
 import ruContestId from '../locales/ru/contestId.json';
 import ruCommon from '../locales/ru/common.json';
 import ruProtocol from "../locales/ru/protocol.json";
+import ruTag from "../locales/ru/tag.json";
 import enHeader from '../locales/en/header.json';
 import enAbout from '../locales/en/about.json';
 import enContest from '../locales/en/contest.json';
@@ -20,6 +21,7 @@ import enHome from '../locales/en/home.json';
 import enContestId from '../locales/en/contestId.json';
 import enCommon from '../locales/en/common.json';
 import enProtocol from "../locales/en/protocol.json";
+import enTag from "../locales/en/tag.json";
 import Cookies from 'js-cookie';
 import { i18n } from 'next-i18next';
 
@@ -44,6 +46,7 @@ i18next
                 contestId: ruContestId,
                 common: ruCommon,
                 protocol: ruProtocol,
+                tag: ruTag,
             },
             en: {
                 header: enHeader,
@@ -55,6 +58,7 @@ i18next
                 contestId: enContestId,
                 common: enCommon,
                 protocol: enProtocol,
+                tag: enTag,
             },
         },
         lng: getInitialLanguage(),

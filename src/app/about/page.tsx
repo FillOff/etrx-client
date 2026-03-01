@@ -25,6 +25,7 @@ export default function Page() {
                 <thead>
                     <tr>
                         <th className={Styles.th}>{t('about:version')}</th>
+                        <th className={Styles.th}>{t('about:author')}</th>
                         <th className={Styles.th}>{t('about:changes')}</th>
                     </tr>
                 </thead>

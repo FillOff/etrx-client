@@ -5,5 +5,6 @@ export interface ChangeDetail {
 
 export interface UpdateData {
     date: string;
+    author: string;
     items: ChangeDetail[];
 }

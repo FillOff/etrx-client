@@ -30,6 +30,9 @@ export function UpdateRow({ update } : { update: UpdateData }) {
                 <div className="text-center">{update.date}</div>
             </td>
             <td className={Styles.cell}>
+                <div className="text-center">{update.author}</div>
+            </td>
+            <td className={Styles.cell}>
                 <ChangeList items={update.items} />
             </td>
         </tr>

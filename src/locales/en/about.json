@@ -2,10 +2,19 @@
     "updatesTitle": "Updates",
     "version": "Version",
     "changes": "Changes",
+    "author": "Author",
     "updates": [
       {
         "date": "28.02.2026",
+        "author": "Александр",
         "items":[
+          {
+            "type":"Added",
+            "details":[
+              "Added tag priority and priority setting page",
+              "Added column with author of update"
+            ]
+          },
           {
             "type":"Reworked/Changed",
             "details":[
@@ -16,6 +25,7 @@
       },
       {
         "date": "10.01.2026",
+        "author": "Александр",
         "items":[
           {
             "type":"Reworked/Changed",
@@ -27,6 +37,7 @@
       },
       {
         "date": "19.12.2025",
+        "author": "Даниил",
         "items": [
           {
             "type": "Reworked/Changed",
@@ -38,6 +49,7 @@
       },
       {
         "date": "15.12.2025",
+        "author": "Артемий",
         "items":[
           {
             "type":"Added",
@@ -49,6 +61,7 @@
       },
       {
         "date": "08.12.2025",
+        "author": "Даниил",
         "items": [
           {
             "type": "Added",
@@ -60,6 +73,7 @@
       },
       {
         "date": "29.11.2025",
+        "author": "Артемий",
         "items": [
           {
             "type": "Added",
@@ -75,6 +89,7 @@
       },
       {
         "date": "15.11.2025",
+        "author": "Александр",
         "items":[
           {
             "type":"Added",
@@ -92,6 +107,7 @@
       },
       {
         "date": "11.11.2025",
+        "author": "Артемий",
         "items":[
           {
             "type": "Reworked/Changed",
@@ -103,6 +119,7 @@
       },
       {
         "date": "7.11.2025",
+        "author": "Александр",
         "items":[
           {
             "type":"Added",
@@ -120,6 +137,7 @@
       },
       {
         "date": "5.11.2025",
+        "author": "Александр",
         "items":[
           {
             "type":"Added",
@@ -131,6 +149,7 @@
       },
       {
         "date": "3.11.2025",
+        "author": "Александр",
         "items":[
           {
             "type":"Added",
@@ -154,6 +173,7 @@
       },
       {
         "date": "31.10.2025",
+        "author": "Артемий",
         "items":[
           {
             "type":"Added",
@@ -171,6 +191,7 @@
       },
       {
         "date": "19.10.2025",
+        "author": "Александр, Артемий",
         "items": [
           {
             "type": "Added",
@@ -189,6 +210,7 @@
       },
       {
         "date": "27.9.2025",
+        "author": "Александр",
         "items": [
           {
             "type": "Added",
@@ -207,6 +229,7 @@
       },
       {
         "date": "5.5.2025",
+        "author": "Александр",
         "items": [
           {
             "type": "Reworked/Changed",
@@ -218,6 +241,7 @@
       },
       {
         "date": "26.4.2025",
+        "author": "Александр",
         "items": [
           {
             "type": "Reworked/Changed",
@@ -229,6 +253,7 @@
       },
       {
         "date": "20.4.2025",
+        "author": "Александр",
         "items": [
           {
             "type": "Added",
@@ -246,6 +271,7 @@
       },
       {
         "date": "5.4.2025",
+        "author": "Александр",
         "items": [
           {
             "type": "Added",
@@ -257,6 +283,7 @@
       },
       {
         "date": "24.3.2025",
+        "author": "Александр",
         "items": [
           {
             "type": "Added",
@@ -269,6 +296,7 @@
       },
       {
         "date": "16.3.2025",
+        "author": "Александр",
         "items": [
           {
             "type": "Reworked/Changed",
@@ -280,6 +308,7 @@
       },
       {
         "date": "9.3.2025",
+        "author": "Александр",
         "items": [
           {
             "type": "Added",
@@ -291,6 +320,7 @@
       },
       {
         "date": "2.3.2025",
+        "author": "Александр",
         "items": [
           {
             "type": "Reworked/Changed",
@@ -309,6 +339,7 @@
       },
       {
         "date": "11.1.2025",
+        "author": "Александр",
         "items": [
           {
             "type": "Added",
@@ -335,6 +366,7 @@
       },
       {
         "date": "5.1.2025",
+        "author": "Александр",
         "items": [
           {
             "type": "Added",
@@ -361,6 +393,7 @@
       },
       {
         "date": "8.12.2024",
+        "author": "Александр",
         "items": [
           {
             "type": "Added",

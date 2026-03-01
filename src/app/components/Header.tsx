@@ -5,11 +5,12 @@ import DdStyles from "./dropdown.module.css"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useTranslation } from 'react-i18next';
 import { changeLanguage } from '../../i18n/client';
+import Dropdown from "./dropdown";
 
 export default function Header()
 {
     const [mounted, setMounted] = useState(false);
-    const [key, setKey] = useState(0);
+    
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams(); 
@@ -19,27 +20,9 @@ export default function Header()
         setMounted(true);
     }, []);
 
-    // const toggleLanguage = () => {
-    //     const newLang = i18n.language === 'ru' ? 'en' : 'ru';
-    //     changeLanguage(newLang);
-    //     document.documentElement.lang = newLang;
-    //     setKey(prev => prev + 1);
-    // };
-
-    const SetLangRU = () => {
-        changeLanguage('ru');
-    }
-     const SetLangEN = () => {
-        changeLanguage('en');
-    }
-
-    const toggleList = () =>{
-        const list = document.getElementById('list');
-        if(list){
-            if (list.style.visibility == 'hidden') list.style.visibility = 'visible';
-            else list.style.visibility = 'hidden'
-        }
-    }
+    const handleLanguageChange = async (lang: string) => {
+        await changeLanguage(lang);
+    };
 
     const handleNavigation = useCallback((targetPath: string) => {
         if (pathname === targetPath) {
@@ -54,11 +37,9 @@ export default function Header()
         return null;
     }
 
-    return(
-        <div key={key} className="flex items-center sticky top-0 z-50 w-full h-16 bg-main">
-            {/* Left Side: Navigation Buttons */}
+    return (
+        <div key={i18n.language} className="flex items-center sticky top-0 z-50 w-full h-16 bg-main">
             <div className="flex items-center w-fit">
-                {/* Logo */}
                 <h1 className={`${DdStyles.header_elem_static} select-none bg-main-light font-bold italic text-[28px]`}>
                     ETRX
                 </h1>
@@ -75,18 +56,11 @@ export default function Header()
                     {t('header:users')}
                 </button>
                 
-                {/* <Dropdown header={t('header:users')} onClick={() => pushRouteWithQueryParams('/user', pathname, router)}>
-                    <button onClick={() => pushRouteWithQueryParams('/user', pathname, router)} className={DdStyles.dropdown_elem}>
-                        {t('header:view_all_users')}
+                <Dropdown header={t('header:problems')} onClick={() => handleNavigation('/problem')}>
+                    <button onClick={(e) => { e.stopPropagation(); handleNavigation('/tags'); }} className={DdStyles.dropdown_elem}>
+                        {t('header:setup_tags_priority')}
                     </button>
-                    <button className={DdStyles.dropdown_elem}>
-                        <div className={MiscStyles.add_ico}></div> {t('header:add_new')}
-                    </button>
-                </Dropdown> */}
-
-                <button onClick={() => handleNavigation('/problem')} className={DdStyles.header_elem}>
-                    {t('header:problems')}
-                </button>
+                </Dropdown>
 
                 <button onClick={() => handleNavigation('/protocol')} className={DdStyles.header_elem}>
                     {t('header:protocol')}
@@ -97,37 +71,22 @@ export default function Header()
                 </button>
             </div>
 
-            {/* Right Side: Language Toggle and Version Info */}
             <div className="flex items-center gap-4 ml-auto mr-2">
-                {/* Language Toggle Button */}
-                
-            <div 
-            className={DdStyles.selectLan}
-            onClick={toggleList}
-            >
-            <p className={DdStyles.cl}>{t('header:cl')}</p>
-            <ul
-            className={DdStyles.lang_list}
-            id="list"
-            >
-                <li
-                    className={DdStyles.langs}
-                    onClick={SetLangRU}
-                >
-                    Русский
-                </li>
+                <Dropdown header={t('header:cl')}>
+                    <button 
+                        className={DdStyles.dropdown_elem} 
+                        onClick={(e) => { e.stopPropagation(); handleLanguageChange('ru'); }}
+                    >
+                        Русский
+                    </button>
+                    <button 
+                        className={DdStyles.dropdown_elem} 
+                        onClick={(e) => { e.stopPropagation(); handleLanguageChange('en'); }}
+                    >
+                        English
+                    </button>
+                </Dropdown>
 
-                <li
-                    className={DdStyles.langs}
-                    onClick={SetLangEN}
-                >
-                    English
-                </li>
-                
-            </ul>
-                </div>
-
-                {/* Version and Build Info */}
                 <div className="flex flex-col items-left text-xs text-white">
                     <div>Version: {process.env.NEXT_PUBLIC_VERSION}</div>
                 </div>
