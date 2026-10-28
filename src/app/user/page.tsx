@@ -13,6 +13,7 @@ import {
 import GizmoSpinner from '@/app/components/gizmo-spinner';
 import { Table } from '@/app/components/Table';
 import { User, UserForTable } from '@/app/models/User';
+import { useAuth } from '../components/auth-provider';
 import { Column, SortOrder } from '../models/TableTypes';
 
 const DEFAULT_SORT_FIELD: keyof User = 'firstName';
@@ -20,6 +21,7 @@ const DEFAULT_SORT_ORDER: SortOrder = 'asc';
 
 function UserClientPage() {
   const { t } = useTranslation('user');
+  const { isAdmin, handle: currentHandle } = useAuth();
   const isClient = useIsClient();
 
   const { searchParams, setQueryParams } = useQueryState({
@@ -84,6 +86,7 @@ function UserClientPage() {
 
   const handleAddUser = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!isAdmin) return;
     setIsSubmitting(true);
     setActionError(null);
     try {
@@ -110,6 +113,7 @@ function UserClientPage() {
 
   const handleDeleteUser = useCallback(
     async (handle: string) => {
+      if (!isAdmin) return;
       if (!window.confirm(`Удалить пользователя ${handle}?`)) return;
       setActionError(null);
       try {
@@ -122,7 +126,7 @@ function UserClientPage() {
         );
       }
     },
-    [fetchData],
+    [fetchData, isAdmin],
   );
 
   const handleSortChange = (newSortField: keyof UserForTable) => {
@@ -165,7 +169,7 @@ function UserClientPage() {
         header: '',
         accessor: 'handle',
         isSortable: false,
-        render: (user) => (
+        render: (user) => user.handle.toLowerCase() === currentHandle?.toLowerCase() ? null : (
           <div className="flex justify-center">
             <button
               type="button"
@@ -181,7 +185,7 @@ function UserClientPage() {
         ),
       },
     ],
-    [t, handleDeleteUser],
+    [t, handleDeleteUser, currentHandle],
   );
 
   const tableData: UserForTable[] = users.map((user) => ({
@@ -198,7 +202,7 @@ function UserClientPage() {
       <h1 className="text-3xl w-full text-center font-bold my-5">
         {t('user:usersTableTitle')}
       </h1>
-      <div className="mb-5 flex flex-col items-center gap-3">
+      {isAdmin && <div className="mb-5 flex flex-col items-center gap-3">
         <button
           type="button"
           className="rounded bg-[var(--main)] px-4 py-2 font-bold text-[var(--main-white)]"
@@ -257,10 +261,10 @@ function UserClientPage() {
           </form>
         )}
         {actionError && <div className="text-red-500">{actionError}</div>}
-      </div>
+      </div>}
 
       <Table
-        columns={columns}
+        columns={columns.filter(column => isAdmin || column.key !== 'actions')}
         data={tableData}
         isLoading={isLoading}
         error={error}

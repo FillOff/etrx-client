@@ -1,4 +1,6 @@
 'use client';
+import { apiFetch } from './auth';
+
 
 import Pageable from '../models/Pageable';
 import Sortable from '../models/Sortable';
@@ -30,8 +32,8 @@ export class GetContestsArgs extends Pageable {
 }
 
 export async function getContests(args: GetContestsArgs) {
-  return fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/Contests?` +
+  return apiFetch(
+    `/api/Contests?` +
       `page=${args.page}` +
       `${args.pageSize != null ? `&pageSize=${args.pageSize}` : '&pageSize=20'}` +
       `${args.isGym != null ? `&gym=${args.isGym}` : ''}` +
@@ -59,8 +61,8 @@ export class GetContestSubmissionsArgs extends Sortable {
 }
 
 export async function getContestSubmissions(args: GetContestSubmissionsArgs) {
-  return await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/Submissions/${args.contestId}?` +
+  return await apiFetch(
+    `/api/Submissions/${args.contestId}?` +
       `${args.sortField != null ? `&sortField=${args.sortField}` : ''}` +
       `${args.filterByParticipantType != null ? `&filterByParticipantType=${args.filterByParticipantType}` : ''}` +
       `${args.sortOrder != null ? `&sortOrder=${args.sortOrder}` : ''}` +
@@ -72,8 +74,8 @@ export async function getContestSubmissions(args: GetContestSubmissionsArgs) {
 }
 
 export async function updateContestSubmissions(contestId: number) {
-  return await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/Codeforces/Submissions/${contestId}?`,
+  return await apiFetch(
+    `/api/Codeforces/Submissions/${contestId}?`,
     {
       redirect: 'error',
       method: 'POST',
@@ -82,8 +84,8 @@ export async function updateContestSubmissions(contestId: number) {
 }
 
 export async function getContest(contestId: number, lang: string | null) {
-  return await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/Contests/${contestId}?` +
+  return await apiFetch(
+    `/api/Contests/${contestId}?` +
       `${lang != null ? `&lang=${lang}` : 'lang=ru'}`,
     {
       redirect: 'error',
