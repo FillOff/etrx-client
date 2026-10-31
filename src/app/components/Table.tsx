@@ -24,6 +24,7 @@ export function Table<T extends { id: string | number }>({
   sortOrder,
   onSortChange,
   onRowClick,
+  rowClassName,
 }: TableProps<T>) {
   const tableHeaders = (
     <thead>
@@ -54,7 +55,10 @@ export function Table<T extends { id: string | number }>({
       {data.map((item) => (
         <tr
           key={item.id}
-          className={onRowClick ? Styles.tr_link : ''}
+          className={[
+            onRowClick ? Styles.tr_link : '',
+            rowClassName?.(item) || '',
+          ].join(' ')}
           onClick={() => onRowClick?.(item)}
         >
           {columns.map((column) => (

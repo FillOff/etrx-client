@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useState, FormEvent, useRef } from 'react';
 import { authRequest, Lookup, Session } from '../services/auth';
+import { flushProblemPreferences } from '../services/problem-preferences';
 import styles from './auth.module.css';
 
 const guest: Session = { authenticated: false, handle: null, isAdmin: false };
@@ -53,7 +54,10 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   const logout = async () => {
     if (inFlight.current) return;
     inFlight.current = true;
-    try { await authRequest('logout', {}); setSession(guest); reset(); }
+    try {
+      await flushProblemPreferences().catch(() => {});
+      await authRequest('logout', {}); setSession(guest); reset();
+    }
     catch (err) { setError((err as Error).message); setOpen(true); }
     finally { inFlight.current = false; }
   };

@@ -1,0 +1,61 @@
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.button {
+  border: 1px solid #808080;
+  border-radius: 5px;
+  padding: 6px 10px;
+  font-size: 14px;
+}
+.button[aria-pressed='true'] {
+  outline: 2px solid var(--foreground);
+  outline-offset: 1px;
+  font-weight: 600;
+}
+.button:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+.solved {
+  background-color: rgba(46, 160, 67, 0.13);
+}
+.failed {
+  background-color: rgba(225, 65, 65, 0.13);
+}
+.deferred {
+  background-color: rgba(128, 128, 128, 0.17);
+}
+.solved:hover {
+  background-color: rgba(46, 160, 67, 0.2);
+}
+.failed:hover {
+  background-color: rgba(225, 65, 65, 0.2);
+}
+.deferred:hover {
+  background-color: rgba(128, 128, 128, 0.24);
+}
+.mark {
+  border: 1px solid #808080;
+  border-radius: 4px;
+  padding: 2px 6px;
+  white-space: nowrap;
+}
+.mark:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.message {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+.error {
+  color: #cf3434;
+}
+.caption {
+  font-size: 13px;
+  opacity: 0.8;
+}
