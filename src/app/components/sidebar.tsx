@@ -1,6 +1,7 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import Styles from './sidebar.module.css';
+import { useAuth } from './auth-provider';
 import MiscStyles from './misc.module.css';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -11,6 +12,7 @@ type SidebarProps = {
 const btnIdPostfix = '--open-btn';
 
 export function Sidebar({ sidebarId }: SidebarProps) {
+  const auth = useAuth();
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const [matches, setMatches] = useState(false);
@@ -79,7 +81,7 @@ export function Sidebar({ sidebarId }: SidebarProps) {
           <button
             onClick={() => {
               toggle();
-              router.push('/contests/view');
+              router.push('/contest');
             }}
             className={Styles.option}
           >
@@ -101,24 +103,13 @@ export function Sidebar({ sidebarId }: SidebarProps) {
           <button
             onClick={() => {
               toggle();
-              router.push('/users/view');
+              router.push('/user');
             }}
             className={Styles.option}
           >
             Просмотреть всех
           </button>
-          <button
-            onClick={() => {
-              toggle();
-              router.push('/users/add');
-            }}
-            className={Styles.option}
-          >
-            <span
-              className={`${MiscStyles.add_ico} flex items-center justify-center`}
-            ></span>
-            Добавить
-          </button>
+
         </div>
         <button
           onClick={() => {
@@ -132,11 +123,12 @@ export function Sidebar({ sidebarId }: SidebarProps) {
         <button
           onClick={() => {
             toggle();
+            if (auth.authenticated) void auth.logout(); else auth.openLogin();
           }}
           className={`${Styles.integrated_button_cont} ${Styles.category} justify-start absolute bottom-5`}
         >
           <div className={Styles.integrated_button}></div>
-          <div>Выход</div>
+          <div>{auth.authenticated ? 'Выйти' : 'Войти'}</div>
         </button>
       </div>
       {open ? outOfSidebarPad : <></>}

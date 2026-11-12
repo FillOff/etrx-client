@@ -31,5 +31,31 @@
     "reset": "Reset",
     "only": "Only",
     "any": "Any"
+  },
+  "progress": {
+    "status": "My status",
+    "none": "—",
+    "solved": "Solved",
+    "failed": "Failed attempt",
+    "deferred": "For later",
+    "defer": "For later",
+    "removeDeferred": "Remove mark",
+    "deferHint": "Defer this problem or remove the mark",
+    "filterLabel": "My problem filters",
+    "onlyfailed": "Only red",
+    "onlysolved": "Only green",
+    "onlydeferred": "Only grey",
+    "hideSolved": "Hide solved",
+    "showAll": "All problems",
+    "refresh": "Refresh Codeforces",
+    "syncing": "Refreshing…",
+    "updated": "Updated",
+    "syncFailed": "Could not refresh Codeforces. Saved results are shown; we will retry automatically.",
+    "saveFailed": "Could not save the mark. Please try again.",
+    "login": "Sign in to save problem statuses",
+    "preferencesLoadFailed": "Could not restore filters.",
+    "preferencesSaveFailed": "Could not save filters. Please retry before signing out.",
+    "retry": "Retry",
+    "savingFilters": "Saving filters…"
   }
 }

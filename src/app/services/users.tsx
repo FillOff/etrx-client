@@ -1,4 +1,6 @@
 'use client';
+import { apiFetch } from './auth';
+
 
 import { User } from '../models/User';
 
@@ -13,8 +15,8 @@ export class GetUsersArgs {
 }
 
 export async function getUsers(args: GetUsersArgs) {
-  return await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/Users?` +
+  return await apiFetch(
+    `/api/Users?` +
       `${args.sortField != null ? `&sortField=${args.sortField}` : ''}` +
       `${args.sortOrder != null ? `&sortOrder=${args.sortOrder}` : '&sortOrder=false'}`,
     { redirect: 'error' },
@@ -22,23 +24,23 @@ export async function getUsers(args: GetUsersArgs) {
 }
 
 export async function getUser(handle: string) {
-  return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Users/${handle}`, {
+  return await apiFetch(`/api/Users/${handle}`, {
     redirect: 'error',
   });
 }
 
 export async function createUser(user: User) {
-  return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`, {
+  return await apiFetch(`/api/users`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(user),
+    body: JSON.stringify({ ...user, grade: Number(user.grade) }),
     redirect: 'error',
   });
 }
 
 export async function deleteUser(handle: string) {
-  return await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/users/${encodeURIComponent(handle)}`,
+  return await apiFetch(
+    `/api/users/${encodeURIComponent(handle)}`,
     {
       method: 'DELETE',
       redirect: 'error',

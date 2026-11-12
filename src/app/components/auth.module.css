@@ -1,0 +1,9 @@
+.overlay { position: fixed; inset: 0; background: #0009; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; overflow: auto; }
+.dialog { width: 100%; max-width: 440px; max-height: 90vh; overflow: auto; background: var(--background); color: var(--foreground); border: 1px solid var(--background-shade1); border-radius: 12px; padding: 24px; box-shadow: 0 12px 50px #0005; }
+.dialog h2 { font-size: 24px; font-weight: bold; margin-bottom: 16px; }
+.dialog label { display: block; margin: 12px 0; }
+.dialog input { display: block; width: 100%; border: 1px solid var(--background-shade1); padding: 9px; margin-top: 5px; border-radius: 6px; color: var(--foreground); background: var(--background); }
+.dialog button { display: block; width: 100%; padding: 10px; margin-top: 12px; border-radius: 6px; border: 1px solid var(--background-shade1); }
+.dialog button[type=submit] { color: var(--main-white); background: var(--main); }
+.dialog button:disabled { opacity: .5; cursor: wait; }
+.error { color: #db4545; margin: 12px 0; }

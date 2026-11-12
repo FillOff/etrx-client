@@ -5,6 +5,19 @@
   "author": "Author",
   "updates": [
     {
+      "date": "8.11.2026",
+      "author": "Артём Кравченко",
+      "items": [
+        {
+          "type": "Added",
+          "details": [
+            "Added user authentication and account-based filter preferences",
+            "Added problem highlighting based on submissions and the ability to mark problems for later"
+          ]
+        }
+      ]
+    },
+    {
       "date": "6.8.2026",
       "author": "Александр",
       "items": [

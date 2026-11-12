@@ -6,8 +6,10 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { changeLanguage } from '../../i18n/client';
 import Dropdown from './dropdown';
+import { useAuth } from './auth-provider';
 
 export default function Header() {
+  const auth = useAuth();
   const [mounted, setMounted] = useState(false);
 
   const router = useRouter();
@@ -42,7 +44,7 @@ export default function Header() {
   return (
     <div
       key={i18n.language}
-      className="flex items-center sticky top-0 z-50 w-full h-16 bg-main"
+      className="flex items-center sticky top-0 z-50 w-full min-h-16 flex-wrap bg-main"
     >
       <div className="flex items-center w-fit">
         <h1
@@ -103,6 +105,12 @@ export default function Header() {
       </div>
 
       <div className="flex items-center gap-4 ml-auto mr-2">
+        <div className="text-sm text-white py-2" aria-live="polite">
+          {auth.loading ? 'Проверка входа…' : auth.authenticated ? <>
+            <span>Вошёл: {auth.handle}{auth.isAdmin ? ' (администратор)' : ''}</span>
+            <button className="ml-2 underline" onClick={() => void auth.logout()}>Выйти</button>
+          </> : <><span>Не вошёл</span><button className="ml-2 underline" onClick={auth.openLogin}>Войти</button></>}
+        </div>
         <Dropdown header={t('header:cl')}>
           <button
             className={DdStyles.dropdown_elem}
