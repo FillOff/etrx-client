@@ -42,7 +42,7 @@ export default function Header() {
   return (
     <div
       key={i18n.language}
-      className="flex items-center sticky top-0 z-50 w-full h-16 bg-main"
+      className="flex items-center sticky top-0 z-50 w-full min-h-16 flex-wrap bg-main"
     >
       <div className="flex items-center w-fit">
         <h1
@@ -92,6 +92,13 @@ export default function Header() {
           className={DdStyles.header_elem}
         >
           {t('header:protocol')}
+        </button>
+
+        <button
+          onClick={() => handleNavigation('/results')}
+          className={DdStyles.header_elem}
+        >
+          {i18n.language.startsWith('ru') ? 'Результаты' : 'Results'}
         </button>
 
         <button

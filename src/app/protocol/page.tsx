@@ -10,6 +10,7 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import DatePicker from 'react-datepicker';
+import Link from 'next/link';
 import 'react-datepicker/dist/react-datepicker.css';
 import {
   getUsersProtocol,
@@ -211,6 +212,12 @@ function ProtocolClientPage() {
       <h1 className="text-3xl w-full text-center font-bold my-5">
         {t('protocol:protocolTableTitle')}
       </h1>
+
+      <div className="mb-3 text-center">
+        <Link href={`/results?${searchParams.toString()}`} className="text-blue-600 underline">
+          Таблицы результатов за выбранные даты
+        </Link>
+      </div>
 
       <div className="m-auto rounded-md h-fit px-4 py-2 w-fit bg-background-shade">
         <div className="text-center">{t('protocol:filtersTitle')}</div>
