@@ -15,18 +15,42 @@ export function apiFetch(path: string, init: RequestInit = {}) {
   const headers = new Headers(init.headers);
   headers.set('X-ETRX-Request', '1');
   return fetch(`${process.env.NEXT_PUBLIC_API_URL}${path}`, {
-    ...init, headers, credentials: 'include', cache: 'no-store',
+    ...init,
+    headers,
+    credentials: 'include',
+    cache: 'no-store',
   });
 }
-export async function authRequest<T>(path: string, payload?: unknown): Promise<T> {
-  const response = await apiFetch(`/api/auth/${path}`, payload === undefined ? {} : {
-    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+export async function authRequest<T>(
+  path: string,
+  payload?: unknown,
+): Promise<T> {
+  const routes: Record<string, { path: string; method: string }> = {
+    me: { path: 'session', method: 'GET' },
+    logout: { path: 'session', method: 'DELETE' },
+    lookup: { path: 'user-queries', method: 'POST' },
+    setup: { path: 'credentials', method: 'POST' },
+    login: { path: 'sessions', method: 'POST' },
+  };
+  const route = routes[path];
+  if (!route) throw new Error(`Unknown authentication action: ${path}`);
+  const response = await apiFetch(`/api/auth/${route.path}`, {
+    method: route.method,
+    ...(route.method === 'POST'
+      ? {
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        }
+      : {}),
   });
   if (!response.ok) {
     const data = await response.json().catch(() => null);
-    throw new Error(data?.message || (response.status === 429
-      ? 'Слишком много попыток. Подождите и повторите вход.'
-      : `Ошибка запроса: ${response.status}`));
+    throw new Error(
+      data?.message ||
+        (response.status === 429
+          ? 'Слишком много попыток. Подождите и повторите вход.'
+          : `Ошибка запроса: ${response.status}`),
+    );
   }
-  return response.status === 204 ? undefined as T : response.json();
+  return response.status === 204 ? (undefined as T) : response.json();
 }

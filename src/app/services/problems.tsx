@@ -88,7 +88,7 @@ export interface ProgressSyncResult {
 export async function syncProgress(
   signal?: AbortSignal,
 ): Promise<ProgressSyncResult> {
-  const response = await apiFetch('/api/problems/progress/sync', {
+  const response = await apiFetch('/api/problems/progress/synchronizations', {
     method: 'POST',
     signal,
   });
@@ -100,13 +100,14 @@ export async function setProblemDeferred(
   contestId: number,
   index: string,
   deferred: boolean,
+  expectedHandle: string,
 ) {
   const response = await apiFetch(
-    `/api/problems/progress/${contestId}/${encodeURIComponent(index)}/deferred`,
+    `/api/problems/progress/${contestId}/${encodeURIComponent(index)}/deferral`,
     {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ deferred }),
+      body: JSON.stringify({ deferred, expectedHandle }),
     },
   );
   if (!response.ok)

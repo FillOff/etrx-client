@@ -75,7 +75,7 @@ export function useProblemPreferences(
       busy = true;
       try {
         const filters = owner
-          ? await getProblemPreferences(controller.signal)
+          ? await getProblemPreferences(controller.signal, owner)
           : {};
         if (controller.signal.aborted || currentOwner.current !== owner) return;
         loadPending = false;

@@ -261,7 +261,7 @@ function ProblemClientPage() {
       setSaving(`${p.contestId}-${p.index}`);
       setProgressError('');
       try {
-        await setProblemDeferred(p.contestId, p.index, !p.isDeferred);
+        await setProblemDeferred(p.contestId, p.index, !p.isDeferred, requestedOwner);
         if (currentOwner.current === requestedOwner) setRevision((v) => v + 1);
       } catch {
         if (currentOwner.current === requestedOwner)
