@@ -9,9 +9,15 @@ import {
   FormEvent,
   useRef,
 } from 'react';
-import { authRequest, Lookup, Session } from '../services/auth';
+import {
+  authRequest,
+  Lookup,
+  Session,
+  subscribeToSession,
+} from '../services/auth';
 import { flushProblemPreferences } from '../services/problem-preferences';
 import styles from './auth.module.css';
+import { authLimits } from '../constants/auth-limits';
 
 const guest: Session = { authenticated: false, handle: null, isAdmin: false };
 interface AuthContextValue extends Session {
@@ -45,6 +51,7 @@ export default function AuthProvider({
   const [logoutError, setLogoutError] = useState('');
   const [busy, setBusy] = useState(false);
   const inFlight = useRef(false);
+  const sessionVersion = useRef(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const reset = useCallback(() => {
@@ -59,17 +66,26 @@ export default function AuthProvider({
     reset();
     setOpen(true);
   }, [reset]);
+  useEffect(
+    () =>
+      subscribeToSession((value) => {
+        sessionVersion.current++;
+        setSession(value);
+      }),
+    [],
+  );
   useEffect(() => {
     let active = true;
-    authRequest<Session>('me')
+    const version = ++sessionVersion.current;
+    authRequest<Session>('getSession')
       .then((value) => {
-        if (active) {
+        if (active && version === sessionVersion.current) {
           setSession(value);
           if (!value.authenticated) setOpen(true);
         }
       })
       .catch(() => {
-        if (active) {
+        if (active && version === sessionVersion.current) {
           setOpen(true);
           setError(
             'Не удалось проверить вход. Проверьте соединение с сервером.',
@@ -84,13 +100,24 @@ export default function AuthProvider({
     };
   }, []);
   useEffect(() => {
-    const refresh = () =>
-      authRequest<Session>('me')
-        .then(setSession)
-        .catch(() => setSession(guest));
+    let active = true;
+    const refresh = () => {
+      if (inFlight.current || loading) return;
+      const version = ++sessionVersion.current;
+      authRequest<Session>('getSession')
+        .then((value) => {
+          if (active && version === sessionVersion.current) setSession(value);
+        })
+        .catch(() => {
+          // Keep the last confirmed session on a transient network failure.
+        });
+    };
     window.addEventListener('focus', refresh);
-    return () => window.removeEventListener('focus', refresh);
-  }, []);
+    return () => {
+      window.removeEventListener('focus', refresh);
+      active = false;
+    };
+  }, [loading]);
   useEffect(() => {
     if (open) inputRef.current?.focus();
   }, [open, step]);
@@ -98,6 +125,7 @@ export default function AuthProvider({
   const logout = async () => {
     if (inFlight.current) return;
     inFlight.current = true;
+    sessionVersion.current++;
     try {
       try {
         await flushProblemPreferences(session.handle);
@@ -120,6 +148,7 @@ export default function AuthProvider({
     event.preventDefault();
     if (inFlight.current) return;
     inFlight.current = true;
+    sessionVersion.current++;
     setBusy(true);
     setError('');
     try {
@@ -198,7 +227,7 @@ export default function AuthProvider({
                     value={handle}
                     onChange={(e) => setHandle(e.target.value)}
                     required
-                    maxLength={100}
+                    maxLength={authLimits.maxHandleLength}
                     autoComplete="username"
                     disabled={busy || loading}
                   />
@@ -239,8 +268,8 @@ export default function AuthProvider({
                       ref={inputRef}
                       type="password"
                       required
-                      minLength={10}
-                      maxLength={128}
+                      minLength={authLimits.minPasswordLength}
+                      maxLength={authLimits.maxPasswordLength}
                       autoComplete={
                         profile?.hasPassword
                           ? 'current-password'
@@ -257,8 +286,8 @@ export default function AuthProvider({
                       <input
                         type="password"
                         required
-                        minLength={10}
-                        maxLength={128}
+                        minLength={authLimits.minPasswordLength}
+                        maxLength={authLimits.maxPasswordLength}
                         autoComplete="new-password"
                         value={repeat}
                         onChange={(e) => setRepeat(e.target.value)}
@@ -273,7 +302,7 @@ export default function AuthProvider({
                         type="password"
                         required
                         autoComplete="off"
-                        maxLength={512}
+                        maxLength={authLimits.maxActivationCodeLength}
                         value={activationCode}
                         onChange={(e) => setActivationCode(e.target.value)}
                         disabled={busy}
@@ -282,8 +311,9 @@ export default function AuthProvider({
                   )}
                   {!profile?.hasPassword && (
                     <p>
-                      От 10 до 128 символов. Сохраните пароль для следующих
-                      входов.
+                      От {authLimits.minPasswordLength} до{' '}
+                      {authLimits.maxPasswordLength} символов. Сохраните пароль
+                      для следующих входов.
                     </p>
                   )}
                 </>

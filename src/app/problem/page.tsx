@@ -28,6 +28,9 @@ import {
 import { useAuth } from '../components/auth-provider';
 import styles from './progress.module.css';
 
+const progressRefreshIntervalMs = 60_000;
+const problemsPerPage = 100;
+
 type ProgressStatus = 'solved' | 'failed' | 'deferred';
 const progressStatuses: ProgressStatus[] = ['failed', 'solved', 'deferred'];
 
@@ -47,7 +50,8 @@ function ProblemClientPage() {
   const [saving, setSaving] = useState<string | null>(null);
   const syncBusy = useRef<string | null>(null);
   const markBusy = useRef(false);
-  const boundsInitialized = useRef(false);
+  const [metadataRevision, setMetadataRevision] = useState(0);
+  const [metadataError, setMetadataError] = useState(false);
 
   const [totalBounds, setTotalBounds] = useState<FilterBounds | null>(null);
   const [currentBounds, setCurrentBounds] = useState<FilterBounds | null>(null);
@@ -106,25 +110,26 @@ function ProblemClientPage() {
   }, [searchParams, authenticated]);
 
   useEffect(() => {
-    const initBounds = async () => {
+    if (!isClient) return;
+    const controller = new AbortController();
+    setMetadataError(false);
+    const loadBounds = async () => {
       try {
-        const response = await getFilters({});
-        if (response.ok) {
-          const data = await response.json();
-          const bounds = data.totalBounds;
-
-          setTotalBounds(bounds);
-          setCurrentBounds(data.currentFilters);
-        }
-      } catch (err) {
-        console.error('Failed to load metadata:', err);
+        const response = await getFilters({}, controller.signal);
+        if (!response.ok) throw new Error(`Metadata: ${response.status}`);
+        const data = await response.json();
+        if (!data.totalBounds || !data.currentFilters)
+          throw new Error('Missing problem filter metadata.');
+        if (controller.signal.aborted) return;
+        setTotalBounds(data.totalBounds);
+        setCurrentBounds(data.currentFilters);
+      } catch {
+        if (!controller.signal.aborted) setMetadataError(true);
       }
     };
-    if (isClient && !boundsInitialized.current) {
-      boundsInitialized.current = true;
-      initBounds();
-    }
-  }, [isClient]);
+    void loadBounds();
+    return () => controller.abort();
+  }, [isClient, metadataRevision]);
 
   const refreshProgress = useCallback(
     async (signal?: AbortSignal) => {
@@ -168,7 +173,7 @@ function ProblemClientPage() {
     };
     queueMicrotask(refresh);
     window.addEventListener('focus', refresh);
-    const timer = window.setInterval(refresh, 60000);
+    const timer = window.setInterval(refresh, progressRefreshIntervalMs);
     return () => {
       controller.abort();
       window.clearInterval(timer);
@@ -184,7 +189,7 @@ function ProblemClientPage() {
       setError(null);
       const queryArgs = {
         'Pagination.Page': filters.page,
-        'Pagination.PageSize': 100,
+        'Pagination.PageSize': problemsPerPage,
         'Filters.AvailableTags': filters.tags,
         'Filters.AvailableIndexes': filters.indexes,
         'Filters.AvailableDivisions': filters.divisions,
@@ -261,7 +266,12 @@ function ProblemClientPage() {
       setSaving(`${p.contestId}-${p.index}`);
       setProgressError('');
       try {
-        await setProblemDeferred(p.contestId, p.index, !p.isDeferred, requestedOwner);
+        await setProblemDeferred(
+          p.contestId,
+          p.index,
+          !p.isDeferred,
+          requestedOwner,
+        );
         if (currentOwner.current === requestedOwner) setRevision((v) => v + 1);
       } catch {
         if (currentOwner.current === requestedOwner)
@@ -379,6 +389,21 @@ function ProblemClientPage() {
     ],
     [t, authenticated, saving, toggleDeferred],
   );
+
+  if (metadataError) {
+    return (
+      <div role="alert" className={styles.message}>
+        <p>{t('problem:progress.metadataFailed')}</p>
+        <button
+          type="button"
+          className={styles.button}
+          onClick={() => setMetadataRevision((value) => value + 1)}
+        >
+          {t('problem:progress.retry')}
+        </button>
+      </div>
+    );
+  }
 
   if (!isClient || !totalBounds || !currentBounds || !preferencesReady) {
     return <GizmoSpinner />;

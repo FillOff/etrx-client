@@ -2,6 +2,8 @@
 
 import { apiFetch } from './auth';
 
+const preferencesRequestTimeoutMs = 8_000;
+
 export const preferenceKeys = [
   'tags',
   'indexes',
@@ -113,7 +115,7 @@ async function preferencesFetch(init: RequestInit = {}) {
     controller.abort();
   }
   init.signal?.addEventListener('abort', abort, { once: true });
-  const timer = setTimeout(abort, 8000);
+  const timer = setTimeout(abort, preferencesRequestTimeoutMs);
   try {
     const response = await apiFetch('/api/problems/preferences', {
       ...init,

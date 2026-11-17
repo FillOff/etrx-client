@@ -33,6 +33,8 @@
     "any": "Any"
   },
   "progress": {
+    "metadataFailed": "Could not load problem filters. Check your connection and try again.",
+    "retry": "Retry",
     "status": "My status",
     "none": "—",
     "solved": "Solved",

@@ -12,6 +12,8 @@ import {
   saveProblemPreferences,
 } from '@/app/services/problem-preferences';
 
+const preferencesRetryIntervalMs = 15_000;
+
 type Hydration = { owner: string | null; target: string; ready: boolean };
 type PendingSave = { owner: string; filters: ProblemPreferences };
 
@@ -105,7 +107,7 @@ export function useProblemPreferences(
       if (snapshot?.owner === owner) void save(snapshot);
       else if (loadPending && selectionVersion.current === 0) void restore();
     };
-    const timer = window.setInterval(retry, 15000);
+    const timer = window.setInterval(retry, preferencesRetryIntervalMs);
     window.addEventListener('online', retry);
     window.addEventListener('focus', retry);
     return () => {
