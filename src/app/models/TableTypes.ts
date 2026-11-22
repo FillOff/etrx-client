@@ -25,4 +25,5 @@ export interface TableProps<T> {
   onSortChange?: (newSortField: keyof T) => void;
 
   onRowClick?: (item: T) => void;
+  rowClassName?: (item: T) => string;
 }

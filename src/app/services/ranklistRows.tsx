@@ -1,3 +1,4 @@
+import { apiFetch } from './auth';
 export class GetRanklistRowsArgs {
   constructor(
     contestId: number,
@@ -21,8 +22,8 @@ export class GetRanklistRowsArgs {
 }
 
 export async function getRanklistRows(args: GetRanklistRowsArgs) {
-  return await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/RanklistRows/${args.contestId}?` +
+  return await apiFetch(
+    `/api/RanklistRows/${args.contestId}?` +
       `${args.sortField != null ? `&sortField=${args.sortField}` : ''}` +
       `${args.sortOrder != null ? `&sortOrder=${args.sortOrder}` : ''}` +
       `${args.participantType != null ? `&participantType=${args.participantType}` : ''}` +
@@ -40,8 +41,8 @@ export async function updateRanklistRows(
   const provider =
     source?.toLowerCase() === 'ioi' ? 'ioiCodeforces' : 'Codeforces';
 
-  return await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/${provider}/RanklistRows/${contestId}?`,
+  return await apiFetch(
+    `/api/${provider}/RanklistRows/${contestId}?`,
     {
       redirect: 'error',
       method: 'POST',

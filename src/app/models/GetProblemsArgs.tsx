@@ -18,4 +18,6 @@ export interface GetProblemsArgs {
   ProblemName?: string;
   IsOnly: boolean;
   Lang: string;
+  Statuses?: string[];
+  HideSolved?: boolean;
 }

@@ -1,3 +1,4 @@
+import { apiFetch } from './auth';
 export class UpdateTags {
   constructor(tags: UpdateTag[]) {
     this.tags = tags;
@@ -17,13 +18,13 @@ export class UpdateTag {
 }
 
 export async function getTags() {
-  return fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Tags?`, {
+  return apiFetch(`/api/Tags?`, {
     redirect: 'error',
   });
 }
 
 export async function updateTags(tags: UpdateTags) {
-  return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Tags/?`, {
+  return await apiFetch(`/api/Tags/?`, {
     redirect: 'error',
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },

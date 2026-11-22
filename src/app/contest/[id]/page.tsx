@@ -22,12 +22,15 @@ import GizmoSpinner from '@/app/components/gizmo-spinner';
 import { useStopwatch } from '@/hooks/useStopwatch';
 import { Contest } from '@/app/models/Contest';
 
+import { useAuth } from '@/app/components/auth-provider';
+
 const DEFAULT_PARTICIPANT_TYPE = 'CONTESTANT';
 const DEFAULT_SORT_FIELD: keyof RanklistRow = 'points';
 const DEFAULT_SORT_ORDER: SortOrder = 'desc';
 
 function ContestIdClientPage() {
   const { t, i18n } = useTranslation();
+  const { isAdmin } = useAuth();
   const contestId = Number(useParams().id);
   const isClient = useIsClient();
 
@@ -100,7 +103,7 @@ function ContestIdClientPage() {
       try {
         const shouldUpdate =
           !contest.isContestLoaded || participantType !== 'CONTESTANT';
-        if (shouldUpdate && !updatePerformed.current) {
+        if (isAdmin && shouldUpdate && !updatePerformed.current) {
           await updateRanklistRows(contestId, contest.source);
           updatePerformed.current = true;
         }
@@ -134,6 +137,7 @@ function ContestIdClientPage() {
     fetchRanklist();
   }, [
     isClient,
+    isAdmin,
     contest,
     contestId,
     participantType,

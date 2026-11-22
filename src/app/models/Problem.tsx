@@ -1,4 +1,6 @@
 export interface Problem {
+  status?: 'none' | 'solved' | 'failed' | 'deferred';
+  isDeferred?: boolean;
   contestId: number;
   index: string;
   rank: string;
