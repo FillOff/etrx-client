@@ -98,7 +98,7 @@ export default function Header() {
           onClick={() => handleNavigation('/results')}
           className={DdStyles.header_elem}
         >
-          {i18n.language.startsWith('ru') ? 'Результаты' : 'Results'}
+          {t('header:results')}
         </button>
 
         <button
