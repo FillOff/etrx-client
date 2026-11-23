@@ -5,6 +5,18 @@
   "author": "Author",
   "updates": [
     {
+      "date": "22.11.2026",
+      "author": "Арсений",
+      "items": [
+        {
+          "type": "Added",
+          "details": [
+            "Added results tables by division, participation type, and solved tasks, with navigation between detail levels"
+          ]
+        }
+      ]
+    },
+    {
       "date": "8.11.2026",
       "author": "Артём Кравченко",
       "items": [

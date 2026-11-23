@@ -1,0 +1,45 @@
+{
+  "title": "Results tables",
+  "filters": {
+    "fromDate": "From date",
+    "toDate": "To date",
+    "contest": "Contest",
+    "all": "All",
+    "refresh": "Refresh",
+    "protocol": "Back to protocol"
+  },
+  "navigation": {
+    "backToTypes": "Back to participation types",
+    "backToDivisions": "Back to divisions"
+  },
+  "matrix": {
+    "title": "Results by division",
+    "hint": "Select a division to view the breakdown by participation type. Use the arrows to sort columns.",
+    "name": "Name",
+    "all": "All",
+    "division": "Div {{number}}"
+  },
+  "types": {
+    "title": "Breakdown: {{division}}",
+    "hint": "Select a task count to view the participant’s solved tasks. Use the arrows to sort columns.",
+    "contestant": "Contests",
+    "virtual": "Virtual contests",
+    "outOfCompetition": "Out of competition",
+    "practice": "Upsolving",
+    "total": "Total"
+  },
+  "tasks": {
+    "title": "Tasks: {{name}}",
+    "hint": "Solved tasks in the selected category. Select a task to open it on Codeforces.",
+    "problem": "Problem",
+    "contest": "Contest",
+    "rating": "Problem rating",
+    "empty": "No solved tasks in this category"
+  },
+  "empty": "No data to display",
+  "invalidPeriod": "The start date must not be later than the end date.",
+  "sort": {
+    "aria": "Sort {{label}}",
+    "title": "Change sorting"
+  }
+}

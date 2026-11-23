@@ -97,6 +97,13 @@ export default function Header() {
         </button>
 
         <button
+          onClick={() => handleNavigation('/results')}
+          className={DdStyles.header_elem}
+        >
+          {t('header:results')}
+        </button>
+
+        <button
           onClick={() => handleNavigation('/about')}
           className={DdStyles.header_elem}
         >

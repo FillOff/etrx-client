@@ -1,0 +1,139 @@
+.page {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 16px 32px;
+}
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 6px;
+  background: var(--background-shade);
+}
+.filters label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.filters input {
+  max-width: 155px;
+  padding: 5px 8px;
+  border: 1px solid var(--background-shade1);
+  border-radius: 4px;
+  background: var(--background);
+}
+
+.filters input[type='number'] {
+  width: 110px;
+}
+.refresh {
+  padding: 5px 12px;
+  border: 1px solid var(--background-shade1);
+  border-radius: 4px;
+}
+.scroll {
+  overflow-x: auto;
+}
+.summary {
+  width: 100%;
+  min-width: 600px;
+  border-collapse: collapse;
+}
+.summary th,
+.summary td {
+  border: 1px solid var(--background-shade1);
+  text-align: center;
+}
+.summary th {
+  padding: 10px;
+
+}
+.summary th:first-child {
+  text-align: left;
+}
+.summary td button {
+  display: block;
+  width: 100%;
+  min-height: 46px;
+  padding: 10px;
+  font-variant-numeric: tabular-nums;
+}
+.summary td button:hover:not(:disabled) {
+  box-shadow: inset 0 0 0 2px var(--main-light);
+}
+.summary button:focus-visible,
+.refresh:focus-visible {
+  outline: 3px solid var(--main-light);
+  outline-offset: -3px;
+}
+.summary button:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+.summary .selected {
+  background: var(--main);
+  color: var(--main-white);
+  font-weight: bold;
+}
+
+.summary tbody th {
+  padding: 9px 12px;
+  text-align: left;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.summary tbody td {
+  padding: 9px 12px;
+  font-variant-numeric: tabular-nums;
+}
+.summary thead th button {
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+.summary thead th button:hover {
+  text-decoration: underline;
+}
+.summary thead th button:focus-visible {
+  outline: 3px solid var(--main-light);
+  outline-offset: 2px;
+}
+
+.headerControls {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.sortButton {
+  min-width: 22px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-weight: 700;
+}
+.sortButton:hover, .cellLink:hover, .back:hover {
+  background: var(--background-shade1);
+}
+.cellLink {
+  display: block;
+  width: 100%;
+  min-height: 40px;
+  padding: 8px;
+  color: var(--main);
+  text-decoration: underline;
+  font-variant-numeric: tabular-nums;
+}
+.cellLink:disabled {
+  cursor: default;
+  opacity: .45;
+  text-decoration: none;
+}
+.back {
+  margin-top: 18px;
+  padding: 7px 12px;
+  border: 1px solid var(--background-shade1);
+  border-radius: 5px;
+}
