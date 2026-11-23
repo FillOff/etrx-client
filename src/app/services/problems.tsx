@@ -1,6 +1,7 @@
 'use client';
 
 import { GetProblemsArgs } from '../models/GetProblemsArgs';
+import { apiFetch } from './auth';
 
 function buildParams(args: Partial<GetProblemsArgs>): URLSearchParams {
   const params = new URLSearchParams();
@@ -52,26 +53,63 @@ function buildParams(args: Partial<GetProblemsArgs>): URLSearchParams {
   if (args.IsOnly !== undefined)
     params.append('IsOnly', args.IsOnly.toString());
   params.append('Lang', args.Lang || 'ru');
+  args.Statuses?.forEach((status) => params.append('Statuses', status));
+  if (args.HideSolved) params.append('HideSolved', 'true');
 
   return params;
 }
 
-export async function getProblems(args: GetProblemsArgs) {
+export async function getProblems(args: GetProblemsArgs, signal?: AbortSignal) {
   const params = buildParams(args);
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/Problems?${params.toString()}`;
-
-  return await fetch(url, {
-    method: 'GET',
+  return apiFetch(`/api/problems?${params.toString()}`, {
+    signal,
     redirect: 'error',
   });
 }
 
-export async function getFilters(args: Partial<GetProblemsArgs> = {}) {
+export async function getFilters(
+  args: Partial<GetProblemsArgs> = {},
+  signal?: AbortSignal,
+) {
   const params = buildParams(args);
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/Problems/filters?${params.toString()}`;
-
-  return await fetch(url, {
-    method: 'GET',
+  return apiFetch(`/api/problems/filters?${params.toString()}`, {
+    signal,
     redirect: 'error',
   });
+}
+
+export interface ProgressSyncResult {
+  success: boolean;
+  lastSuccessAt: string | null;
+  message: string | null;
+  skipped: boolean;
+}
+
+export async function syncProgress(
+  signal?: AbortSignal,
+): Promise<ProgressSyncResult> {
+  const response = await apiFetch('/api/problems/progress/synchronizations', {
+    method: 'POST',
+    signal,
+  });
+  if (!response.ok) throw new Error(`Ошибка синхронизации: ${response.status}`);
+  return response.json();
+}
+
+export async function setProblemDeferred(
+  contestId: number,
+  index: string,
+  deferred: boolean,
+  expectedHandle: string,
+) {
+  const response = await apiFetch(
+    `/api/problems/progress/${contestId}/${encodeURIComponent(index)}/deferral`,
+    {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ deferred, expectedHandle }),
+    },
+  );
+  if (!response.ok)
+    throw new Error(`Не удалось сохранить отметку: ${response.status}`);
 }

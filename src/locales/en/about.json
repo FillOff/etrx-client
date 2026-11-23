@@ -5,13 +5,26 @@
   "author": "Author",
   "updates": [
     {
-    "date": "22.11.2026",
+      "date": "22.11.2026",
       "author": "Арсений",
       "items": [
         {
           "type": "Added",
           "details": [
-            "Added results tables by division, participation type, and solved tasks, with navigation between detail levels."
+            "Added results tables by division, participation type, and solved tasks, with navigation between detail levels"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "8.11.2026",
+      "author": "Артём Кравченко",
+      "items": [
+        {
+          "type": "Added",
+          "details": [
+            "Added user authentication and account-based filter preferences",
+            "Added problem highlighting based on submissions and the ability to mark problems for later"
           ]
         }
       ]

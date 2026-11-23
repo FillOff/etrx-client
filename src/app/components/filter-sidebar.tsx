@@ -107,46 +107,46 @@ export default function FilterSidebar({
     setRangeFilters({
       minRating: clamp(
         initialFilters.minRating,
-        currentBounds.minRating,
-        currentBounds.maxRating,
+        totalBounds.minRating,
+        totalBounds.maxRating,
       ),
       maxRating: clamp(
         initialFilters.maxRating,
-        currentBounds.minRating,
-        currentBounds.maxRating,
+        totalBounds.minRating,
+        totalBounds.maxRating,
       ),
 
       minPoints: clamp(
         initialFilters.minPoints,
-        currentBounds.minPoints,
-        currentBounds.maxPoints,
+        totalBounds.minPoints,
+        totalBounds.maxPoints,
       ),
       maxPoints: clamp(
         initialFilters.maxPoints,
-        currentBounds.minPoints,
-        currentBounds.maxPoints,
+        totalBounds.minPoints,
+        totalBounds.maxPoints,
       ),
 
       minSolved: clamp(
         initialFilters.minSolved,
-        currentBounds.minSolved,
-        currentBounds.maxSolved,
+        totalBounds.minSolved,
+        totalBounds.maxSolved,
       ),
       maxSolved: clamp(
         initialFilters.maxSolved,
-        currentBounds.minSolved,
-        currentBounds.maxSolved,
+        totalBounds.minSolved,
+        totalBounds.maxSolved,
       ),
 
       minDifficulty: clamp(
         initialFilters.minDifficulty,
-        currentBounds.minDifficulty,
-        currentBounds.maxDifficulty,
+        totalBounds.minDifficulty,
+        totalBounds.maxDifficulty,
       ),
       maxDifficulty: clamp(
         initialFilters.maxDifficulty,
-        currentBounds.minDifficulty,
-        currentBounds.maxDifficulty,
+        totalBounds.minDifficulty,
+        totalBounds.maxDifficulty,
       ),
     });
 
@@ -156,7 +156,7 @@ export default function FilterSidebar({
     setDivisions(initialFilters.divisions);
     setRanks(initialFilters.ranks);
     setIsOnly(initialFilters.isOnly);
-  }, [initialFilters, currentBounds]);
+  }, [initialFilters, totalBounds]);
 
   const handleReset = () => {
     const resetData = {
@@ -166,14 +166,14 @@ export default function FilterSidebar({
       indexes: [],
       divisions: [],
       ranks: [],
-      minRating: totalBounds.minRating,
-      maxRating: totalBounds.maxRating,
-      minPoints: totalBounds.minPoints,
-      maxPoints: totalBounds.maxPoints,
-      minSolved: totalBounds.minSolved,
-      maxSolved: totalBounds.maxSolved,
-      minDifficulty: totalBounds.minDifficulty,
-      maxDifficulty: totalBounds.maxDifficulty,
+      minRating: undefined,
+      maxRating: undefined,
+      minPoints: undefined,
+      maxPoints: undefined,
+      minSolved: undefined,
+      maxSolved: undefined,
+      minDifficulty: undefined,
+      maxDifficulty: undefined,
     };
     onApply(resetData);
   };
