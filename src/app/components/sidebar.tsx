@@ -1,5 +1,6 @@
 'use client';
 import { useRouter } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 import Styles from './sidebar.module.css';
 import { useAuth } from './auth-provider';
 import MiscStyles from './misc.module.css';
@@ -12,6 +13,7 @@ type SidebarProps = {
 const btnIdPostfix = '--open-btn';
 
 export function Sidebar({ sidebarId }: SidebarProps) {
+  const { t } = useTranslation();
   const auth = useAuth();
   const [open, setOpen] = useState(false);
   const router = useRouter();
@@ -77,6 +79,15 @@ export function Sidebar({ sidebarId }: SidebarProps) {
           >
             Главная
           </button>
+          <button
+            onClick={() => {
+              toggle();
+              router.push('/ladder');
+            }}
+            className={Styles.option}
+          >
+            {t('header:ladder')}
+          </button>
           <div className={Styles.category}>Контесты</div>
           <button
             onClick={() => {
@@ -109,7 +120,6 @@ export function Sidebar({ sidebarId }: SidebarProps) {
           >
             Просмотреть всех
           </button>
-
         </div>
         <button
           onClick={() => {
@@ -123,7 +133,8 @@ export function Sidebar({ sidebarId }: SidebarProps) {
         <button
           onClick={() => {
             toggle();
-            if (auth.authenticated) void auth.logout(); else auth.openLogin();
+            if (auth.authenticated) void auth.logout();
+            else auth.openLogin();
           }}
           className={`${Styles.integrated_button_cont} ${Styles.category} justify-start absolute bottom-5`}
         >

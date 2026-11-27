@@ -46,7 +46,7 @@ export default function Header() {
       key={i18n.language}
       className="flex items-center sticky top-0 z-50 w-full min-h-16 flex-wrap bg-main"
     >
-      <div className="flex items-center w-fit">
+      <div className="flex flex-wrap items-center w-fit">
         <h1
           className={`${DdStyles.header_elem_static} select-none bg-main-light font-bold italic text-[28px]`}
         >
@@ -90,6 +90,13 @@ export default function Header() {
         </Dropdown>
 
         <button
+          onClick={() => handleNavigation('/ladder')}
+          className={DdStyles.header_elem}
+        >
+          {t('header:ladder')}
+        </button>
+
+        <button
           onClick={() => handleNavigation('/protocol')}
           className={DdStyles.header_elem}
         >
@@ -113,10 +120,29 @@ export default function Header() {
 
       <div className="flex items-center gap-4 ml-auto mr-2">
         <div className="text-sm text-white py-2" aria-live="polite">
-          {auth.loading ? 'Проверка входа…' : auth.authenticated ? <>
-            <span>Вошёл: {auth.handle}{auth.isAdmin ? ' (администратор)' : ''}</span>
-            <button className="ml-2 underline" onClick={() => void auth.logout()}>Выйти</button>
-          </> : <><span>Не вошёл</span><button className="ml-2 underline" onClick={auth.openLogin}>Войти</button></>}
+          {auth.loading ? (
+            'Проверка входа…'
+          ) : auth.authenticated ? (
+            <>
+              <span>
+                Вошёл: {auth.handle}
+                {auth.isAdmin ? ' (администратор)' : ''}
+              </span>
+              <button
+                className="ml-2 underline"
+                onClick={() => void auth.logout()}
+              >
+                Выйти
+              </button>
+            </>
+          ) : (
+            <>
+              <span>Не вошёл</span>
+              <button className="ml-2 underline" onClick={auth.openLogin}>
+                Войти
+              </button>
+            </>
+          )}
         </div>
         <Dropdown header={t('header:cl')}>
           <button

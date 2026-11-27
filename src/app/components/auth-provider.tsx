@@ -16,8 +16,10 @@ import {
   subscribeToSession,
 } from '../services/auth';
 import { flushProblemPreferences } from '../services/problem-preferences';
+import { flushLadderPreferences } from '../services/ladder-preferences';
 import styles from './auth.module.css';
 import { authLimits } from '../constants/auth-limits';
+import { usePathname } from 'next/navigation';
 
 const guest: Session = { authenticated: false, handle: null, isAdmin: false };
 interface AuthContextValue extends Session {
@@ -39,6 +41,8 @@ export default function AuthProvider({
   children: React.ReactNode;
 }) {
   const [session, setSession] = useState<Session>(guest);
+  const pathname = usePathname();
+  const publicEntry = useRef(['/', '/ladder', '/results'].includes(pathname));
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<'handle' | 'confirm' | 'password'>('handle');
@@ -81,11 +85,15 @@ export default function AuthProvider({
       .then((value) => {
         if (active && version === sessionVersion.current) {
           setSession(value);
-          if (!value.authenticated) setOpen(true);
+          if (!value.authenticated && !publicEntry.current) setOpen(true);
         }
       })
       .catch(() => {
-        if (active && version === sessionVersion.current) {
+        if (
+          active &&
+          version === sessionVersion.current &&
+          !publicEntry.current
+        ) {
           setOpen(true);
           setError(
             'Не удалось проверить вход. Проверьте соединение с сервером.',
@@ -129,6 +137,7 @@ export default function AuthProvider({
     try {
       try {
         await flushProblemPreferences(session.handle);
+        await flushLadderPreferences(session.handle);
       } catch {
         setLogoutError(
           'Не удалось сохранить фильтры. Проверьте соединение и повторите выход.',

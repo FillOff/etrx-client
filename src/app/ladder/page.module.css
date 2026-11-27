@@ -1,0 +1,83 @@
+.page {
+  max-width: 72rem;
+  margin: 2rem auto;
+  padding: 0 1.25rem;
+}
+.page h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+}
+.filters,
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  margin-bottom: 1rem;
+}
+.filters label {
+  display: grid;
+  gap: 0.25rem;
+}
+.filters input,
+.filters select {
+  padding: 0.4rem 0.65rem;
+  border: 1px solid var(--background-shade1);
+  background: var(--background);
+  border-radius: 0.25rem;
+  max-width: 12rem;
+}
+.tags legend {
+  font-weight: 600;
+  margin: 0.75rem 0 0.4rem;
+}
+.tags label,
+.group summary {
+  cursor: pointer;
+}
+.stats {
+  margin: 1rem 0;
+}
+.page a {
+  text-decoration: underline;
+}
+.group {
+  padding: 0.7rem 0;
+  border-top: 1px solid var(--background-shade1);
+}
+.group summary {
+  font-weight: 600;
+  padding: 0.4rem;
+  border-radius: 0.25rem;
+}
+.completion {
+  font-weight: 400;
+}
+.group table {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+}
+.group th,
+.group td {
+  padding: 0.4rem;
+  border-bottom: 1px solid var(--background-shade);
+}
+.group td:not(:first-child),
+.group th:not(:first-child) {
+  text-align: right;
+}
+
+.loadMore {
+  display: block;
+  margin: 1.25rem auto;
+  padding: 0.6rem 1.2rem;
+  border: 1px solid var(--background-shade1);
+  border-radius: 0.3rem;
+  cursor: pointer;
+}
+.loadMore:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
