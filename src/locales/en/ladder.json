@@ -1,0 +1,17 @@
+{
+  "choose": "Select",
+  "failedCount": "With failed attempts: {{count}}",
+  "completed": "Solved {{count}} of {{total}}",
+  "error": "Unable to load data.",
+  "loading": "Loading…",
+  "noLevels": "The catalogue has no problems with a division yet.",
+  "selectLevel": "Choose a division.",
+  "statistics": "Participant solutions for this selection (JSON)",
+  "empty": "No matching problems.",
+  "noTags": "Untagged",
+  "loadMore": "Load 8 more",
+  "noRating": "Unrated",
+  "anyDifficulty": "Any difficulty",
+  "anyRating": "Any rating",
+  "branchStatistics": "Who solved this branch (JSON)"
+}
